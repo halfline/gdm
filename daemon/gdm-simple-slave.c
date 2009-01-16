@@ -164,7 +164,6 @@ reset_session (GdmSimpleSlave *slave)
 {
         destroy_session (slave);
         create_new_session (slave);
-        gdm_session_start_conversation (GDM_SESSION (slave->priv->session));
 }
 
 static gboolean
@@ -1018,8 +1017,6 @@ on_greeter_connected (GdmGreeterServer *greeter_server,
         gboolean display_is_local;
 
         g_debug ("GdmSimpleSlave: Greeter connected");
-
-        gdm_session_start_conversation (GDM_SESSION (slave->priv->session));
 
         g_object_get (slave,
                       "display-is-local", &display_is_local,
