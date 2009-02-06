@@ -82,6 +82,7 @@ gui/simple-greeter/gdm-user.c
 gui/simple-greeter/gdm-user-chooser-widget.c
 gui/simple-greeter/greeter-main.c
 gui/simple-greeter/plugins/password/gdm-password-extension.c
+gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c
 gui/user-switch-applet/applet.c
 gui/user-switch-applet/gdm-entry-menu-item.c
 gui/user-switch-applet/GNOME_FastUserSwitchApplet.server.in.in
