@@ -1049,8 +1049,17 @@ on_ready_to_start_session (GdmGreeterLoginWindow *login_window,
                            GParamSpec            *param_spec,
                            char                  *service_name)
 {
+        if (!login_window->priv->is_interactive) {
+                return;
+        }
+
         gdm_greeter_login_window_start_session_when_ready (login_window, service_name);
         g_free (service_name);
+
+        if (login_window->priv->start_session_handler_id > 0) {
+                g_signal_handler_disconnect (login_window, login_window->priv->start_session_handler_id);
+                login_window->priv->start_session_handler_id = 0;
+        }
 }
 
 static void
