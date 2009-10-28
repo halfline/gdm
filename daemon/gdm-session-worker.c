@@ -1311,7 +1311,7 @@ gdm_session_worker_initialize_pam (GdmSessionWorker *worker,
                  */
                 g_set_error (error,
                              GDM_SESSION_WORKER_ERROR,
-                             GDM_SESSION_WORKER_ERROR_AUTHENTICATING,
+                             GDM_SESSION_WORKER_ERROR_SERVICE_UNAVAILABLE,
                              _("error initiating conversation with authentication system - %s"),
                              error_code == PAM_ABORT? _("general failure") :
                              error_code == PAM_BUF_ERR? _("out of memory") :
@@ -1423,7 +1423,15 @@ gdm_session_worker_authenticate_user (GdmSessionWorker *worker,
         /* blocking call, does the actual conversation */
         error_code = pam_authenticate (worker->priv->pam_handle, authentication_flags);
 
-        if (error_code != PAM_SUCCESS) {
+        if (error_code == PAM_AUTHINFO_UNAVAIL) {
+                g_debug ("GdmSessionWorker: authentication service unavailable");
+
+                g_set_error (error,
+                             GDM_SESSION_WORKER_ERROR,
+                             GDM_SESSION_WORKER_ERROR_SERVICE_UNAVAILABLE,
+                             "%s", pam_strerror (worker->priv->pam_handle, error_code));
+                goto out;
+        } else if (error_code != PAM_SUCCESS) {
                 g_debug ("GdmSessionWorker: authentication returned %d: %s", error_code, pam_strerror (worker->priv->pam_handle, error_code));
 
                 /*
