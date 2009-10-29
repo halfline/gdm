@@ -223,6 +223,19 @@ queue_postlogin_failed_reset (GdmSimpleSlave *slave)
 }
 
 static void
+on_session_service_unavailable (GdmSession     *session,
+                                const char     *service_name,
+                                GdmSimpleSlave *slave)
+{
+        if (slave->priv->greeter_server != NULL) {
+                gdm_greeter_server_service_unavailable (slave->priv->greeter_server,
+                                                        service_name);
+        }
+
+        gdm_session_stop_conversation (session, service_name);
+}
+
+static void
 on_session_setup_complete (GdmSession     *session,
                            const char     *service_name,
                            GdmSimpleSlave *slave)
@@ -774,6 +787,10 @@ create_new_session (GdmSimpleSlave *slave)
                           G_CALLBACK (on_session_conversation_stopped),
                           slave);
         g_signal_connect (slave->priv->session,
+                          "service-unavailable",
+                          G_CALLBACK (on_session_service_unavailable),
+                          slave);
+        g_signal_connect (slave->priv->session,
                           "setup-complete",
                           G_CALLBACK (on_session_setup_complete),
                           slave);
@@ -886,6 +903,9 @@ destroy_session (GdmSimpleSlave *slave)
                                               slave);
         g_signal_handlers_disconnect_by_func (slave->priv->session,
                                               G_CALLBACK (on_session_conversation_stopped),
+                                              slave);
+        g_signal_handlers_disconnect_by_func (slave->priv->session,
+                                              G_CALLBACK (on_session_service_unavailable),
                                               slave);
         g_signal_handlers_disconnect_by_func (slave->priv->session,
                                               G_CALLBACK (on_session_setup_complete),
