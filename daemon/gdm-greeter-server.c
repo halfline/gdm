@@ -286,6 +286,14 @@ gdm_greeter_server_problem (GdmGreeterServer *greeter_server,
 }
 
 gboolean
+gdm_greeter_server_service_unavailable (GdmGreeterServer *greeter_server,
+                                        const char       *service_name)
+{
+        send_dbus_string_signal (greeter_server, "ServiceUnavailable", service_name);
+        return TRUE;
+}
+
+gboolean
 gdm_greeter_server_reset (GdmGreeterServer *greeter_server)
 {
         send_dbus_void_signal (greeter_server, "Reset");
