@@ -744,7 +744,7 @@ gdm_greeter_login_window_start_session_when_ready (GdmGreeterLoginWindow *login_
                  * so they can pick language/session.  Will need to refactor things
                  * a bit so we can share code with timed login.
                  */
-                if (!login_window->priv->timed_login_enabled) {
+                if (strcmp (service_name, "gdm-autologin") != 0) {
 
                         g_debug ("GdmGreeterLoginWindow: Okay, we'll start the session anyway,"
                                  "because the user isn't ever going to get an opportunity to"
