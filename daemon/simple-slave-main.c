@@ -177,9 +177,11 @@ main (int    argc,
         DBusGConnection  *connection;
         GdmSlave         *slave;
         static char      *display_id = NULL;
+        static gboolean   force_active_vt = FALSE;
         GdmSignalHandler *signal_handler;
         static GOptionEntry entries []   = {
                 { "display-id", 0, 0, G_OPTION_ARG_STRING, &display_id, N_("Display ID"), N_("ID") },
+                { "force-active-vt", 0, 0, G_OPTION_ARG_NONE, &force_active_vt, N_("Force X to start on active vt"), NULL },
                 { NULL }
         };
 
@@ -248,7 +250,7 @@ main (int    argc,
         gdm_signal_handler_add (signal_handler, SIGUSR1, signal_cb, NULL);
         gdm_signal_handler_add (signal_handler, SIGUSR2, signal_cb, NULL);
 
-        slave = gdm_simple_slave_new (display_id);
+        slave = gdm_simple_slave_new (display_id, force_active_vt);
         if (slave == NULL) {
                 goto out;
         }

@@ -86,10 +86,27 @@ gdm_static_display_remove_user_authorization (GdmDisplay *display,
 }
 
 static gboolean
+triggered_to_force_display_on_active_vt (void)
+{
+        gboolean should_force_display_on_active_vt;
+
+        should_force_display_on_active_vt = g_file_test (GDM_SPOOL_DIR "/force-display-on-active-vt",
+                                                         G_FILE_TEST_EXISTS);
+        g_unlink (GDM_SPOOL_DIR "/force-display-on-active-vt");
+
+        return should_force_display_on_active_vt;
+}
+
+static gboolean
 gdm_static_display_manage (GdmDisplay *display)
 {
         g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
 
+        if (triggered_to_force_display_on_active_vt ()) {
+                g_object_set (display, "force-active-vt", TRUE, NULL);
+        } else {
+                g_object_set (display, "force-active-vt", FALSE, NULL);
+        }
         GDM_DISPLAY_CLASS (gdm_static_display_parent_class)->manage (display);
 
         return TRUE;
