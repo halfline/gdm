@@ -65,7 +65,9 @@ struct GdmDisplayPrivate
         gsize                 x11_cookie_size;
         GdmDisplayAccessFile *access_file;
 
-        gboolean              is_local;
+        guint                 is_local : 1;
+        guint                 force_active_vt : 1;
+
         guint                 finish_idle_id;
 
         GdmSlaveProxy        *slave_proxy;
@@ -84,6 +86,7 @@ enum {
         PROP_X11_COOKIE,
         PROP_X11_AUTHORITY_FILE,
         PROP_IS_LOCAL,
+        PROP_FORCE_ACTIVE_VT,
         PROP_SLAVE_COMMAND,
 };
 
@@ -574,9 +577,10 @@ gdm_display_real_prepare (GdmDisplay *display)
         gdm_slave_proxy_set_log_path (display->priv->slave_proxy, log_path);
         g_free (log_path);
 
-        command = g_strdup_printf ("%s --display-id %s",
+        command = g_strdup_printf ("%s --display-id %s %s",
                                    display->priv->slave_command,
-                                   display->priv->id);
+                                   display->priv->id,
+                                   display->priv->force_active_vt? "--force-active-vt" : "");
         gdm_slave_proxy_set_command (display->priv->slave_proxy, command);
         g_free (command);
 
@@ -824,6 +828,13 @@ _gdm_display_set_is_local (GdmDisplay     *display,
 }
 
 static void
+_gdm_display_set_force_active_vt (GdmDisplay     *display,
+                                  gboolean        force_active_vt)
+{
+        display->priv->force_active_vt = force_active_vt;
+}
+
+static void
 _gdm_display_set_slave_command (GdmDisplay     *display,
                                 const char     *command)
 {
@@ -865,6 +876,9 @@ gdm_display_set_property (GObject        *object,
                 break;
         case PROP_IS_LOCAL:
                 _gdm_display_set_is_local (self, g_value_get_boolean (value));
+                break;
+        case PROP_FORCE_ACTIVE_VT:
+                _gdm_display_set_force_active_vt (self, g_value_get_boolean (value));
                 break;
         case PROP_SLAVE_COMMAND:
                 _gdm_display_set_slave_command (self, g_value_get_string (value));
@@ -913,6 +927,9 @@ gdm_display_get_property (GObject        *object,
                 break;
         case PROP_IS_LOCAL:
                 g_value_set_boolean (value, self->priv->is_local);
+                break;
+        case PROP_FORCE_ACTIVE_VT:
+                g_value_set_boolean (value, self->priv->force_active_vt);
                 break;
         case PROP_SLAVE_COMMAND:
                 g_value_set_string (value, self->priv->slave_command);
@@ -1083,6 +1100,13 @@ gdm_display_class_init (GdmDisplayClass *klass)
                                                                NULL,
                                                                NULL,
                                                                TRUE,
+                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+        g_object_class_install_property (object_class,
+                                         PROP_FORCE_ACTIVE_VT,
+                                         g_param_spec_boolean ("force-active-vt",
+                                                               NULL,
+                                                               NULL,
+                                                               FALSE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
 
         g_object_class_install_property (object_class,

@@ -87,6 +87,7 @@ struct GdmSlavePrivate
         char            *display_hostname;
         gboolean         display_is_local;
         gboolean         display_is_parented;
+        gboolean         force_active_vt;
         char            *display_seat_id;
         char            *display_x11_authority_file;
         char            *parent_display_name;
@@ -106,6 +107,7 @@ enum {
         PROP_DISPLAY_NUMBER,
         PROP_DISPLAY_HOSTNAME,
         PROP_DISPLAY_IS_LOCAL,
+        PROP_FORCE_ACTIVE_VT,
         PROP_DISPLAY_SEAT_ID,
         PROP_DISPLAY_X11_AUTHORITY_FILE
 };
@@ -1523,6 +1525,13 @@ _gdm_slave_set_display_is_local (GdmSlave   *slave,
 }
 
 static void
+_gdm_slave_set_force_active_vt (GdmSlave   *slave,
+                                gboolean    force_active_vt)
+{
+        slave->priv->force_active_vt = force_active_vt;
+}
+
+static void
 gdm_slave_set_property (GObject      *object,
                         guint         prop_id,
                         const GValue *value,
@@ -1553,6 +1562,9 @@ gdm_slave_set_property (GObject      *object,
                 break;
         case PROP_DISPLAY_IS_LOCAL:
                 _gdm_slave_set_display_is_local (self, g_value_get_boolean (value));
+                break;
+        case PROP_FORCE_ACTIVE_VT:
+                _gdm_slave_set_force_active_vt (self, g_value_get_boolean (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1591,6 +1603,9 @@ gdm_slave_get_property (GObject    *object,
                 break;
         case PROP_DISPLAY_IS_LOCAL:
                 g_value_set_boolean (value, self->priv->display_is_local);
+                break;
+        case PROP_FORCE_ACTIVE_VT:
+                g_value_set_boolean (value, self->priv->force_active_vt);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1714,6 +1729,14 @@ gdm_slave_class_init (GdmSlaveClass *klass)
                                          g_param_spec_boolean ("display-is-local",
                                                                "display is local",
                                                                "display is local",
+                                                               TRUE,
+                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+        g_object_class_install_property (object_class,
+                                         PROP_FORCE_ACTIVE_VT,
+                                         g_param_spec_boolean ("force-active-vt",
+                                                               "Force Active VT",
+                                                               "Force display to active VT",
                                                                TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
