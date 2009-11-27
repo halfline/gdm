@@ -906,6 +906,15 @@ setup_server (GdmSimpleSlave *slave)
 {
         /* Set the busy cursor */
         gdm_slave_set_busy_cursor (GDM_SLAVE (slave));
+
+        /* The root window has a background that may be useful
+         * to cross fade or transition from when setting the
+         * login screen background.  We read it here, and stuff
+         * it into the standard _XROOTPMAP_ID root window property,
+         * so gnome-settings-daemon can get at it.
+         */
+        gdm_slave_save_root_windows (GDM_SLAVE (slave));
+
 }
 
 static void
