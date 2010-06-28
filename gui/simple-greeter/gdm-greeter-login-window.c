@@ -1131,6 +1131,17 @@ create_computer_info (GdmGreeterLoginWindow *login_window)
 
 
 static void
+register_custom_types (GdmGreeterLoginWindow *login_window)
+{
+        GType types[] = { GDM_TYPE_USER_CHOOSER_WIDGET };
+        int i;
+
+        for (i = 0; i < G_N_ELEMENTS (types); i++) {
+                g_debug ("Registering type '%s'", g_type_name (types[i]));
+        }
+}
+
+static void
 load_theme (GdmGreeterLoginWindow *login_window)
 {
         GtkWidget *entry;
@@ -1140,6 +1151,8 @@ load_theme (GdmGreeterLoginWindow *login_window)
         GError* error = NULL;
 
         gdm_profile_start (NULL);
+
+        register_custom_types (login_window);
 
         login_window->priv->builder = gtk_builder_new ();
         if (!gtk_builder_add_from_file (login_window->priv->builder, UIDIR "/" UI_XML_FILE, &error)) {
@@ -1174,12 +1187,7 @@ load_theme (GdmGreeterLoginWindow *login_window)
         box = GTK_WIDGET (gtk_builder_get_object (login_window->priv->builder, "window-frame"));
         gtk_container_add (GTK_CONTAINER (login_window), box);
 
-        /* FIXME: user chooser should implement GtkBuildable and this should get dropped
-         */
-        login_window->priv->user_chooser = gdm_user_chooser_widget_new ();
-        box = GTK_WIDGET (gtk_builder_get_object (login_window->priv->builder, "selection-box"));
-        gtk_box_pack_start (GTK_BOX (box), login_window->priv->user_chooser, TRUE, TRUE, 0);
-        gtk_box_reorder_child (GTK_BOX (box), login_window->priv->user_chooser, 0);
+        login_window->priv->user_chooser = GTK_WIDGET (gtk_builder_get_object (login_window->priv->builder, "user-chooser"));
 
         gdm_user_chooser_widget_set_show_only_chosen (GDM_USER_CHOOSER_WIDGET (login_window->priv->user_chooser), TRUE);
 
