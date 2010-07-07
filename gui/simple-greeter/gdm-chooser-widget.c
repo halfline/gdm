@@ -698,7 +698,7 @@ update_chooser_visibility (GdmChooserWidget *widget)
 
         if (gdm_chooser_widget_get_number_of_items (widget) > 0) {
                 gtk_widget_show (widget->priv->frame);
-                set_chooser_list_visible (widget, TRUE);
+                set_chooser_list_visible (widget, GTK_WIDGET_VISIBLE (widget));
         } else {
                 gtk_widget_hide (widget->priv->frame);
                 set_chooser_list_visible (widget, FALSE);
