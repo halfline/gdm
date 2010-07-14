@@ -211,7 +211,7 @@ find_conversation_by_name (GdmSessionDirect *session,
         conversation = g_hash_table_lookup (session->priv->conversations, service_name);
 
         if (conversation == NULL) {
-                g_warning ("Tried to look up non-existant conversation");
+                g_warning ("Tried to look up non-existent conversation %s", service_name);
         }
 
         return conversation;
@@ -1798,7 +1798,7 @@ static void
 free_conversation (GdmSessionConversation *conversation)
 {
         if (conversation->job != NULL) {
-                g_warning ("Freeing conversation with active job");
+                g_warning ("Freeing conversation '%s' with active job", conversation->service_name);
         }
 
         g_free (conversation->service_name);
@@ -1971,7 +1971,7 @@ gdm_session_direct_start_conversation (GdmSession *session,
 
         g_return_if_fail (session != NULL);
 
-        g_debug ("GdmSessionDirect: starting conversation");
+        g_debug ("GdmSessionDirect: starting conversation %s", service_name);
 
         conversation = start_conversation (impl, service_name);
 
@@ -1988,7 +1988,7 @@ gdm_session_direct_stop_conversation (GdmSession *session,
 
         g_return_if_fail (session != NULL);
 
-        g_debug ("GdmSessionDirect: stopping conversation");
+        g_debug ("GdmSessionDirect: stopping conversation %s", service_name);
 
         conversation = find_conversation_by_name (impl, service_name);
 
