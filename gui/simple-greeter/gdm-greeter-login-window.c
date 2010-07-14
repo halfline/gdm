@@ -1347,7 +1347,7 @@ begin_auto_login (GdmGreeterLoginWindow *login_window)
         /* just wait for the user to select language and stuff */
         set_message (login_window, _("Select language and click Log In"));
 
-        switch_mode (login_window, MODE_AUTHENTICATION);
+        switch_mode (login_window, MODE_TIMED_LOGIN);
 
         show_widget (login_window, "conversation-list", FALSE);
         gdm_task_list_foreach_task (GDM_TASK_LIST (login_window->priv->conversation_list),
