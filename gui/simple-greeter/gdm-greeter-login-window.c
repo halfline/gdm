@@ -2086,7 +2086,7 @@ static void
 on_conversation_cancel (GdmGreeterLoginWindow *login_window,
                         GdmConversation       *conversation)
 {
-        do_cancel (login_window);
+        restart_conversations (login_window);
 }
 
 static gboolean
