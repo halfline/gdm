@@ -184,6 +184,7 @@ gdm_smartcard_extension_ask_question (GdmConversation *conversation,
         gtk_entry_set_visibility (GTK_ENTRY (extension->priv->prompt_entry), TRUE);
         gtk_widget_show (extension->priv->prompt_entry);
         gtk_action_set_visible (extension->priv->login_action, TRUE);
+        gtk_action_set_sensitive (extension->priv->login_action, TRUE);
         gtk_widget_grab_focus (extension->priv->prompt_entry);
         extension->priv->answer_pending = TRUE;
 }
@@ -200,6 +201,7 @@ gdm_smartcard_extension_ask_secret (GdmConversation *conversation,
         gtk_widget_show (extension->priv->prompt_entry);
         gtk_widget_grab_focus (extension->priv->prompt_entry);
         gtk_action_set_visible (extension->priv->login_action, TRUE);
+        gtk_action_set_sensitive (extension->priv->login_action, TRUE);
         extension->priv->answer_pending = TRUE;
 }
 
@@ -475,6 +477,7 @@ static void
 on_activate_log_in (GdmSmartcardExtension *extension)
 {
         gdm_smartcard_extension_request_answer (GDM_CONVERSATION (extension));
+        gtk_action_set_sensitive (extension->priv->login_action, FALSE);
 }
 
 static void
