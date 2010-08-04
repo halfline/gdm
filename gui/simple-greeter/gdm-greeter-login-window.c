@@ -814,7 +814,7 @@ static void
 do_cancel (GdmGreeterLoginWindow *login_window)
 {
         /* need to wait for response from backend */
-        set_message (login_window, _("Cancelling..."));
+        //set_message (login_window, _("Cancelling..."));
         restart_conversations (login_window);
 }
 
