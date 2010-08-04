@@ -740,8 +740,6 @@ static void
 reset_dialog (GdmGreeterLoginWindow *login_window,
               guint                  dialog_mode)
 {
-        GtkWidget  *label;
-
         g_debug ("GdmGreeterLoginWindow: Resetting dialog to mode %u", dialog_mode);
         set_busy (login_window);
         set_sensitive (login_window, FALSE);
@@ -775,9 +773,6 @@ reset_dialog (GdmGreeterLoginWindow *login_window,
                                     (GdmTaskListForeachFunc)
                                     reset_task,
                                     login_window);
-
-        label = GTK_WIDGET (gtk_builder_get_object (GDM_GREETER_LOGIN_WINDOW (login_window)->priv->builder, "auth-prompt-label"));
-        gtk_label_set_text (GTK_LABEL (label), "");
 
         if (can_jump_to_authenticate (login_window)) {
                 /* If we don't have a user list jump straight to authenticate */
