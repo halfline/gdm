@@ -33,6 +33,7 @@ struct _GdmPasswordExtensionPrivate
         GIcon     *icon;
         GtkWidget *page;
         GtkActionGroup *actions;
+        GtkAction *login_action;
 
         GtkWidget *message_label;
         GtkWidget *prompt_label;
@@ -78,6 +79,8 @@ gdm_password_extension_ask_question (GdmConversation *conversation,
         gtk_widget_show (extension->priv->prompt_entry);
         gtk_widget_grab_focus (extension->priv->prompt_entry);
         extension->priv->answer_pending = TRUE;
+
+        gtk_action_set_sensitive (extension->priv->login_action, TRUE);
 }
 
 static void
@@ -92,6 +95,8 @@ gdm_password_extension_ask_secret (GdmConversation *conversation,
         gtk_widget_show (extension->priv->prompt_entry);
         gtk_widget_grab_focus (extension->priv->prompt_entry);
         extension->priv->answer_pending = TRUE;
+
+        gtk_action_set_sensitive (extension->priv->login_action, TRUE);
 }
 
 static void
@@ -249,9 +254,11 @@ gdm_password_extension_finalize (GObject *object)
 }
 
 static void
-on_activate_log_in (GdmPasswordExtension *extension)
+on_activate_log_in (GdmPasswordExtension *extension,
+                    GtkAction            *action)
 {
         gdm_password_extension_request_answer (GDM_CONVERSATION (extension));
+        gtk_action_set_sensitive (action, FALSE);
 }
 
 static void
@@ -311,6 +318,8 @@ create_actions (GdmPasswordExtension *extension)
         g_object_set (G_OBJECT (action), "icon-name", "go-home", NULL);
         gtk_action_group_add_action (extension->priv->actions,
                                      action);
+
+        extension->priv->login_action = action;
 }
 
 static void
