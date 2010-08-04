@@ -40,6 +40,8 @@ struct _GdmPasswordExtensionPrivate
         GtkWidget *prompt_entry;
 
         guint      answer_pending : 1;
+
+        guint      message_timeout_id;
 };
 
 static void gdm_password_extension_finalize (GObject *object);
@@ -58,6 +60,16 @@ G_DEFINE_TYPE_WITH_CODE (GdmPasswordExtension,
                          G_IMPLEMENT_INTERFACE (GDM_TYPE_CONVERSATION,
                                                 gdm_conversation_iface_init));
 
+static gboolean
+on_message_expired (GdmConversation *conversation)
+{
+        GdmPasswordExtension *extension = GDM_PASSWORD_EXTENSION (conversation);
+        extension->priv->message_timeout_id = 0;
+
+        gdm_conversation_message_set (conversation);
+        return FALSE;
+}
+
 static void
 gdm_password_extension_set_message (GdmConversation *conversation,
                                     const char *message)
@@ -65,6 +77,11 @@ gdm_password_extension_set_message (GdmConversation *conversation,
         GdmPasswordExtension *extension = GDM_PASSWORD_EXTENSION (conversation);
         gtk_widget_show (extension->priv->message_label);
         gtk_label_set_text (GTK_LABEL (extension->priv->message_label), message);
+
+        if (extension->priv->message_timeout_id  != 0) {
+                g_source_remove (extension->priv->message_timeout_id);
+        }
+        extension->priv->message_timeout_id = g_timeout_add_seconds (2, (GSourceFunc) on_message_expired, conversation);
 }
 
 static void
@@ -251,6 +268,9 @@ gdm_password_extension_class_init (GdmPasswordExtensionClass *extension_class)
 static void
 gdm_password_extension_finalize (GObject *object)
 {
+
+        GdmPasswordExtension *extension = GDM_PASSWORD_EXTENSION (object);
+        g_source_remove (extension->priv->message_timeout_id);
 }
 
 static void

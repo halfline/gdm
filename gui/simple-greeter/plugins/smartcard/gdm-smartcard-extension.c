@@ -56,6 +56,8 @@ struct _GdmSmartcardExtensionPrivate
 
         guint      answer_pending : 1;
         guint      select_when_ready : 1;
+
+        guint      message_timeout_id;
 };
 
 static void gdm_smartcard_extension_finalize (GObject *object);
@@ -164,6 +166,16 @@ stop_watching_for_smartcards (GdmSmartcardExtension *extension)
         kill (extension->priv->worker_pid, SIGTERM);
 }
 
+static gboolean
+on_message_expired (GdmConversation *conversation)
+{
+        GdmSmartcardExtension *extension = GDM_SMARTCARD_EXTENSION (conversation);
+        extension->priv->message_timeout_id = 0;
+
+        gdm_conversation_message_set (conversation);
+        return FALSE;
+}
+
 static void
 gdm_smartcard_extension_set_message (GdmConversation *conversation,
                                      const char      *message)
@@ -171,6 +183,11 @@ gdm_smartcard_extension_set_message (GdmConversation *conversation,
         GdmSmartcardExtension *extension = GDM_SMARTCARD_EXTENSION (conversation);
         gtk_widget_show (extension->priv->message_label);
         gtk_label_set_text (GTK_LABEL (extension->priv->message_label), message);
+
+        if (extension->priv->message_timeout_id  != 0) {
+                g_source_remove (extension->priv->message_timeout_id);
+        }
+        extension->priv->message_timeout_id = g_timeout_add_seconds (2, (GSourceFunc) on_message_expired, conversation);
 }
 
 static void
@@ -428,6 +445,8 @@ gdm_smartcard_extension_finalize (GObject *object)
         if (extension->priv->worker_pid > 0) {
                 stop_watching_for_smartcards (extension);
         }
+
+        g_source_remove (extension->priv->message_timeout_id);
 }
 
 static void

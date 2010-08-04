@@ -62,6 +62,7 @@ struct _GdmConversationIface
         char * (* answer)       (GdmConversation *conversation);
         void   (* cancel)       (GdmConversation *conversation);
         gboolean  (* user_chosen)  (GdmConversation *conversation);
+        void   (* message_set)  (GdmConversation *conversation);
 };
 
 GType  gdm_conversation_get_type     (void) G_GNUC_CONST;
@@ -87,6 +88,7 @@ void   gdm_conversation_answer (GdmConversation   *conversation,
 void   gdm_conversation_cancel (GdmConversation   *conversation);
 gboolean  gdm_conversation_choose_user (GdmConversation   *conversation,
                                         const char        *username);
+void gdm_conversation_message_set (GdmConversation *conversation);
 
 G_END_DECLS
 
