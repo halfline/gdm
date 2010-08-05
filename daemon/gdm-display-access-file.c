@@ -30,6 +30,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/wait.h>
+#include <stdlib.h>
 
 #include <glib.h>
 #include <glib-object.h>
@@ -198,25 +200,153 @@ gdm_display_access_file_new (const char *username)
 }
 
 static gboolean
+get_uid_for_user (const char *username,
+                  uid_t      *uid)
+{
+        gboolean res;
+        char *command_line;
+        char *output, *error_output;
+        gint exit_code;
+        GError *error;
+
+        g_assert (username != NULL);
+        g_assert (uid != NULL);
+
+        command_line = g_strdup_printf ("id -u -- '%s'", username);
+
+        error = NULL;
+        output = NULL;
+        error_output = NULL;
+        res = g_spawn_command_line_sync (command_line, &output, &error_output, &exit_code, &error);
+        if (!res) {
+                g_warning ("Could not run '%s'", error->message);
+
+                if (error != NULL) {
+                        g_warning ("(error output: %s)", error_output);
+                        g_error_free (error);
+                }
+        } else if (!WIFEXITED (exit_code)) {
+                if (WIFSIGNALED (exit_code)) {
+                        g_warning ("Command '%s' died from signal %d",
+                                   command_line, WTERMSIG (exit_code));
+                } else {
+                        g_warning ("Command '%s' died unexpectedly",
+                                   command_line);
+                }
+        } else if (WEXITSTATUS (exit_code) != 0) {
+                g_warning ("Command '%s' exited unsuccessfully with code: %d",
+                           command_line, WEXITSTATUS (exit_code));
+        } else {
+                long number;
+                char *end;
+                static const long long max_uid = (1LL << (sizeof (uid_t) * 8)) - 1;
+
+                g_assert (sizeof (uid_t) <= sizeof (long));
+
+                number = strtol (output, &end, 10);
+
+                if (*end != '\n' && *end != '\r' && *end != '\0') {
+                        res = FALSE;
+                        g_warning ("Command '%s' return unparseable output: '%s'",
+                                   command_line, output);
+                } else if (number < 0 || number > max_uid) {
+                        g_warning ("Command '%s' return out of range uid: %ld",
+                                   command_line, number);
+                        res = FALSE;
+                } else {
+                        res = TRUE;
+                        *uid = (uid_t) number;
+                }
+        }
+        g_free (output);
+        g_free (error_output);
+        g_free (command_line);
+
+        return res;
+}
+
+static gboolean
+get_gid_for_user (const char *username,
+                  gid_t      *gid)
+{
+        gboolean res;
+        char *command_line;
+        char *output, *error_output;
+        gint exit_code;
+        GError *error;
+
+        g_assert (username != NULL);
+        g_assert (gid != NULL);
+
+        command_line = g_strdup_printf ("id -g -- '%s'", username);
+
+        error = NULL;
+        output = NULL;
+        error_output = NULL;
+        res = g_spawn_command_line_sync (command_line, &output, &error_output, &exit_code, &error);
+        if (!res) {
+                g_warning ("Could not run '%s'", error->message);
+
+                if (error != NULL) {
+                        g_warning ("(error output: %s)", error_output);
+                        g_error_free (error);
+                }
+        } else if (!WIFEXITED (exit_code)) {
+                if (WIFSIGNALED (exit_code)) {
+                        g_warning ("Command '%s' died from signal %d",
+                                   command_line, WTERMSIG (exit_code));
+                } else {
+                        g_warning ("Command '%s' died unexpectedly",
+                                   command_line);
+                }
+        } else if (WEXITSTATUS (exit_code) != 0) {
+                g_warning ("Command '%s' exited unsuccessfully with code: %d",
+                           command_line, WEXITSTATUS (exit_code));
+        } else {
+                long number;
+                char *end;
+                static const long long max_gid = (1LL << (sizeof (gid_t) * 8)) - 1;
+
+                g_assert (sizeof (gid_t) <= sizeof (long));
+
+                number = strtol (output, &end, 10);
+
+                if (*end != '\n' && *end != '\r' && *end != '\0') {
+                        res = FALSE;
+                        g_warning ("Command '%s' return unparseable output: '%s'",
+                                   command_line, output);
+                } else if (number < 0 || number > max_gid) {
+                        g_warning ("Command '%s' return out of range gid: %ld",
+                                   command_line, number);
+                        res = FALSE;
+                } else {
+                        res = TRUE;
+                        *gid = (gid_t) number;
+                }
+        }
+        g_free (output);
+        g_free (error_output);
+        g_free (command_line);
+
+        return res;
+}
+
+static gboolean
 _get_uid_and_gid_for_user (const char *username,
                            uid_t      *uid,
                            gid_t      *gid)
 {
-        struct passwd *passwd_entry;
-
         g_assert (username != NULL);
         g_assert (uid != NULL);
         g_assert (gid != NULL);
 
-        errno = 0;
-        gdm_get_pwent_for_name (username, &passwd_entry);
-
-        if (passwd_entry == NULL) {
+        if (!get_uid_for_user (username, uid)) {
                 return FALSE;
         }
 
-        *uid = passwd_entry->pw_uid;
-        *gid = passwd_entry->pw_gid;
+        if (!get_gid_for_user (username, gid)) {
+                return FALSE;
+        }
 
         return TRUE;
 }
