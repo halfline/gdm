@@ -68,7 +68,6 @@ on_task_toggled (GdmTaskList    *widget,
         if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button))) {
 
                 GList     *task_node;
-
                 /* Sort the list such that the tasks the user clicks last end
                  * up first.  This doesn't change the order in which the tasks
                  * appear in the UI, but will affect which tasks we implicitly
@@ -135,7 +134,6 @@ activate_first_available_task (GdmTaskList *task_list)
 
                 node = node->next;
         }
-
 }
 
 static void
@@ -218,8 +216,15 @@ gdm_task_list_remove_task (GdmTaskList *task_list,
                            GdmTask     *task)
 {
         GtkWidget *button;
+        GList     *node;
 
-        task_list->priv->tasks = g_list_remove (task_list->priv->tasks, task);
+        node = g_list_find (task_list->priv->tasks, task);
+
+        if (node == NULL) {
+                return;
+        }
+
+        task_list->priv->tasks = g_list_delete_link (task_list->priv->tasks, node);
 
         button = g_object_get_data (G_OBJECT (task), "gdm-task-list-button");
 
