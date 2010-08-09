@@ -454,7 +454,9 @@ set_log_in_button_mode (GdmGreeterLoginWindow *login_window,
         if (login_window->priv->login_button_handler_id > 0) {
                 g_signal_handler_disconnect (button, login_window->priv->login_button_handler_id);
                 login_window->priv->login_button_handler_id = 0;
-       }
+        }
+
+        g_list_foreach (login_window->priv->tasks, (GFunc) hide_task_actions, NULL);
 
         switch (mode) {
         case LOGIN_BUTTON_HIDDEN:
@@ -660,6 +662,7 @@ reset_task (GdmTask               *task,
         login_window->priv->tasks_to_enable = g_list_remove (login_window->priv->tasks_to_enable, task);
 
         gdm_task_list_remove_task (GDM_TASK_LIST (login_window->priv->conversation_list), task);
+        hide_task_actions (task);
         gdm_conversation_reset (GDM_CONVERSATION (task));
         return FALSE;
 }
