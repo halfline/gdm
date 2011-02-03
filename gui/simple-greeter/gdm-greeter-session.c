@@ -295,8 +295,7 @@ on_cancelled (GdmGreeterLoginWindow *login_window,
 }
 
 static void
-on_disconnected (GdmGreeterLoginWindow *login_window,
-                 GdmGreeterSession     *session)
+on_disconnected (GdmGreeterSession     *session)
 {
         gdm_greeter_client_call_disconnect (session->priv->client);
 }
@@ -374,6 +373,10 @@ toggle_panel (GdmGreeterSession *session,
                                           "session-selected",
                                           G_CALLBACK (on_select_session),
                                           session);
+                g_signal_connect_swapped (session->priv->panel,
+                                          "disconnected",
+                                          G_CALLBACK (on_disconnected),
+                                          session);
 
                 gtk_widget_show (session->priv->panel);
         } else {
@@ -423,10 +426,6 @@ toggle_login_window (GdmGreeterSession *session,
                 g_signal_connect (session->priv->login_window,
                                   "cancelled",
                                   G_CALLBACK (on_cancelled),
-                                  session);
-                g_signal_connect (session->priv->login_window,
-                                  "disconnected",
-                                  G_CALLBACK (on_disconnected),
                                   session);
                 g_signal_connect (session->priv->login_window,
                                   "start-session",
