@@ -1167,6 +1167,23 @@ on_greeter_connected (GdmGreeterServer *greeter_server,
 }
 
 static void
+on_greeter_disconnected (GdmGreeterServer *greeter_server,
+                         GdmSimpleSlave   *slave)
+{
+        gboolean display_is_local;
+
+        g_debug ("GdmSimpleSlave: Greeter disconnected");
+
+        g_object_get (slave,
+                      "display-is-local", &display_is_local,
+                      NULL);
+
+        if ( ! display_is_local) {
+                gdm_slave_stopped (GDM_SLAVE (slave));
+        }
+}
+
+static void
 on_start_session_when_ready (GdmGreeterServer *session,
                              const char       *service_name,
                              GdmSimpleSlave   *slave)
@@ -1372,6 +1389,10 @@ start_greeter (GdmSimpleSlave *slave)
         g_signal_connect (slave->priv->greeter_server,
                           "connected",
                           G_CALLBACK (on_greeter_connected),
+                          slave);
+        g_signal_connect (slave->priv->greeter_server,
+                          "disconnected",
+                          G_CALLBACK (on_greeter_disconnected),
                           slave);
         g_signal_connect (slave->priv->greeter_server,
                           "cancelled",
