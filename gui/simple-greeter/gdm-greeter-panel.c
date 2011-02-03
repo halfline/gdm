@@ -105,6 +105,7 @@ enum {
         LANGUAGE_SELECTED,
         LAYOUT_SELECTED,
         SESSION_SELECTED,
+        DISCONNECTED,
         NUMBER_OF_SIGNALS
 };
 
@@ -615,9 +616,10 @@ do_system_stop (void)
 }
 
 static void
-do_disconnect (void)
+do_disconnect (GtkWidget       *widget,
+               GdmGreeterPanel *panel)
 {
-        gtk_main_quit ();
+        g_signal_emit (panel, signals[DISCONNECTED], 0);
 }
 
 static gboolean
@@ -880,7 +882,7 @@ setup_panel (GdmGreeterPanel *panel)
 
                 if (! panel->priv->display_is_local) {
                         menu_item = gtk_menu_item_new_with_label ("Disconnect");
-                        g_signal_connect (G_OBJECT (menu_item), "activate", G_CALLBACK (do_disconnect), NULL);
+                        g_signal_connect (G_OBJECT (menu_item), "activate", G_CALLBACK (do_disconnect), panel);
                         gtk_menu_shell_append (GTK_MENU_SHELL (panel->priv->shutdown_menu), menu_item);
                 } else if (get_show_restart_buttons (panel)) {
                         if (can_suspend ()) {
@@ -1053,6 +1055,17 @@ gdm_greeter_panel_class_init (GdmGreeterPanelClass *klass)
                                                                "display is local",
                                                                FALSE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+        signals [DISCONNECTED] =
+                g_signal_new ("disconnected",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdmGreeterPanelClass, disconnected),
+                              NULL,
+                              NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE,
+                              0);
 
         g_type_class_add_private (klass, sizeof (GdmGreeterPanelPrivate));
 }
