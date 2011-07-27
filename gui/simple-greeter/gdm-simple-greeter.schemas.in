@@ -38,7 +38,7 @@
       <applyto>/apps/gdm/simple-greeter/logo_icon_name</applyto>
       <owner>gdm-simple-greeter</owner>
       <type>string</type>
-      <default>computer</default>
+      <default>start-here</default>
       <locale name="C">
         <short>Icon name to use for greeter logo</short>
         <long>Set to the themed icon name to use for the greeter logo.</long>
