@@ -10,20 +10,20 @@
 # drtvasudevan <agnihot3@gmail.com>, 2006.
 # Dr.T.Vasudevan <agnihot3@gmail.com>, 2007, 2009.
 # I. Felix <ifelix@redhat.com>, 2008, 2009.
-# Priyadharsini <priyafelix@gmail.com>, 2008.
-# Dr,T,Vasudevan <agnihot3@gmail.com>, 2009, 2010.
+# Priyadharsini <priyafelix@gmail.com>, 2008, 2010.
+# I Felix <ifelix@redhat.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: gdm.master.ta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-18 08:56+0530\n"
-"PO-Revision-Date: 2010-02-18 08:57+0530\n"
-"Last-Translator: Dr,T,Vasudevan <agnihot3@gmail.com>\n"
-"Language-Team: Tamil <Ubuntu-l10n-tam@lists.ubuntu.com>>\n"
+"POT-Creation-Date: 2010-07-26 19:08+0530\n"
+"PO-Revision-Date: 2010-07-27 16:18+0530\n"
+"Last-Translator: I Felix <ifelix@redhat.com>\n"
+"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 0.3\n"
+"X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\\n"
 "\n"
 "\n"
@@ -34,23 +34,23 @@ msgstr ""
 "\n"
 "\n"
 
-#: ../common/gdm-common.c:437
+#: ../common/gdm-common.c:456
 #, c-format
 msgid "/dev/urandom is not a character device"
 msgstr "/dev/urandom ஒரு எழுத்து சாதனம் அல்ல"
 
-#: ../daemon/factory-slave-main.c:177 ../daemon/product-slave-main.c:181
-#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:183
+#: ../daemon/factory-slave-main.c:178 ../daemon/product-slave-main.c:182
+#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:184
 msgid "Display ID"
 msgstr "காட்சி ID"
 
-#: ../daemon/factory-slave-main.c:177 ../daemon/product-slave-main.c:181
-#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:183
+#: ../daemon/factory-slave-main.c:178 ../daemon/product-slave-main.c:182
+#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:184
 msgid "ID"
 msgstr "ID"
 
-#: ../daemon/factory-slave-main.c:189 ../daemon/product-slave-main.c:193
-#: ../daemon/simple-slave-main.c:195 ../daemon/xdmcp-chooser-slave-main.c:195
+#: ../daemon/factory-slave-main.c:190 ../daemon/product-slave-main.c:194
+#: ../daemon/simple-slave-main.c:196 ../daemon/xdmcp-chooser-slave-main.c:196
 msgid "GNOME Display Manager Slave"
 msgstr "GNOME காட்சி மேலாளர் அடிமை"
 
@@ -59,28 +59,28 @@ msgstr "GNOME காட்சி மேலாளர் அடிமை"
 msgid "could not find user \"%s\" on system"
 msgstr "கணினியில் பயனர் \"%s\" ஐ காண முடியவில்லை"
 
-#: ../daemon/gdm-factory-slave.c:203 ../daemon/gdm-simple-slave.c:225
+#: ../daemon/gdm-factory-slave.c:211 ../daemon/gdm-simple-slave.c:242
 msgid "Unable to initialize login system"
 msgstr "புகுபதிவு முறைமையை துவக்க முடியவில்லை"
 
-#: ../daemon/gdm-factory-slave.c:235 ../daemon/gdm-simple-slave.c:261
+#: ../daemon/gdm-factory-slave.c:245 ../daemon/gdm-simple-slave.c:280
 msgid "Unable to authenticate user"
 msgstr "பயனரை அங்கீகரிக்க முடியவில்லை"
 
-#: ../daemon/gdm-factory-slave.c:257 ../daemon/gdm-simple-slave.c:315
+#: ../daemon/gdm-factory-slave.c:269 ../daemon/gdm-simple-slave.c:338
 msgid "Unable to authorize user"
 msgstr "பயனரை அங்கீகரிக்க முடியவில்லை"
 
-#: ../daemon/gdm-factory-slave.c:279 ../daemon/gdm-simple-slave.c:443
+#: ../daemon/gdm-factory-slave.c:293 ../daemon/gdm-simple-slave.c:473
 msgid "Unable to establish credentials"
 msgstr "மதிப்புகளை கொடுக்க முடியவில்லை"
 
-#: ../daemon/gdm-factory-slave.c:302 ../daemon/gdm-simple-slave.c:473
+#: ../daemon/gdm-factory-slave.c:318 ../daemon/gdm-simple-slave.c:506
 msgid "Unable to open session"
-msgstr "அமர்வை  துவக்க முடியவில்லை"
+msgstr "அமர்வை திறக்க முடியவில்லை"
 
-#: ../daemon/gdm-factory-slave.c:683 ../daemon/gdm-product-slave.c:449
-#: ../daemon/gdm-simple-slave.c:1151
+#: ../daemon/gdm-factory-slave.c:715 ../daemon/gdm-product-slave.c:516
+#: ../daemon/gdm-simple-slave.c:1486
 msgid ""
 "Could not start the X server (your graphical environment) due to some "
 "internal error. Please contact your system administrator or check your "
@@ -92,52 +92,49 @@ msgstr ""
 "பரிசோதிக்கவும். நடுவில் இந்த காட்சி செயல் இழக்கப்படும். பிரச்சினை சரியான உடன் GDM ஐ "
 "துவக்குக."
 
-#: ../daemon/gdm-server.c:246
+#: ../daemon/gdm-server.c:253
 #, c-format
 msgid "%s: failed to connect to parent display '%s'"
 msgstr "%s:பெற்றோர் காட்சியை திறப்பதற்கு இணைக்க முடியவில்லை %s"
 
-#: ../daemon/gdm-server.c:361
+#: ../daemon/gdm-server.c:368
 #, c-format
 msgid "Server was to be spawned by user %s but that user doesn't exist"
 msgstr "இந்த பயனர் %s சேவையகம் உருவாக்கப்பட்டது ஆனால் அந்த பயனர் இப்போது இல்லை"
 
-#: ../daemon/gdm-server.c:372 ../daemon/gdm-welcome-session.c:554
+#: ../daemon/gdm-server.c:379 ../daemon/gdm-server.c:399
+#: ../daemon/gdm-welcome-session.c:561 ../daemon/gdm-welcome-session.c:581
 #, c-format
 msgid "Couldn't set groupid to %d"
 msgstr "%d க்கு குழுக்குறியீடு அமைக்க முடியவில்லை"
 
-#: ../daemon/gdm-server.c:378 ../daemon/gdm-welcome-session.c:560
+#: ../daemon/gdm-server.c:385 ../daemon/gdm-welcome-session.c:567
 #, c-format
 msgid "initgroups () failed for %s"
 msgstr "initgroups() %sக்கு செயலிழக்கப்பட்டது"
 
-#: ../daemon/gdm-server.c:384 ../daemon/gdm-welcome-session.c:566
+#: ../daemon/gdm-server.c:391 ../daemon/gdm-welcome-session.c:573
 #, c-format
 msgid "Couldn't set userid to %d"
 msgstr "%dக்கு பயனர் அடையாளத்தை அமைக்க முடியவில்லை"
 
-#: ../daemon/gdm-server.c:392 ../daemon/gdm-welcome-session.c:574
-msgid "Couldn't set groupid to 0"
-msgstr "0 விற்கு குழு அடையாளம் அமைக்க முடியவில்லை"
-
-#: ../daemon/gdm-server.c:431
+#: ../daemon/gdm-server.c:438
 #, c-format
 msgid "%s: Could not open logfile for display %s!"
 msgstr "%s: இந்த காட்சிக்கான பதிவு கோப்பினை திறக்க முடியவில்லை %s!"
 
-#: ../daemon/gdm-server.c:442 ../daemon/gdm-server.c:448
-#: ../daemon/gdm-server.c:454
+#: ../daemon/gdm-server.c:449 ../daemon/gdm-server.c:455
+#: ../daemon/gdm-server.c:461
 #, c-format
 msgid "%s: Error setting %s to %s"
 msgstr "%s: பிழை %s ஐ %s க்கு அமைக்க"
 
-#: ../daemon/gdm-server.c:469
+#: ../daemon/gdm-server.c:481
 #, c-format
 msgid "%s: Server priority couldn't be set to %d: %s"
 msgstr "%s: X சேவையகத்தின் முன்னுரிமை %dக்கு அமைக்க முடியவில்லை: %s"
 
-#: ../daemon/gdm-server.c:621
+#: ../daemon/gdm-server.c:634
 #, c-format
 msgid "%s: Empty server command for display %s"
 msgstr "%s: காட்சிக்கான வெற்றுசேவையகம் கட்டளை %s"
@@ -166,208 +163,208 @@ msgstr "காட்சி சாதனம்"
 msgid "The display device"
 msgstr "காட்சி சாதனம்"
 
-#: ../daemon/gdm-session-worker.c:1298
+#: ../daemon/gdm-session-worker.c:1310
 #, c-format
 msgid "error initiating conversation with authentication system - %s"
 msgstr "கணினியை அங்கீகரித்தலுடன் உரையாடலை துவக்குவதில் பிழை - %s"
 
-#: ../daemon/gdm-session-worker.c:1299
+#: ../daemon/gdm-session-worker.c:1311
 msgid "general failure"
 msgstr "பொது தோல்வி"
 
-#: ../daemon/gdm-session-worker.c:1300
+#: ../daemon/gdm-session-worker.c:1312
 msgid "out of memory"
 msgstr "நினைவகம் இல்லை"
 
-#: ../daemon/gdm-session-worker.c:1301
+#: ../daemon/gdm-session-worker.c:1313
 msgid "application programmer error"
 msgstr "பயன்பாடு நிரலாளர் பிழை"
 
-#: ../daemon/gdm-session-worker.c:1302
+#: ../daemon/gdm-session-worker.c:1314
 msgid "unknown error"
 msgstr "தெரியாத பிழை "
 
-#: ../daemon/gdm-session-worker.c:1309
+#: ../daemon/gdm-session-worker.c:1321
 msgid "Username:"
 msgstr "பயனர் பெயர்:"
 
-#: ../daemon/gdm-session-worker.c:1315
+#: ../daemon/gdm-session-worker.c:1327
 #, c-format
 msgid "error informing authentication system of preferred username prompt - %s"
 msgstr "விருப்பட்ட பயனர்பெயரை காட்டும் போது அங்கீரிக்கும் கணினியை தெரிவிப்பதில் பிழை - %s"
 
-#: ../daemon/gdm-session-worker.c:1329
+#: ../daemon/gdm-session-worker.c:1341
 #, c-format
 msgid "error informing authentication system of user's hostname - %s"
 msgstr "பயனர் புரவலன் பெயரை அங்கீரிக்கும் கணினியை தெரிவிப்பதில் பிழை - %s"
 
-#: ../daemon/gdm-session-worker.c:1344
+#: ../daemon/gdm-session-worker.c:1356
 #, c-format
 msgid "error informing authentication system of user's console - %s"
 msgstr "பயனர் பணியகத்தை அங்கீரிக்கும் கணினியை தெரிவிப்பதில் பிழை - %s"
 
-#: ../daemon/gdm-session-worker.c:1357
+#: ../daemon/gdm-session-worker.c:1369
 #, c-format
 msgid "error informing authentication system of display string - %s"
 msgstr "காட்சி சரத்தை அங்கீரிக்கும் கணினியை தெரிவிப்பதில் பிழை - %s"
 
-#: ../daemon/gdm-session-worker.c:1372
+#: ../daemon/gdm-session-worker.c:1384
 #, c-format
 msgid "error informing authentication system of display xauth credentials - %s"
 msgstr "xauth காட்சியை அங்கீரிக்கும் கணினியை தெரிவிப்பதில் பிழை - %s"
 
-#: ../daemon/gdm-session-worker.c:1661 ../daemon/gdm-session-worker.c:1680
+#: ../daemon/gdm-session-worker.c:1687 ../daemon/gdm-session-worker.c:1704
 #, c-format
 msgid "no user account available"
 msgstr "பயனர் கணக்கு இல்லை"
 
-#: ../daemon/gdm-session-worker.c:1707
+#: ../daemon/gdm-session-worker.c:1731
 msgid "Unable to change to user"
 msgstr "பயனருக்கு மாற்ற இயவில்லை"
 
-#: ../daemon/gdm-welcome-session.c:532
+#: ../daemon/gdm-welcome-session.c:535
 #, c-format
 msgid "User %s doesn't exist"
 msgstr "%s பயனர் வெளியேறவில்லை"
 
-#: ../daemon/gdm-welcome-session.c:539
+#: ../daemon/gdm-welcome-session.c:542
 #, c-format
 msgid "Group %s doesn't exist"
 msgstr "%s குழு வெளியேறவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:596
+#: ../daemon/gdm-xdmcp-display-factory.c:604
 msgid "Could not create socket!"
 msgstr "சாக்கெட்டை உருவாக்க முடியவில்லை!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:865
+#: ../daemon/gdm-xdmcp-display-factory.c:873
 #, c-format
 msgid "Denied XDMCP query from host %s"
 msgstr "XDMCP வினாவை புரவலன் %sலிருந்து மறுக்கிறது"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1023
-#: ../daemon/gdm-xdmcp-display-factory.c:1247
+#: ../daemon/gdm-xdmcp-display-factory.c:1031
+#: ../daemon/gdm-xdmcp-display-factory.c:1255
 msgid "Could not extract authlist from packet"
 msgstr "authlistஐ பாக்கெட்டிலிருந்து பிரிக்கிறது"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1036
-#: ../daemon/gdm-xdmcp-display-factory.c:1262
+#: ../daemon/gdm-xdmcp-display-factory.c:1044
+#: ../daemon/gdm-xdmcp-display-factory.c:1270
 msgid "Error in checksum"
 msgstr "checksumஇல் பிழை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1515
+#: ../daemon/gdm-xdmcp-display-factory.c:1523
 msgid "Bad address"
 msgstr "தவறான முகவரி"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1599
+#: ../daemon/gdm-xdmcp-display-factory.c:1607
 #, c-format
 msgid "%s: Could not read display address"
 msgstr "%s: காட்டப்படும் முகவரியை படிக்க இயலவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1607
+#: ../daemon/gdm-xdmcp-display-factory.c:1615
 #, c-format
 msgid "%s: Could not read display port number"
 msgstr "%s: காட்சி துறை எண்ணை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1616
+#: ../daemon/gdm-xdmcp-display-factory.c:1624
 #, c-format
 msgid "%s: Could not extract authlist from packet"
 msgstr "%s: பாக்கெட்டிலிருந்து authlist ஐ பிரிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1636
+#: ../daemon/gdm-xdmcp-display-factory.c:1644
 #, c-format
 msgid "%s: Error in checksum"
 msgstr "%s: checksumஇல் பிழை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2155
+#: ../daemon/gdm-xdmcp-display-factory.c:2200
 #, c-format
 msgid "%s: Got REQUEST from banned host %s"
 msgstr "%s: தடுக்கப்பட்ட புரவலன் %sலிருந்து REQUEST பெறப்பட்டது"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2165
-#: ../daemon/gdm-xdmcp-display-factory.c:2521
-#: ../daemon/gdm-xdmcp-display-factory.c:2775
+#: ../daemon/gdm-xdmcp-display-factory.c:2210
+#: ../daemon/gdm-xdmcp-display-factory.c:2568
+#: ../daemon/gdm-xdmcp-display-factory.c:2822
 #, c-format
 msgid "%s: Could not read Display Number"
 msgstr "%s: காட்சி எண்ணை வாசிக்க இயலவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2172
+#: ../daemon/gdm-xdmcp-display-factory.c:2217
 #, c-format
 msgid "%s: Could not read Connection Type"
 msgstr "%s: இணைப்பு வகையை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2179
+#: ../daemon/gdm-xdmcp-display-factory.c:2224
 #, c-format
 msgid "%s: Could not read Client Address"
 msgstr "%s: வாடிக்கையாளர் முகவரியை வாசிக்க இயலவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2187
+#: ../daemon/gdm-xdmcp-display-factory.c:2232
 #, c-format
 msgid "%s: Could not read Authentication Names"
 msgstr "%s: அங்கீகார பெயர்களை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2196
+#: ../daemon/gdm-xdmcp-display-factory.c:2241
 #, c-format
 msgid "%s: Could not read Authentication Data"
 msgstr "%s: அங்கீகார தரவை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2206
+#: ../daemon/gdm-xdmcp-display-factory.c:2251
 #, c-format
 msgid "%s: Could not read Authorization List"
 msgstr "%s: அங்கீகார பட்டியலை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2225
+#: ../daemon/gdm-xdmcp-display-factory.c:2270
 #, c-format
 msgid "%s: Could not read Manufacturer ID"
 msgstr "%s: உற்பத்தியாளர் IDஐ வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2252
+#: ../daemon/gdm-xdmcp-display-factory.c:2297
 #, c-format
 msgid "%s: Failed checksum from %s"
 msgstr "%s: %sஇலிருந்து checksum ஐ சோதிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2505
+#: ../daemon/gdm-xdmcp-display-factory.c:2552
 #, c-format
 msgid "%s: Got Manage from banned host %s"
 msgstr "%s: தடுக்கப்பட்ட புரவலன் %sலிருந்து மேலாண்மை செய்யப்படுகிறது"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2514
-#: ../daemon/gdm-xdmcp-display-factory.c:2782
+#: ../daemon/gdm-xdmcp-display-factory.c:2561
+#: ../daemon/gdm-xdmcp-display-factory.c:2829
 #, c-format
 msgid "%s: Could not read Session ID"
 msgstr "%s: அமர்வு ID ஐ வாசிக்க இயலவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2528
+#: ../daemon/gdm-xdmcp-display-factory.c:2575
 #, c-format
 msgid "%s: Could not read Display Class"
 msgstr "%s: காட்சி வகுப்பை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2634
-#: ../daemon/gdm-xdmcp-display-factory.c:2684
-#: ../daemon/gdm-xdmcp-display-factory.c:2690
+#: ../daemon/gdm-xdmcp-display-factory.c:2681
+#: ../daemon/gdm-xdmcp-display-factory.c:2731
+#: ../daemon/gdm-xdmcp-display-factory.c:2737
 #, c-format
 msgid "%s: Could not read address"
 msgstr "%s: முகவரியை வாசிக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2765
+#: ../daemon/gdm-xdmcp-display-factory.c:2812
 #, c-format
 msgid "%s: Got KEEPALIVE from banned host %s"
 msgstr "%s: KEEPALIVE தடைசெய்யப்பட்ட புரவலன் %sஐ பெற்றது"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2854
+#: ../daemon/gdm-xdmcp-display-factory.c:2902
 msgid "GdmXdmcpDisplayFactory: Could not read XDMCP header!"
 msgstr "GdmXdmcpDisplayFactory: XDMCP தலைப்பை வாசிக்க முடியவில்லை!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2860
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:226
+#: ../daemon/gdm-xdmcp-display-factory.c:2908
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:227
 msgid "XMDCP: Incorrect XDMCP version!"
 msgstr "XDMCP: தவறான XDMCP பதிப்பு!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2866
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:232
+#: ../daemon/gdm-xdmcp-display-factory.c:2914
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:233
 msgid "XMDCP: Unable to parse address"
 msgstr "XMDCP: முகவரியை பகுக்க முடியவில்லை"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:3311
+#: ../daemon/gdm-xdmcp-display-factory.c:3359
 #, c-format
 msgid "Could not get server hostname: %s!"
 msgstr "சேவையரின் புரவலப்பெயரை பெற முடியவில்லை: %s!"
@@ -392,66 +389,70 @@ msgstr "Authdir %s வெளியேற்றப்படவில்லை. �
 msgid "Authdir %s is not a directory. Aborting."
 msgstr "Authdir %s அடைவில் இல்லை. கைவிடப்படுகிறது."
 
-#: ../daemon/main.c:365
+#: ../daemon/main.c:371
 #, c-format
 msgid "Authdir %s is not owned by user %d, group %d. Aborting."
 msgstr "Authdir %s இல் பயனர் %d, குழு %d க்கு உரிமை இல்லை. எனவே கைவிடப்படுகிறது."
 
-#: ../daemon/main.c:372
+#: ../daemon/main.c:378
 #, c-format
 msgid "Authdir %s has wrong permissions %o. Should be %o. Aborting."
 msgstr ""
 "Authdir %s, இல் தவறான அனுமதி உள்ளது %o. இருக்க வேண்டியது %o. எனவே கைவிடப்படுகிறது."
 
-#: ../daemon/main.c:409
+#: ../daemon/main.c:415
 #, c-format
 msgid "Can't find the GDM user '%s'. Aborting!"
 msgstr "GDM பயனர் (%s) கண்டுபிடிக்க முடியவில்லை. கைவிடப்படுகிறது!"
 
-#: ../daemon/main.c:415
+#: ../daemon/main.c:421
 msgid "The GDM user should not be root. Aborting!"
 msgstr "GDM பயனர் rootஆக இருக்கக்கூடாது. கைவிடப்படுகிறது!"
 
-#: ../daemon/main.c:421
+#: ../daemon/main.c:427
 #, c-format
 msgid "Can't find the GDM group '%s'. Aborting!"
 msgstr "GDM குழு '%s' ஐ கண்டுபிடிக்க முடியவில்லை. கைவிடப்படுகிறது!"
 
-#: ../daemon/main.c:427
+#: ../daemon/main.c:433
 msgid "The GDM group should not be root. Aborting!"
 msgstr "GDM குழு 'ரூட்டாக இருக்கக்கூடாது. கைவிடப்படுகிறது!"
 
-#: ../daemon/main.c:533
+#: ../daemon/main.c:539
 msgid "Make all warnings fatal"
 msgstr "அனைத்து எச்சரிக்கைகளையும் முக்கியமானதாக்கு"
 
-#: ../daemon/main.c:534
+#: ../daemon/main.c:540
 msgid "Exit after a time - for debugging"
 msgstr "ஒரு நேரத்தில் பிழைக்கு - பின் வெளியேறு"
 
-#: ../daemon/main.c:535
+#: ../daemon/main.c:541
 msgid "Print GDM version"
 msgstr "GDM பதிப்பை அச்சிடு"
 
-#: ../daemon/main.c:550
+#: ../daemon/main.c:556
 msgid "GNOME Display Manager"
 msgstr "GNOME காட்சி மேலாளர்"
 
 #. make sure the pid file doesn't get wiped
-#: ../daemon/main.c:611
+#: ../daemon/main.c:622
 msgid "Only the root user can run GDM"
-msgstr "ரூட் பயனர் மட்டுமே GDM இயக்கலாம்."
+msgstr "ரூட் பயனர் மட்டுமே GDM இயக்கும்"
 
 #: ../daemon/session-worker-main.c:156
 msgid "GNOME Display Manager Session Worker"
 msgstr "GNOME (க்நோம் காட்சி மேலாளர்) ஓடவில்லை."
+
+#: ../daemon/simple-slave-main.c:184
+msgid "Force X to start on active vt"
+msgstr "Xஐ செயலிலுள்ள vtஇல் துவக்க வலியுறுத்தவும்"
 
 #: ../data/greeter-autostart/at-spi-registryd-wrapper.desktop.in.in.h:1
 msgid "AT SPI Registry Wrapper"
 msgstr "AT SPI தொகுபதிவக ரேப்பர்"
 
 #: ../data/greeter-autostart/gdm-simple-greeter.desktop.in.in.h:1
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:1434
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:2346
 msgid "Login Window"
 msgstr "புகுபதிவு சாளரம்"
 
@@ -503,11 +504,11 @@ msgstr "PolicyKit அங்கீகார முகவர்"
 msgid "Select System"
 msgstr "கணினியைத் தேர்ந்தெடு"
 
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:213
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:215
 msgid "XDMCP: Could not create XDMCP buffer!"
 msgstr "XDMCP: XDMCP இடையகத்தை உருவாக்க முடியவில்லை!"
 
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:220
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:221
 msgid "XDMCP: Could not read XDMCP header!"
 msgstr "XDMCP: XDMCP தலைப்பை வாசிக்க முடியவில்லை!"
 
@@ -519,29 +520,29 @@ msgstr "மதிப்பு"
 msgid "percentage of time complete"
 msgstr "முடிக்கப்பட்ட நேரத்தின் சதவீதம்"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1281
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1451
 msgid "Inactive Text"
 msgstr "செயலிழந்த உரை"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1282
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1452
 msgid "The text to use in the label if the user hasn't picked an item yet"
 msgstr "இன்னும் பயனர் எந்த உருப்படியையும் எடுக்காதவரை லேபிளில் பயன்படுத்த வேண்டிய உரை"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1290
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1460
 msgid "Active Text"
 msgstr "செயலிலுள்ள உரை"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1291
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1461
 msgid "The text to use in the label if the user has picked an item"
 msgstr "இன்னும் பயனர் எந்த உருப்படியையும் எடுத்த வரை லேபிளில் பயன்படுத்த வேண்டிய உரை"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1300
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1470
 msgid "List Visible"
 msgstr "தெரிவதை பட்டியல் இடு"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1301
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1471
 msgid "Whether the chooser list is visible"
-msgstr "தேர்வாளர் பட்டியல் தெரிய வேண்டுமா"
+msgstr "தேர்வாளர் பட்டியல் தெரிகிறதா இல்லையா"
 
 #. translators: This is the time format to use when both
 #. * the date and time with seconds are being shown together.
@@ -564,14 +565,6 @@ msgstr "%a %b %e, %l:%M %p"
 msgid "%a %l:%M:%S %p"
 msgstr "%a %l:%M:%S %p"
 
-#. translators: This is the time format to use for the date
-#.
-#: ../gui/simple-greeter/gdm-clock-widget.c:87
-#: ../gui/simple-greeter/gdm-clock-widget.c:94
-#, c-format
-msgid "%x"
-msgstr "%x"
-
 #. translators: This is the time format to use when there is
 #. * no date, just weekday and time without seconds.
 #.
@@ -579,16 +572,17 @@ msgstr "%x"
 msgid "%a %l:%M %p"
 msgstr "%a %l:%M %p"
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:278
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:312
 msgid "Automatically logging in..."
 msgstr "தானாகவே உள்நுழைதல் ..."
 
 #. need to wait for response from backend
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:570
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:816
 msgid "Cancelling..."
 msgstr "ரத்துசெய்யப்படுகிறது..."
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:870
+#. just wait for the user to select language and stuff
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:1348
 msgid "Select language and click Log In"
 msgstr "மொழியைத் தேர்ந்தெடுக்கவும் மற்றும் உள்நுழைய கிளிக் செய்யவும்"
 
@@ -597,6 +591,8 @@ msgid "Computer Name"
 msgstr "கணினியின் பெயர்"
 
 #: ../gui/simple-greeter/gdm-greeter-login-window.ui.h:2
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:308
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:488
 msgid "Log In"
 msgstr "புகுபதிவு"
 
@@ -604,23 +600,23 @@ msgstr "புகுபதிவு"
 msgid "Version"
 msgstr "பதிப்பு"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:852
+#: ../gui/simple-greeter/gdm-greeter-panel.c:738
 msgid "Panel"
 msgstr "பலகம்"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:923
+#: ../gui/simple-greeter/gdm-greeter-panel.c:803
 msgid "Shutdown Options..."
-msgstr "முழு நிறுத்த தேர்வுகள்..."
+msgstr "பணிநிறுத்த விருப்பங்கள்..."
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:945
+#: ../gui/simple-greeter/gdm-greeter-panel.c:825
 msgid "Suspend"
 msgstr "இடைநிறுத்தம்"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:950
+#: ../gui/simple-greeter/gdm-greeter-panel.c:830
 msgid "Restart"
 msgstr "மறுதுவக்கம்"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:954
+#: ../gui/simple-greeter/gdm-greeter-panel.c:834
 msgid "Shut Down"
 msgstr "பணி நிறுத்தம்"
 
@@ -628,31 +624,31 @@ msgstr "பணி நிறுத்தம்"
 msgid "Languages"
 msgstr "மொழிகள்"
 
-#: ../gui/simple-greeter/gdm-language-chooser-widget.c:274
+#: ../gui/simple-greeter/gdm-language-chooser-widget.c:276
 msgid "_Languages:"
 msgstr "மொழிகள் (_L):"
 
-#: ../gui/simple-greeter/gdm-language-chooser-widget.c:275
+#: ../gui/simple-greeter/gdm-language-chooser-widget.c:277
 msgid "_Language:"
 msgstr "மொழி (_L):"
-
-#: ../gui/simple-greeter/gdm-language-option-widget.c:274
-msgid "Language"
-msgstr "மொழி"
 
 #. translators: This brings up a dialog
 #. * with a list of languages to choose from
 #.
-#: ../gui/simple-greeter/gdm-language-option-widget.c:243
+#: ../gui/simple-greeter/gdm-language-option-widget.c:231
 msgctxt "language"
 msgid "Other..."
 msgstr "மற்ற..."
 
-#: ../gui/simple-greeter/gdm-language-option-widget.c:244
+#: ../gui/simple-greeter/gdm-language-option-widget.c:232
 msgid "Choose a language from the full list of available languages."
 msgstr "மொத்த அட்டவணையிலுள்ள கிடைக்கப்பெறும் மொழிகளிலிருந்து ஒரு மொழியை தேர்ந்தெடு "
 
-#: ../gui/simple-greeter/gdm-languages.c:698
+#: ../gui/simple-greeter/gdm-language-option-widget.c:262
+msgid "Language"
+msgstr "மொழி"
+
+#: ../gui/simple-greeter/gdm-languages.c:699
 msgid "Unspecified"
 msgstr "குறிப்பிடப்படாத"
 
@@ -660,51 +656,51 @@ msgstr "குறிப்பிடப்படாத"
 msgid "Keyboard layouts"
 msgstr "விசைப்பலகை அமைப்புகள்"
 
-#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:200
-#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:201
+#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:202
+#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:203
 msgid "_Keyboard:"
 msgstr "விசைப்பலகை (_K):"
-
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:266
-msgid "Keyboard"
-msgstr "விசைப்பலகை"
 
 #. translators: This brings up a dialog of
 #. * available keyboard layouts
 #.
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:235
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:223
 msgctxt "keyboard"
 msgid "Other..."
 msgstr "மற்ற..."
 
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:236
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:224
 msgid "Choose a keyboard layout from the full list of available layouts."
 msgstr ""
 "இருக்கும் அமைப்புகளில் முழு பட்டியலிலிருந்து ஒரு விசைப்பலகை அமைப்பை தேர்ந்தெடுக்கவும்"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:507
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:254
+msgid "Keyboard"
+msgstr "விசைப்பலகை"
+
+#: ../gui/simple-greeter/gdm-option-widget.c:505
 msgid "Label Text"
 msgstr "லேபில் உரை"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:508
+#: ../gui/simple-greeter/gdm-option-widget.c:506
 msgid "The text to use as a label"
 msgstr "லேபிலாக பயன்படுத்தப்படும் உரை"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:515
+#: ../gui/simple-greeter/gdm-option-widget.c:513
 msgid "Icon name"
 msgstr "சின்னத்தின் பெயர்"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:516
+#: ../gui/simple-greeter/gdm-option-widget.c:514
 msgid "The icon to use with the label"
 msgstr "சின்னத்தை லெபிலுடன் பயன்படுத்தவும் "
 
-#: ../gui/simple-greeter/gdm-option-widget.c:524
+#: ../gui/simple-greeter/gdm-option-widget.c:522
 msgid "Default Item"
 msgstr "முன்னிருப்பு உருப்படி"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:525
+#: ../gui/simple-greeter/gdm-option-widget.c:523
 msgid "The ID of the default item"
-msgstr "முன்னிருப்பு உருப்படியின் IDகுறியீடு"
+msgstr "முன்னிருப்பு உருப்படியின் ID"
 
 #: ../gui/simple-greeter/gdm-recent-option-widget.c:310
 msgid "Max Item Count"
@@ -730,7 +726,7 @@ msgstr "தொலை புகுபதிவு"
 
 #: ../gui/simple-greeter/gdm-session-option-widget.c:162
 msgid "Session"
-msgstr "அமர்வுகள்"
+msgstr "அமர்வு"
 
 #: ../gui/simple-greeter/gdm-simple-greeter.schemas.in.h:1
 msgid "Banner message text"
@@ -907,56 +903,139 @@ msgstr "இயங்குகிறதா?"
 
 #: ../gui/simple-greeter/gdm-timer.c:166
 msgid "Whether the timer is currently ticking"
-msgstr "நேரம் காட்டி தற்போது டிக் செய்கிறதா"
+msgstr "நேரம் காட்டி தற்போது சரியாக டிக் செய்கிறதா"
 
-#: ../gui/simple-greeter/gdm-user.c:245
-msgid "Manager"
-msgstr "மேலாளர்"
-
-#: ../gui/simple-greeter/gdm-user.c:246
-msgid "The user manager object this user is controlled by."
-msgstr "பயனர் மேலளர் பொருள் இந்த பயனரால் கட்டுப்படுத்தப்படுகிறது."
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:188
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:487
+#, c-format
+msgid "Log in as %s"
+msgstr "%s ஆக உள்நுழை"
 
 #. translators: This option prompts
 #. * the user to type in a username
 #. * manually instead of choosing from
 #. * a list.
 #.
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:166
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:244
 msgctxt "user"
 msgid "Other..."
 msgstr "மற்ற..."
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:167
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:245
 msgid "Choose a different account"
 msgstr "வேறுப்பட்ட கணக்கினை தேர்ந்தெடுக்கவும்"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:179
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:259
 msgid "Guest"
 msgstr "விருந்தினர்"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:180
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:260
 msgid "Login as a temporary guest"
 msgstr "தற்காலிக விருந்தினராக புகுபதிவு செய்"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:193
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:275
 msgid "Automatic Login"
 msgstr "தானாகவே உள்நுழைதல்"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:194
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:276
 msgid "Automatically login to the system after selecting options"
 msgstr "விருப்பங்களை தேர்ந்தெடுத்த பின் தானாகவே கணினிக்குள் உள்நுழையவும்"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:385
-#, c-format
-msgid "Log in as %s"
-msgstr "%s ஆக உள்நுழை"
-
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:738
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:999
 msgid "Currently logged in"
 msgstr "தற்போது உள்நுழைந்தது"
 
-#: ../gui/user-switch-applet/applet.c:164
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:182
+msgid "Password Authentication"
+msgstr "கடவுச்சொல் அங்கீகாரம்"
+
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:188
+msgid "Log into session with username and password"
+msgstr "பயனர்பெயர் மற்றும் கடவுச்சொல்லுடன் அமர்வில் உள்நுழையவும்"
+
+#: ../gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c:184
+msgid "Fingerprint Authentication"
+msgstr "விரல்ரேகை அங்கீகாரம்"
+
+#: ../gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c:190
+msgid "Log into session with fingerprint"
+msgstr "விரல்ரேகையுடன் அமைவில் உள்நுழையவும்"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:305
+msgid "Smartcard Authentication"
+msgstr "ஸ்மார்ட்கார்ட் அங்கீகாரம்"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:311
+msgid "Log into session with smartcard"
+msgstr "ஸ்மார்ட்கார்டுடன் உள்நுழையவும்"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:186
+msgid "Module Path"
+msgstr "தொகுதி பாதை"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:187
+msgid "path to smartcard PKCS #11 driver"
+msgstr "ஸ்மார்ட் கார்ட் PKCS #11 இயக்கிக்கு பாதை"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:530
+msgid "received error or hang up from event source"
+msgstr "நிகழ்வு மூலத்திலிருந்து பிழை பெறப்பட்டது அல்லது செயலிழக்கப்பட்டது"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:664
+#, c-format
+msgid "NSS security system could not be initialized"
+msgstr "NSS பாதுகாப்பு அமைப்பை துவக்க முடியவில்லை"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:792
+#, c-format
+msgid "no suitable smartcard driver could be found"
+msgstr "சரியான ஸ்மார்ட்கார்ட் இயக்கி காணப்படவில்லை"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:806
+#, c-format
+msgid "smartcard driver '%s' could not be loaded"
+msgstr "ஸ்மார்ட் கார்ட் இயக்கி '%s' ஐ ஏற்ற முடியவில்லை"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:879
+#, c-format
+msgid "could not watch for incoming card events - %s"
+msgstr "உள்வரும் கார்ட் நிகழ்வுகளுக்கு பார்க்க முடியவில்லை - %s"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:1277
+#, c-format
+msgid "encountered unexpected error while waiting for smartcard events"
+msgstr "ஸ்மார்ட் கார்ட் நிகழ்வுகளுக்கு காத்திருக்கையில் எதிர்பாராத பிழை ஏற்பட்டது"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:156
+msgid "Slot ID"
+msgstr "இட ID"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:157
+msgid "The slot the card is in"
+msgstr "கார்ட் உள்ள இடம்"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:163
+msgid "Slot Series"
+msgstr "இட வரிசைகள்"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:164
+msgid "per-slot card identifier"
+msgstr "இடத்திற்கான கார்ட் அடையாளப்படுத்தி"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:170
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:171
+msgid "name"
+msgstr "பெயர்"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:175
+msgid "Module"
+msgstr "தொகுதி"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:176
+msgid "smartcard driver"
+msgstr "ஸ்மார்ட் கார்ட் இயக்கி"
+
+#: ../gui/user-switch-applet/applet.c:162
 msgid ""
 "The User Switch Applet is free software; you can redistribute it and/or "
 "modify it under the terms of the GNU General Public License as published by "
@@ -968,7 +1047,7 @@ msgstr ""
 "the Free Software Foundation; either version 2 of the License, or (at your "
 "option) any later version."
 
-#: ../gui/user-switch-applet/applet.c:168
+#: ../gui/user-switch-applet/applet.c:166
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -980,7 +1059,7 @@ msgstr ""
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 
-#: ../gui/user-switch-applet/applet.c:172
+#: ../gui/user-switch-applet/applet.c:170
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -990,78 +1069,78 @@ msgstr ""
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA "
 
-#: ../gui/user-switch-applet/applet.c:186
+#: ../gui/user-switch-applet/applet.c:184
 msgid "A menu to quickly switch between users."
 msgstr "பயனர்களுக்கு இடையில் ஒரு மெனு விரைவாக மாற்றப்பட்டது."
 
-#: ../gui/user-switch-applet/applet.c:190
+#: ../gui/user-switch-applet/applet.c:188
 msgid "translator-credits"
-msgstr "I. Felix <ifelix@redhat.com> 2008"
+msgstr "I. Felix <ifelix@redhat.com>Dr.T.Vasudevan <agnihot3@gmail.com>"
 
-#: ../gui/user-switch-applet/applet.c:649
-#: ../gui/user-switch-applet/applet.c:788
-#: ../gui/user-switch-applet/applet.c:827
+#: ../gui/user-switch-applet/applet.c:656
+#: ../gui/user-switch-applet/applet.c:785
+#: ../gui/user-switch-applet/applet.c:824
 #, c-format
 msgid "Can't lock screen: %s"
 msgstr "திரையினை மூட இயலவில்லை: %s"
 
-#: ../gui/user-switch-applet/applet.c:671
+#: ../gui/user-switch-applet/applet.c:678
 #, c-format
 msgid "Can't temporarily set screensaver to blank screen: %s"
 msgstr "தற்காலிகமாக ஸ்கிரீன்சேவரை காலித் திரையாக அமைக்க முடியவில்லை: %s"
 
-#: ../gui/user-switch-applet/applet.c:886
+#: ../gui/user-switch-applet/applet.c:883
 #, c-format
 msgid "Can't logout: %s"
 msgstr "வெளியேற இயலவில்லை: %s"
 
-#: ../gui/user-switch-applet/applet.c:970
+#: ../gui/user-switch-applet/applet.c:967
 msgid "Available"
 msgstr "கிடைக்கக்கூடிய"
 
-#: ../gui/user-switch-applet/applet.c:971
+#: ../gui/user-switch-applet/applet.c:968
 msgid "Invisible"
 msgstr "பார்க்கமுடியாத"
 
-#: ../gui/user-switch-applet/applet.c:972
+#: ../gui/user-switch-applet/applet.c:969
 msgid "Busy"
 msgstr "பரபரப்பாக"
 
-#: ../gui/user-switch-applet/applet.c:973
+#: ../gui/user-switch-applet/applet.c:970
 msgid "Away"
 msgstr "அப்பால்"
 
-#: ../gui/user-switch-applet/applet.c:1133
+#: ../gui/user-switch-applet/applet.c:1117
 msgid "Account Information"
 msgstr "கணக்கு தகவல்"
 
-#: ../gui/user-switch-applet/applet.c:1145
+#: ../gui/user-switch-applet/applet.c:1129
 msgid "System Preferences"
 msgstr "கணினி முன்னுரிமைகள்"
 
-#: ../gui/user-switch-applet/applet.c:1161
+#: ../gui/user-switch-applet/applet.c:1143
 msgid "Lock Screen"
 msgstr "திரையை மூடு"
 
 #. Only show if not locked down
-#: ../gui/user-switch-applet/applet.c:1172
+#: ../gui/user-switch-applet/applet.c:1154
 msgid "Switch User"
 msgstr "பயனர் மாற்றி"
 
 #. Only show switch user if there are other users
-#: ../gui/user-switch-applet/applet.c:1183
+#: ../gui/user-switch-applet/applet.c:1165
 msgid "Quit..."
 msgstr "வெளியேறுதல்..."
 
-#: ../gui/user-switch-applet/applet.c:1304
+#: ../gui/user-switch-applet/applet.c:1271
 msgid "Unknown"
 msgstr "தெரியாத"
 
-#: ../gui/user-switch-applet/applet.c:1422
+#: ../gui/user-switch-applet/applet.c:1384
 msgid "User Switch Applet"
 msgstr "பயனர் மாற்றி ஆப்லெட்"
 
-#: ../gui/user-switch-applet/applet.c:1436
+#: ../gui/user-switch-applet/applet.c:1399
 msgid "Change account settings and status"
 msgstr "கணக்கின் அமைப்புகளையும் மற்றும் நிலைகளையும் மாற்றவும்"
 
@@ -1091,7 +1170,7 @@ msgstr "பயனர்கள் மற்றும் குழுக்கள�
 
 #: ../utils/gdmflexiserver.c:61
 msgid "Only the VERSION command is supported"
-msgstr "வெர்ஷன் கட்டளைக்கு மட்டுமே ஆதரவுள்ளது"
+msgstr "பதிப்பு கட்டளைக்கு மட்டுமே துணைபுரிகிறது"
 
 #: ../utils/gdmflexiserver.c:61
 msgid "COMMAND"
@@ -1136,6 +1215,15 @@ msgstr "திரையை ஒரு படமெடுக்கவும்"
 #~ msgid "Enable debugging code"
 #~ msgstr "பிழைத்திருத்த குறியீட்டை செயல்படுத்து"
 
+#~ msgid "id"
+#~ msgstr "id"
+
+#~ msgid "Couldn't set groupid to 0"
+#~ msgstr "0 விற்கு குழு அடையாளம் அமைக்க முடியவில்லை"
+
+#~ msgid "%x"
+#~ msgstr "%x"
+
 #~ msgid "Authentication Dialog"
 #~ msgstr "அங்கீகார உரையாடல்"
 
@@ -1145,8 +1233,11 @@ msgstr "திரையை ஒரு படமெடுக்கவும்"
 #~ msgid "Enable debugging mode for the greeter."
 #~ msgstr "வாழ்த்துரைகு பிழைத்திருத்த முறைமையை செயல்படுத்து."
 
-#~ msgid "id"
-#~ msgstr "id"
+#~ msgid "Manager"
+#~ msgstr "மேலாளர்"
+
+#~ msgid "The user manager object this user is controlled by."
+#~ msgstr "பயனர் மேலளர் பொருள் இந்த பயனரால் கட்டுப்படுத்தப்படுகிறது."
 
 #~ msgid "%a %b %e"
 #~ msgstr "%a %b %e"
