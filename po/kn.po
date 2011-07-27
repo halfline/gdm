@@ -7,33 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gdm.master.kn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 16:01+0530\n"
-"PO-Revision-Date: 2010-04-22 16:02+0530\n"
+"POT-Creation-Date: 2010-07-26 19:08+0530\n"
+"PO-Revision-Date: 2010-07-27 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
-"Language-Team: kn-IN <>\n"
+"Language-Team: kn_IN <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../common/gdm-common.c:437
+#: ../common/gdm-common.c:456
 #, c-format
 msgid "/dev/urandom is not a character device"
 msgstr "/dev/urandom ವು ಒಂದು ಕ್ಯಾರಕ್ಟರ್ ಸಾಧನವಲ್ಲ"
 
-#: ../daemon/factory-slave-main.c:177 ../daemon/product-slave-main.c:181
-#: ../daemon/simple-slave-main.c:181 ../daemon/xdmcp-chooser-slave-main.c:183
+#: ../daemon/factory-slave-main.c:178 ../daemon/product-slave-main.c:182
+#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:184
 msgid "Display ID"
 msgstr "ಪ್ರದರ್ಶಕ ಐಡಿ"
 
-#: ../daemon/factory-slave-main.c:177 ../daemon/product-slave-main.c:181
-#: ../daemon/simple-slave-main.c:181 ../daemon/xdmcp-chooser-slave-main.c:183
+#: ../daemon/factory-slave-main.c:178 ../daemon/product-slave-main.c:182
+#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:184
 msgid "ID"
-msgstr "ಐಡಿ"
+msgstr "ID"
 
-#: ../daemon/factory-slave-main.c:189 ../daemon/product-slave-main.c:193
-#: ../daemon/simple-slave-main.c:193 ../daemon/xdmcp-chooser-slave-main.c:195
+#: ../daemon/factory-slave-main.c:190 ../daemon/product-slave-main.c:194
+#: ../daemon/simple-slave-main.c:196 ../daemon/xdmcp-chooser-slave-main.c:196
 msgid "GNOME Display Manager Slave"
 msgstr "GNOME ಪ್ರದರ್ಶಕ ವ್ಯವಸ್ಥಾಪಕ ಸೇವಕ"
 
@@ -42,28 +42,28 @@ msgstr "GNOME ಪ್ರದರ್ಶಕ ವ್ಯವಸ್ಥಾಪಕ ಸೇವ�
 msgid "could not find user \"%s\" on system"
 msgstr "ಗಣಕದಲ್ಲಿ \"%s\" ಬಳಕೆದಾರನನ್ನು ಪತ್ತೆ ಮಾಡಲಾಗಲಿಲ್ಲ"
 
-#: ../daemon/gdm-factory-slave.c:203 ../daemon/gdm-simple-slave.c:225
+#: ../daemon/gdm-factory-slave.c:211 ../daemon/gdm-simple-slave.c:242
 msgid "Unable to initialize login system"
 msgstr "ಪ್ರವೇಶ ವ್ಯವಸ್ಥೆಯನ್ನು ಆರಂಭಿಸಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-factory-slave.c:235 ../daemon/gdm-simple-slave.c:261
+#: ../daemon/gdm-factory-slave.c:245 ../daemon/gdm-simple-slave.c:280
 msgid "Unable to authenticate user"
 msgstr "ಬಳಕೆದಾರನನ್ನು ದೃಢೀಕರಿಸಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-factory-slave.c:257 ../daemon/gdm-simple-slave.c:315
+#: ../daemon/gdm-factory-slave.c:269 ../daemon/gdm-simple-slave.c:338
 msgid "Unable to authorize user"
 msgstr "ಬಳಕೆದಾರನಿಗೆ ಅಧಿಕಾರ ನೀಡಲಾಗಲಿಲ್ಲ"
 
-#: ../daemon/gdm-factory-slave.c:279 ../daemon/gdm-simple-slave.c:443
+#: ../daemon/gdm-factory-slave.c:293 ../daemon/gdm-simple-slave.c:473
 msgid "Unable to establish credentials"
 msgstr "ನಂಬಿಕೆಯನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-factory-slave.c:302 ../daemon/gdm-simple-slave.c:473
+#: ../daemon/gdm-factory-slave.c:318 ../daemon/gdm-simple-slave.c:506
 msgid "Unable to open session"
 msgstr "ಅಧಿವೇಶನವನ್ನು ತೆರೆಯಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-factory-slave.c:683 ../daemon/gdm-product-slave.c:449
-#: ../daemon/gdm-simple-slave.c:1153
+#: ../daemon/gdm-factory-slave.c:715 ../daemon/gdm-product-slave.c:516
+#: ../daemon/gdm-simple-slave.c:1486
 msgid ""
 "Could not start the X server (your graphical environment) due to some "
 "internal error. Please contact your system administrator or check your "
@@ -75,51 +75,51 @@ msgstr ""
 "syslog ಅನ್ನು ನೋಡಿ. ಈ ಸಮಯದಲ್ಲಿ ನಿಮ್ಮ ಪ್ರದರ್ಶಕವು ನಿಷ್ಕ್ರಿಯಗೊಂಡಿರುತ್ತದೆ.  ತೊಂದರೆಯು "
 "ನಿವಾರಿಸಲ್ಪಟ್ಟ ನಂತರ ದಯವಿಟ್ಟು GDM ಅನ್ನು ಪುನಃ ಆರಂಭಿಸಿ."
 
-#: ../daemon/gdm-server.c:246
+#: ../daemon/gdm-server.c:253
 #, c-format
 msgid "%s: failed to connect to parent display '%s'"
 msgstr "%s: ಮೂಲವಾದ '%s' ಪ್ರದರ್ಶಕಕ್ಕೆ ಸಂಪರ್ಕಹೊಂದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-server.c:361
+#: ../daemon/gdm-server.c:368
 #, c-format
 msgid "Server was to be spawned by user %s but that user doesn't exist"
 msgstr ""
 "%s ಬಳಕೆದಾರನಿಂದ ಪರಿಚಾರಕವು ತಯಾರಿಸಲ್ಪಡ(ಸ್ಪಾನ್) ಬೇಕಿತ್ತು ಆದರೆ ಆ ಬಳಕೆದಾರ ಅಸ್ತಿತ್ವದಲ್ಲೇ "
 "ಇಲ್ಲ"
 
-#: ../daemon/gdm-server.c:372 ../daemon/gdm-server.c:392
-#: ../daemon/gdm-welcome-session.c:554 ../daemon/gdm-welcome-session.c:574
+#: ../daemon/gdm-server.c:379 ../daemon/gdm-server.c:399
+#: ../daemon/gdm-welcome-session.c:561 ../daemon/gdm-welcome-session.c:581
 #, c-format
 msgid "Couldn't set groupid to %d"
 msgstr "ಸಮೂಹಐಡಿಯನ್ನು %d ಗೆ ಹೊಂದಿಸಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-server.c:378 ../daemon/gdm-welcome-session.c:560
+#: ../daemon/gdm-server.c:385 ../daemon/gdm-welcome-session.c:567
 #, c-format
 msgid "initgroups () failed for %s"
 msgstr "initgroups () %s ಗೆ ವಿಫಲಗೊಂಡಿವೆ"
 
-#: ../daemon/gdm-server.c:384 ../daemon/gdm-welcome-session.c:566
+#: ../daemon/gdm-server.c:391 ../daemon/gdm-welcome-session.c:573
 #, c-format
 msgid "Couldn't set userid to %d"
 msgstr "ಬಳಕೆದಾರ ಐಡಿಯನ್ನು %d ಗೆ ಹೊಂದಿಸಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-server.c:431
+#: ../daemon/gdm-server.c:438
 #, c-format
 msgid "%s: Could not open logfile for display %s!"
 msgstr "%s: %s ಪ್ರದರ್ಶಕಕ್ಕಾಗಿ ದಾಖಲೆಕಡತವನ್ನು ತೆಗೆಯಲಾಗಲಿಲ್ಲ!"
 
-#: ../daemon/gdm-server.c:442 ../daemon/gdm-server.c:448
-#: ../daemon/gdm-server.c:454
+#: ../daemon/gdm-server.c:449 ../daemon/gdm-server.c:455
+#: ../daemon/gdm-server.c:461
 #, c-format
 msgid "%s: Error setting %s to %s"
 msgstr "%s: %s ಅನ್ನು %s ಗೆ ಹೊಂದಿಸುವಲ್ಲಿ ದೋಷ ಎದುರಾಗಿದೆ"
 
-#: ../daemon/gdm-server.c:469
+#: ../daemon/gdm-server.c:481
 #, c-format
 msgid "%s: Server priority couldn't be set to %d: %s"
 msgstr "%s: ಪರಿಚಾರಕದ ಆದ್ಯತೆಯನ್ನು %d ಗೆ ಹೊಂದಿಸಲಾಗಿಲ್ಲ: %s"
 
-#: ../daemon/gdm-server.c:621
+#: ../daemon/gdm-server.c:634
 #, c-format
 msgid "%s: Empty server command for display %s"
 msgstr "%s: %s ಪ್ರದರ್ಶಕಕ್ಕಾಗಿ ಖಾಲಿಯಾದ ಪರಿಚಾರಕ ಆಜ್ಞೆ"
@@ -148,208 +148,208 @@ msgstr "ಪ್ರದರ್ಶಕ ಸಾಧನ"
 msgid "The display device"
 msgstr "ಪ್ರದರ್ಶಕ ಸಾಧನ"
 
-#: ../daemon/gdm-session-worker.c:1298
+#: ../daemon/gdm-session-worker.c:1310
 #, c-format
 msgid "error initiating conversation with authentication system - %s"
 msgstr "ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯೊಂದಿಗೆ ಸಂವಾದವನ್ನು ಆರಂಭಿಸುವಲ್ಲಿ ದೋಷ - %s"
 
-#: ../daemon/gdm-session-worker.c:1299
+#: ../daemon/gdm-session-worker.c:1311
 msgid "general failure"
 msgstr "ಸಾಮಾನ್ಯ ವಿಫಲತೆ"
 
-#: ../daemon/gdm-session-worker.c:1300
+#: ../daemon/gdm-session-worker.c:1312
 msgid "out of memory"
 msgstr "ಮೆಮೊರಿ ಇಲ್ಲ"
 
-#: ../daemon/gdm-session-worker.c:1301
+#: ../daemon/gdm-session-worker.c:1313
 msgid "application programmer error"
 msgstr "ಅನ್ವಯ ಪ್ರೊಗ್ರಾಮರ್ ದೋಷ"
 
-#: ../daemon/gdm-session-worker.c:1302
+#: ../daemon/gdm-session-worker.c:1314
 msgid "unknown error"
 msgstr "ಅಜ್ಞಾತ ದೋಷ"
 
-#: ../daemon/gdm-session-worker.c:1309
+#: ../daemon/gdm-session-worker.c:1321
 msgid "Username:"
 msgstr "ಬಳಕೆದಾರಹೆಸರು:"
 
-#: ../daemon/gdm-session-worker.c:1315
+#: ../daemon/gdm-session-worker.c:1327
 #, c-format
 msgid "error informing authentication system of preferred username prompt - %s"
 msgstr "ಸೂಚಿಸಲಾದ ಬಳಕೆದಾರರಹೆಸರಿನ ಪ್ರಾಂಪ್ಟ್‍ನ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯನ್ನು ತಿಳಿಸುವಲ್ಲಿ ದೋಷ - %s"
 
-#: ../daemon/gdm-session-worker.c:1329
+#: ../daemon/gdm-session-worker.c:1341
 #, c-format
 msgid "error informing authentication system of user's hostname - %s"
 msgstr "ಬಳಕೆದಾರರ ಅತಿಥೇಯಹೆಸರಿನ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯನ್ನು ತಿಳಿಸುವಲ್ಲಿ ದೋಷ - %s"
 
-#: ../daemon/gdm-session-worker.c:1344
+#: ../daemon/gdm-session-worker.c:1356
 #, c-format
 msgid "error informing authentication system of user's console - %s"
 msgstr "ಬಳಕೆದಾರರ ಕನ್ಸೋಲ್‍ನ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯನ್ನು ತಿಳಿಸುವಲ್ಲಿ ದೋಷ - %s"
 
-#: ../daemon/gdm-session-worker.c:1357
+#: ../daemon/gdm-session-worker.c:1369
 #, c-format
 msgid "error informing authentication system of display string - %s"
 msgstr "ಪ್ರದರ್ಶಕ ವಾಕ್ಯದ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯನ್ನು ತಿಳಿಸುವಲ್ಲಿ ದೋಷ - %s"
 
-#: ../daemon/gdm-session-worker.c:1372
+#: ../daemon/gdm-session-worker.c:1384
 #, c-format
 msgid "error informing authentication system of display xauth credentials - %s"
 msgstr "ಪ್ರದರ್ಶಕ xauth ಮನ್ನಣೆಗಳ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯನ್ನು ತಿಳಿಸುವಲ್ಲಿ ದೋಷ - %s"
 
-#: ../daemon/gdm-session-worker.c:1661 ../daemon/gdm-session-worker.c:1680
+#: ../daemon/gdm-session-worker.c:1687 ../daemon/gdm-session-worker.c:1704
 #, c-format
 msgid "no user account available"
 msgstr "ಯಾವುದೆ ಬಳಕೆದಾರ ಖಾತೆಯು ಲಭ್ಯವಿಲ್ಲ"
 
-#: ../daemon/gdm-session-worker.c:1707
+#: ../daemon/gdm-session-worker.c:1731
 msgid "Unable to change to user"
 msgstr "ಬಳಕೆದಾರನಿಗೆ ಬದಲಾಯಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
 
-#: ../daemon/gdm-welcome-session.c:532
+#: ../daemon/gdm-welcome-session.c:535
 #, c-format
 msgid "User %s doesn't exist"
 msgstr "%s ಬಳಕೆದಾರ ಅಸ್ತಿತ್ವದಲ್ಲಿಲ್ಲ"
 
-#: ../daemon/gdm-welcome-session.c:539
+#: ../daemon/gdm-welcome-session.c:542
 #, c-format
 msgid "Group %s doesn't exist"
 msgstr "%s ಸಮೂಹವು ಅಸ್ತಿತ್ವದಲ್ಲಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:596
+#: ../daemon/gdm-xdmcp-display-factory.c:604
 msgid "Could not create socket!"
 msgstr "ಸಾಕೆಟ್ ಅನ್ನು ಸೃಜಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:865
+#: ../daemon/gdm-xdmcp-display-factory.c:873
 #, c-format
 msgid "Denied XDMCP query from host %s"
 msgstr "%s ಅತಿಥೇಯದಿಂದ XDMCP ಮನವಿಯು ತಿರಸ್ಕರಿಸಲ್ಪಟ್ಟಿದೆ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1023
-#: ../daemon/gdm-xdmcp-display-factory.c:1247
+#: ../daemon/gdm-xdmcp-display-factory.c:1031
+#: ../daemon/gdm-xdmcp-display-factory.c:1255
 msgid "Could not extract authlist from packet"
 msgstr "ಪ್ಯಾಕೆಟ್‍ನಿಂದ authlist ಅನ್ನು ಹೊರತೆಗೆಯಲಾಗಲಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1036
-#: ../daemon/gdm-xdmcp-display-factory.c:1262
+#: ../daemon/gdm-xdmcp-display-factory.c:1044
+#: ../daemon/gdm-xdmcp-display-factory.c:1270
 msgid "Error in checksum"
 msgstr "checksum ನಲ್ಲಿ ದೋಷ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1515
+#: ../daemon/gdm-xdmcp-display-factory.c:1523
 msgid "Bad address"
 msgstr "ಸರಿಯಲ್ಲದ ವಿಳಾಸ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1599
+#: ../daemon/gdm-xdmcp-display-factory.c:1607
 #, c-format
 msgid "%s: Could not read display address"
 msgstr "%s: ಪ್ರದರ್ಶಕ ವಿಳಾಸವನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1607
+#: ../daemon/gdm-xdmcp-display-factory.c:1615
 #, c-format
 msgid "%s: Could not read display port number"
 msgstr "%s: ಪ್ರದರ್ಶಕ ಸಂಪರ್ಕಸ್ಥಾನ ಸಂಖ್ಯೆಯನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1616
+#: ../daemon/gdm-xdmcp-display-factory.c:1624
 #, c-format
 msgid "%s: Could not extract authlist from packet"
 msgstr "%s:ಪ್ಯಾಕೆಟ್‍ನಿಂದ authlist ಅನ್ನು ಹೊರತೆಗೆಯಲಾಗಲಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1636
+#: ../daemon/gdm-xdmcp-display-factory.c:1644
 #, c-format
 msgid "%s: Error in checksum"
 msgstr "%s: checksum ನಲ್ಲಿ ದೋಷ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2155
+#: ../daemon/gdm-xdmcp-display-factory.c:2200
 #, c-format
 msgid "%s: Got REQUEST from banned host %s"
 msgstr "%s: ಪ್ರತಿಬಂಧಿಸಲಾದ %s ಅತಿಥೇಯದಿಂದ REQUEST ಪಡೆದುಕೊಳ್ಳಲಾಗಿದೆ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2165
-#: ../daemon/gdm-xdmcp-display-factory.c:2521
-#: ../daemon/gdm-xdmcp-display-factory.c:2775
+#: ../daemon/gdm-xdmcp-display-factory.c:2210
+#: ../daemon/gdm-xdmcp-display-factory.c:2568
+#: ../daemon/gdm-xdmcp-display-factory.c:2822
 #, c-format
 msgid "%s: Could not read Display Number"
 msgstr "%s: ಪ್ರದರ್ಶಕದ ಸಂಖ್ಯೆಯನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2172
+#: ../daemon/gdm-xdmcp-display-factory.c:2217
 #, c-format
 msgid "%s: Could not read Connection Type"
 msgstr "%s: ಸಂಪರ್ಕದ ಪ್ರಕಾರವನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2179
+#: ../daemon/gdm-xdmcp-display-factory.c:2224
 #, c-format
 msgid "%s: Could not read Client Address"
 msgstr "%s: ಕ್ಲೈಂಟ್ ವಿಳಾಸವನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2187
+#: ../daemon/gdm-xdmcp-display-factory.c:2232
 #, c-format
 msgid "%s: Could not read Authentication Names"
 msgstr "%s: ದೃಢೀಕರಣ ಹೆಸರುಗಳನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2196
+#: ../daemon/gdm-xdmcp-display-factory.c:2241
 #, c-format
 msgid "%s: Could not read Authentication Data"
 msgstr "%s: ದೃಢೀಕರಣ ದತ್ತಾಂಶವನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2206
+#: ../daemon/gdm-xdmcp-display-factory.c:2251
 #, c-format
 msgid "%s: Could not read Authorization List"
 msgstr "%s: ದೃಢೀಕರಣ ಪಟ್ಟಿಯನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2225
+#: ../daemon/gdm-xdmcp-display-factory.c:2270
 #, c-format
 msgid "%s: Could not read Manufacturer ID"
 msgstr "%s: ತಯಾರಕರ ಐಡಿಯನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2252
+#: ../daemon/gdm-xdmcp-display-factory.c:2297
 #, c-format
 msgid "%s: Failed checksum from %s"
 msgstr "%s: %s ನಿಂದ checksum ವಿಫಲಗೊಂಡಿದೆ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2505
+#: ../daemon/gdm-xdmcp-display-factory.c:2552
 #, c-format
 msgid "%s: Got Manage from banned host %s"
 msgstr "%s: ಪ್ರತಿಬಂಧಿಸಲಾದ ಅತಿಥೇಯ %s ದಿಂದ ನಿರ್ವಹಣೆಯು ಒದಗಿಬಂದಿದೆ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2514
-#: ../daemon/gdm-xdmcp-display-factory.c:2782
+#: ../daemon/gdm-xdmcp-display-factory.c:2561
+#: ../daemon/gdm-xdmcp-display-factory.c:2829
 #, c-format
 msgid "%s: Could not read Session ID"
 msgstr "%s: ಅಧಿವೇಶನದ ಐಡಿಯನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2528
+#: ../daemon/gdm-xdmcp-display-factory.c:2575
 #, c-format
 msgid "%s: Could not read Display Class"
 msgstr "%s: ಪ್ರದರ್ಶನ ವರ್ಗವನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2634
-#: ../daemon/gdm-xdmcp-display-factory.c:2684
-#: ../daemon/gdm-xdmcp-display-factory.c:2690
+#: ../daemon/gdm-xdmcp-display-factory.c:2681
+#: ../daemon/gdm-xdmcp-display-factory.c:2731
+#: ../daemon/gdm-xdmcp-display-factory.c:2737
 #, c-format
 msgid "%s: Could not read address"
 msgstr "%s: ವಿಳಾಸವನ್ನು ಓದಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2765
+#: ../daemon/gdm-xdmcp-display-factory.c:2812
 #, c-format
 msgid "%s: Got KEEPALIVE from banned host %s"
 msgstr "%s: ಪ್ರತಿಬಂಧಿಸಲಾದ ಅತಿಥೇಯ %s ದಿಂದ KEEPALIVE ಒದಗಿದೆ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2854
+#: ../daemon/gdm-xdmcp-display-factory.c:2902
 msgid "GdmXdmcpDisplayFactory: Could not read XDMCP header!"
 msgstr "GdmXdmcpDisplayFactory: XDMCP ಹೆಡರನ್ನು ಓದಲಾಗಿಲ್ಲ!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2860
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:226
+#: ../daemon/gdm-xdmcp-display-factory.c:2908
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:227
 msgid "XMDCP: Incorrect XDMCP version!"
 msgstr "XMDCP: ಸರಿಯಲ್ಲದ XDMCP ಆವೃತ್ತಿ!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2866
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:232
+#: ../daemon/gdm-xdmcp-display-factory.c:2914
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:233
 msgid "XMDCP: Unable to parse address"
 msgstr "XMDCP: ವಿಳಾಸವನ್ನು ಪಾರ್ಸ್ ಮಾಡಲಾಗಿಲ್ಲ"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:3311
+#: ../daemon/gdm-xdmcp-display-factory.c:3359
 #, c-format
 msgid "Could not get server hostname: %s!"
 msgstr "ಪರಿಚಾರಕದ ಅತಿಥೇಯಹೆಸರನ್ನು ಪಡೆಯಲಾಗಿಲ್ಲ : %s!"
@@ -374,54 +374,54 @@ msgstr "Authdir %s ಅಸ್ತಿತ್ವದಲ್ಲಿಲ್ಲ. ನಿಲ�
 msgid "Authdir %s is not a directory. Aborting."
 msgstr "Authdir %s ಯು ಒಂದು ಕೋಶವಾಗಿಲ್ಲ. ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ."
 
-#: ../daemon/main.c:365
+#: ../daemon/main.c:371
 #, c-format
 msgid "Authdir %s is not owned by user %d, group %d. Aborting."
 msgstr "Authdir %s ಗೆ %d ಬಳಕೆದಾರರು, %d ಸಮೂಹವು ಮಾಲಿಕರಾಗಿಲ್ಲ. ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ."
 
-#: ../daemon/main.c:372
+#: ../daemon/main.c:378
 #, c-format
 msgid "Authdir %s has wrong permissions %o. Should be %o. Aborting."
 msgstr ""
 "Authdir %s ಯು ಸರಿ ಇರದ %o ಅನುಮತಿಗಳನ್ನು ಹೊಂದಿದೆ. ಅದು %o ಆಗಿರಬೇಕಿತ್ತು. "
 "ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ."
 
-#: ../daemon/main.c:409
+#: ../daemon/main.c:415
 #, c-format
 msgid "Can't find the GDM user '%s'. Aborting!"
 msgstr "GDM ಬಳಕೆದಾರ '%s' ನನ್ನು ಪತ್ತೆ ಮಾಡಲಾಗಲಿಲ್ಲ. ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ!"
 
-#: ../daemon/main.c:415
+#: ../daemon/main.c:421
 msgid "The GDM user should not be root. Aborting!"
 msgstr "GDM ಬಳಕೆದಾರನು ನಿರ್ವಾಹಕನಾಗಿರಬಾರದು. ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ!"
 
-#: ../daemon/main.c:421
+#: ../daemon/main.c:427
 #, c-format
 msgid "Can't find the GDM group '%s'. Aborting!"
 msgstr "GDM ಸಮೂಹ '%s' ವನ್ನು ಪತ್ತೆ ಮಾಡಲಾಗಲಿಲ್ಲ. ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ!"
 
-#: ../daemon/main.c:427
+#: ../daemon/main.c:433
 msgid "The GDM group should not be root. Aborting!"
 msgstr "GDM ಸಮೂಹವು ನಿರ್ವಾಹಕರಾಗಿರಬಾರದು. ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ!"
 
-#: ../daemon/main.c:533
+#: ../daemon/main.c:539
 msgid "Make all warnings fatal"
 msgstr "ಎಲ್ಲಾ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಮಾರಕವಾಗಿಸು"
 
-#: ../daemon/main.c:534
+#: ../daemon/main.c:540
 msgid "Exit after a time - for debugging"
 msgstr "ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ನಿರ್ಗಮಿಸು - ದೋಷನಿವಾರಣೆಗಾಗಿ"
 
-#: ../daemon/main.c:535
+#: ../daemon/main.c:541
 msgid "Print GDM version"
 msgstr "GDM ಆವೃತ್ತಿಯನ್ನು ಮುದ್ರಿಸು"
 
-#: ../daemon/main.c:550
+#: ../daemon/main.c:556
 msgid "GNOME Display Manager"
 msgstr "GNOME ಪ್ರದರ್ಶಕ ವ್ಯವಸ್ಥಾಪಕ"
 
 #. make sure the pid file doesn't get wiped
-#: ../daemon/main.c:611
+#: ../daemon/main.c:622
 msgid "Only the root user can run GDM"
 msgstr "ಕೇವಲ ನಿರ್ವಾಹಕರು ಮಾತ್ರ GDM ಅನ್ನು ಚಲಾಯಿಸಬಹುದಾಗಿದೆ"
 
@@ -429,12 +429,16 @@ msgstr "ಕೇವಲ ನಿರ್ವಾಹಕರು ಮಾತ್ರ GDM ಅನ�
 msgid "GNOME Display Manager Session Worker"
 msgstr "GNOME ಪ್ರದರ್ಶಕ ವ್ಯವಸ್ಥಾಪಕ ಅಧಿವೇಶನ ಕೆಲಸಗಾರ"
 
+#: ../daemon/simple-slave-main.c:184
+msgid "Force X to start on active vt"
+msgstr "X ಅನ್ನು ಸಕ್ರಿಯ vt ಯಲ್ಲಿ ತೆರೆಯುವಂತೆ ಒತ್ತಾಯಿಸು"
+
 #: ../data/greeter-autostart/at-spi-registryd-wrapper.desktop.in.in.h:1
 msgid "AT SPI Registry Wrapper"
 msgstr "AT SPI ರಿಜಿಸ್ಟ್ರಿ ವ್ರಾಪರ್"
 
 #: ../data/greeter-autostart/gdm-simple-greeter.desktop.in.in.h:1
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:1456
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:2346
 msgid "Login Window"
 msgstr "ಪ್ರವೇಶ ವಿಂಡೊ"
 
@@ -486,11 +490,11 @@ msgstr "PolicyKit ದೃಢೀಕರಣ ಮಧ್ಯವರ್ತಿ"
 msgid "Select System"
 msgstr "ವ್ಯವಸ್ಥೆಯನ್ನು ಆರಿಸಿ"
 
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:213
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:215
 msgid "XDMCP: Could not create XDMCP buffer!"
 msgstr "XDMCP: XDMCP ಬಫರ್ ಅನ್ನು ನಿರ್ಮಿಸಲಾಗಿಲ್ಲ!"
 
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:220
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:221
 msgid "XDMCP: Could not read XDMCP header!"
 msgstr "XDMCP: XDMCP ಹೆಡರನ್ನು ಓದಲಾಗಿಲ್ಲ!"
 
@@ -502,27 +506,27 @@ msgstr "ಮೌಲ್ಯ"
 msgid "percentage of time complete"
 msgstr "ಪೂರ್ಣಗೊಂಡ ಸಮಯದ ಪ್ರತಿಶತ"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1281
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1451
 msgid "Inactive Text"
 msgstr "ನಿಷ್ಕ್ರಿಯ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1282
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1452
 msgid "The text to use in the label if the user hasn't picked an item yet"
 msgstr "ಬಳಕೆದಾರನು ಒಂದು ಅಂಶವನ್ನು ತೆಗೆದುಕೊಳ್ಳದೇ ಹೋದಲ್ಲಿ ಲೇಬಲ್ಲಿನಲ್ಲಿ ಬಳಸಬೇಕಿರುವ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1290
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1460
 msgid "Active Text"
 msgstr "ಸಕ್ರಿಯ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1291
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1461
 msgid "The text to use in the label if the user has picked an item"
 msgstr "ಬಳಕೆದಾರನು ಒಂದು ಅಂಶವನ್ನು ತೆಗೆದುಕೊಂಡಲ್ಲಿ ಲೇಬಲ್ಲಿನಲ್ಲಿ ಬಳಸಬೇಕಿರುವ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1300
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1470
 msgid "List Visible"
 msgstr "ಗೋಚರಿಸುವ ಪಟ್ಟಿ"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1301
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1471
 msgid "Whether the chooser list is visible"
 msgstr "ಆರಿಸುವ ಪಟ್ಟಿ ಗೋಚರಿಸುತ್ತಿದೆಯೆ"
 
@@ -554,16 +558,17 @@ msgstr "%a %l:%M:%S %p"
 msgid "%a %l:%M %p"
 msgstr "%a %l:%M %p"
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:279
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:312
 msgid "Automatically logging in..."
 msgstr "ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಪ್ರವೇಶಿಸು..."
 
 #. need to wait for response from backend
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:571
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:816
 msgid "Cancelling..."
 msgstr "ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ..."
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:892
+#. just wait for the user to select language and stuff
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:1348
 msgid "Select language and click Log In"
 msgstr "ಭಾಷೆಯನ್ನು ಆರಿಸಿ ಹಾಗು ಪ್ರವೇಶಿಸಲು ಕ್ಲಿಕ್ಕಿಸಿ"
 
@@ -572,6 +577,8 @@ msgid "Computer Name"
 msgstr "ಗಣಕದ ಹೆಸರು"
 
 #: ../gui/simple-greeter/gdm-greeter-login-window.ui.h:2
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:308
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:488
 msgid "Log In"
 msgstr "ಒಳಗೆ ಪ್ರವೇಶಿಸು"
 
@@ -579,23 +586,23 @@ msgstr "ಒಳಗೆ ಪ್ರವೇಶಿಸು"
 msgid "Version"
 msgstr "ಆವೃತ್ತಿ"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:852
+#: ../gui/simple-greeter/gdm-greeter-panel.c:738
 msgid "Panel"
 msgstr "ಫಲಕ"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:923
+#: ../gui/simple-greeter/gdm-greeter-panel.c:803
 msgid "Shutdown Options..."
-msgstr ""
+msgstr "ಸ್ಥಗಿತಗೊಳಿಸುವ ಆಯ್ಕೆಗಳು..."
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:945
+#: ../gui/simple-greeter/gdm-greeter-panel.c:825
 msgid "Suspend"
 msgstr "ತಾತ್ಕಾಲಿಕ ಸ್ಥಗಿತ"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:950
+#: ../gui/simple-greeter/gdm-greeter-panel.c:830
 msgid "Restart"
 msgstr "ಪುನಃ ಆರಂಭಿಸು"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:954
+#: ../gui/simple-greeter/gdm-greeter-panel.c:834
 msgid "Shut Down"
 msgstr "ಮುಚ್ಚು"
 
@@ -603,31 +610,31 @@ msgstr "ಮುಚ್ಚು"
 msgid "Languages"
 msgstr "ಭಾಷೆಗಳು"
 
-#: ../gui/simple-greeter/gdm-language-chooser-widget.c:274
+#: ../gui/simple-greeter/gdm-language-chooser-widget.c:276
 msgid "_Languages:"
 msgstr "ಭಾಷೆಗಳು(_L):"
 
-#: ../gui/simple-greeter/gdm-language-chooser-widget.c:275
+#: ../gui/simple-greeter/gdm-language-chooser-widget.c:277
 msgid "_Language:"
 msgstr "ಭಾಷೆ(_L):"
-
-#: ../gui/simple-greeter/gdm-language-option-widget.c:274
-msgid "Language"
-msgstr "ಭಾಷೆ"
 
 #. translators: This brings up a dialog
 #. * with a list of languages to choose from
 #.
-#: ../gui/simple-greeter/gdm-language-option-widget.c:243
+#: ../gui/simple-greeter/gdm-language-option-widget.c:231
 msgctxt "language"
 msgid "Other..."
 msgstr "ಇತರೆ..."
 
-#: ../gui/simple-greeter/gdm-language-option-widget.c:244
+#: ../gui/simple-greeter/gdm-language-option-widget.c:232
 msgid "Choose a language from the full list of available languages."
 msgstr "ಲಭ್ಯವಿರುವ ಭಾಷೆಗಳ ಪಟ್ಟಿಯಿಂದ ಒಂದು ಭಾಷೆಯನ್ನು ಆರಿಸಿ."
 
-#: ../gui/simple-greeter/gdm-languages.c:698
+#: ../gui/simple-greeter/gdm-language-option-widget.c:262
+msgid "Language"
+msgstr "ಭಾಷೆ"
+
+#: ../gui/simple-greeter/gdm-languages.c:699
 msgid "Unspecified"
 msgstr "ಸೂಚಿಸದೆ ಇರುವ"
 
@@ -635,48 +642,48 @@ msgstr "ಸೂಚಿಸದೆ ಇರುವ"
 msgid "Keyboard layouts"
 msgstr "ಕೀಲಮಣೆ ವಿನ್ಯಾಸಗಳು"
 
-#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:200
-#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:201
+#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:202
+#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:203
 msgid "_Keyboard:"
 msgstr "ಕೀಲಿಮಣೆ(_K):"
-
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:266
-msgid "Keyboard"
-msgstr "ಕೀಲಿಮಣೆ"
 
 #. translators: This brings up a dialog of
 #. * available keyboard layouts
 #.
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:235
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:223
 msgctxt "keyboard"
 msgid "Other..."
 msgstr "ಇತರೆ..."
 
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:236
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:224
 msgid "Choose a keyboard layout from the full list of available layouts."
 msgstr "ಲಭ್ಯವಿರುವ ಕೀಲಿಮಣೆ ವಿನ್ಯಾಸಗಳ ಒಂದು ಸಂಪೂರ್ಣ ಪಟ್ಟಿಯಿಂದ ಒಂದು ಕೀಲಿಮಣೆಯನ್ನು ಆರಿಸಿ."
 
-#: ../gui/simple-greeter/gdm-option-widget.c:507
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:254
+msgid "Keyboard"
+msgstr "ಕೀಲಿಮಣೆ"
+
+#: ../gui/simple-greeter/gdm-option-widget.c:505
 msgid "Label Text"
 msgstr "ಲೇಬಲ್ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:508
+#: ../gui/simple-greeter/gdm-option-widget.c:506
 msgid "The text to use as a label"
 msgstr "ಒಂದು ಲೇಬಲ್ ಆಗಿ ಬಳಸಬೇಕಿರುವ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:515
+#: ../gui/simple-greeter/gdm-option-widget.c:513
 msgid "Icon name"
 msgstr "ಚಿಹ್ನೆಯ ಹೆಸರು"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:516
+#: ../gui/simple-greeter/gdm-option-widget.c:514
 msgid "The icon to use with the label"
 msgstr "ಒಂದು ಲೇಬಲ್ ಆಗಿ ಬಳಸಬೇಕಿರುವ ಪಠ್ಯ"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:524
+#: ../gui/simple-greeter/gdm-option-widget.c:522
 msgid "Default Item"
 msgstr "ಪೂರ್ವನಿಯೋಜಿತ ಅಂಶ"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:525
+#: ../gui/simple-greeter/gdm-option-widget.c:523
 msgid "The ID of the default item"
 msgstr "ಪೂರ್ವನಿಯೋಜಿತ ಅಂಶದ ಐಡಿ"
 
@@ -888,54 +895,137 @@ msgstr "ಅದು ಚಾಲನೆಯಲ್ಲಿದೆಯೆ?"
 msgid "Whether the timer is currently ticking"
 msgstr "ಟೈಮರ್ ಚಾಲನೆಯಲ್ಲಿದೆಯೆ"
 
-#: ../gui/simple-greeter/gdm-user.c:241
-msgid "Manager"
-msgstr "ವ್ಯವಸ್ಥಾಪಕ"
-
-#: ../gui/simple-greeter/gdm-user.c:242
-msgid "The user manager object this user is controlled by."
-msgstr "ಈ ಬಳಕೆದಾರ ನಿಯಂತ್ರಿಸಲ್ಪಡುವ ಬಳಕೆದಾರ ವ್ಯವಸ್ಥಾಪಕ ಆಬ್ಜೆಕ್ಟ್‍."
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:188
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:487
+#, c-format
+msgid "Log in as %s"
+msgstr "%s ಆಗಿ ಒಳ ಪ್ರವೇಶಿಸಿ"
 
 #. translators: This option prompts
 #. * the user to type in a username
 #. * manually instead of choosing from
 #. * a list.
 #.
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:166
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:244
 msgctxt "user"
 msgid "Other..."
 msgstr "ಇತರೆ..."
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:167
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:245
 msgid "Choose a different account"
 msgstr "ಬೇರೊಂದು ಖಾತೆಯನ್ನು ಆರಿಸಿ"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:179
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:259
 msgid "Guest"
 msgstr "ಅತಿಥಿ"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:180
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:260
 msgid "Login as a temporary guest"
 msgstr "ಒಬ್ಬ ತಾತ್ಕಾಲಿಕ ಅತಿಥಿಯಾಗಿ ಒಳಗೆ ಪ್ರವೇಶಿಸಿ"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:193
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:275
 msgid "Automatic Login"
 msgstr "ಸ್ವಯಂಚಾಲಿತ ಪ್ರವೇಶ"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:194
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:276
 msgid "Automatically login to the system after selecting options"
 msgstr "ಆಯ್ಕೆಗಳನ್ನು ಆರಿಸಿದ ನಂತರ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಗಣಕಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:385
-#, c-format
-msgid "Log in as %s"
-msgstr "%s ಆಗಿ ಒಳ ಪ್ರವೇಶಿಸಿ"
-
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:738
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:999
 msgid "Currently logged in"
 msgstr "ಪ್ರಸ್ತುತ ಒಳಗೆ ಪ್ರವೇಶಿಸಿರುವುದು"
 
-#: ../gui/user-switch-applet/applet.c:164
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:182
+msgid "Password Authentication"
+msgstr "ಗುಪ್ತಪದ ದೃಢೀಕರಣ"
+
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:188
+msgid "Log into session with username and password"
+msgstr "ಬಳಕೆದಾರಪದ ಹಾಗು ಗುಪ್ತಪದದೊಂದಿಗೆ ಅಧಿವೇಶನಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
+
+#: ../gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c:184
+msgid "Fingerprint Authentication"
+msgstr "ಫಿಂಗರ್ಪ್ರಿಂಟ್ ದೃಢೀಕರಣ"
+
+#: ../gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c:190
+msgid "Log into session with fingerprint"
+msgstr "ಫಿಂಗರ್ಪ್ರಿಂಟನ್ನು ಬಳಸಿಕೊಂಡು ಅಧಿವೇಶನಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:305
+msgid "Smartcard Authentication"
+msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ದೃಢೀಕರಣ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:311
+msgid "Log into session with smartcard"
+msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡನ್ನು ಬಳಸಿಕೊಂಡು ಅಧಿವೇಶನಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:186
+msgid "Module Path"
+msgstr "ಮಾಡ್ಯೂಲಿನ ಮಾರ್ಗ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:187
+msgid "path to smartcard PKCS #11 driver"
+msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ PKCS #11 ಚಾಲಕದ ಮಾರ್ಗ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:530
+msgid "received error or hang up from event source"
+msgstr "ಘಟನೆಯ ಆಕರದಿಂದ ದೋಷ ಅಥವ ಹ್ಯಾಂಗ್ ಅಪ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:664
+#, c-format
+msgid "NSS security system could not be initialized"
+msgstr "NSS ಸುರಕ್ಷತಾ ವ್ಯವಸ್ಥೆಯನ್ನು ಆರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:792
+#, c-format
+msgid "no suitable smartcard driver could be found"
+msgstr "ಯಾವುದೆ ಸೂಕ್ತವಾದ ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಚಾಲಕವು ಕಂಡುಬಂದಿಲ್ಲ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:806
+#, c-format
+msgid "smartcard driver '%s' could not be loaded"
+msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಚಾಲಕ '%s' ಅನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:879
+#, c-format
+msgid "could not watch for incoming card events - %s"
+msgstr "ಒಳಬರುವ ಕಾರ್ಡ್ ಘಟನೆಗಳಿಗಾಗಿ ಗಮನಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ - %s"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:1277
+#, c-format
+msgid "encountered unexpected error while waiting for smartcard events"
+msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಘಟನೆಗಳಿಗಾಗಿ ಕಾಯುವಾಗ ಅನಿರೀಕ್ಷಿತವಾದ ದೋಷವು ಕಂಡುಬಂದಿದೆ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:156
+msgid "Slot ID"
+msgstr "ಸ್ಲಾಟ್ ID"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:157
+msgid "The slot the card is in"
+msgstr "ಕಾರ್ಡ್ ಇರುವ ಸ್ಲಾಟ್"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:163
+msgid "Slot Series"
+msgstr "ಸ್ಲಾಟ್ ಸರಣಿಗಳು"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:164
+msgid "per-slot card identifier"
+msgstr "ಪ್ರತಿ ಸ್ಲಾಟಿನಲ್ಲಿನ ಕಾರ್ಡಿನ ಪತ್ತೆಗಾರ"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:170
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:171
+msgid "name"
+msgstr "ಹೆಸರು"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:175
+msgid "Module"
+msgstr "ಮಾಡ್ಯೂಲ್"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:176
+msgid "smartcard driver"
+msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಚಾಲಕ"
+
+#: ../gui/user-switch-applet/applet.c:162
 msgid ""
 "The User Switch Applet is free software; you can redistribute it and/or "
 "modify it under the terms of the GNU General Public License as published by "
@@ -947,7 +1037,7 @@ msgstr ""
 "the Free Software Foundation; either version 2 of the License, or (at your "
 "option) any later version."
 
-#: ../gui/user-switch-applet/applet.c:168
+#: ../gui/user-switch-applet/applet.c:166
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -959,7 +1049,7 @@ msgstr ""
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 
-#: ../gui/user-switch-applet/applet.c:172
+#: ../gui/user-switch-applet/applet.c:170
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -969,78 +1059,78 @@ msgstr ""
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA "
 
-#: ../gui/user-switch-applet/applet.c:186
+#: ../gui/user-switch-applet/applet.c:184
 msgid "A menu to quickly switch between users."
 msgstr "ಬಳಕೆದಾರರ ನಡುವೆ ತ್ವರಿತವಾಗಿ ಬದಲಾಯಿಸಲು ಒಂದು ಮೆನು."
 
-#: ../gui/user-switch-applet/applet.c:190
+#: ../gui/user-switch-applet/applet.c:188
 msgid "translator-credits"
 msgstr "ಶಂಕರ್ ಪ್ರಸಾದ್ ಎಂ. ವಿ. <svenkate@redhat.com>"
 
-#: ../gui/user-switch-applet/applet.c:649
-#: ../gui/user-switch-applet/applet.c:788
-#: ../gui/user-switch-applet/applet.c:827
+#: ../gui/user-switch-applet/applet.c:656
+#: ../gui/user-switch-applet/applet.c:785
+#: ../gui/user-switch-applet/applet.c:824
 #, c-format
 msgid "Can't lock screen: %s"
 msgstr "ತೆರೆಯನ್ನು ಲಾಕ್ ಮಾಡಲಾಗಲಿಲ್ಲ: %s"
 
-#: ../gui/user-switch-applet/applet.c:671
+#: ../gui/user-switch-applet/applet.c:678
 #, c-format
 msgid "Can't temporarily set screensaver to blank screen: %s"
 msgstr "ಖಾಲಿ ತೆರೆಗೆ ತಾತ್ಕಾಲಿಕವಾಗಿ ಸ್ಕ್ರೀನ್‌ಸೇವರನ್ನು ಹೊಂದಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ: %s"
 
-#: ../gui/user-switch-applet/applet.c:886
+#: ../gui/user-switch-applet/applet.c:883
 #, c-format
 msgid "Can't logout: %s"
 msgstr "ನಿರ್ಗಮಿಸಲಾಗಲಿಲ್ಲ: %s"
 
-#: ../gui/user-switch-applet/applet.c:970
+#: ../gui/user-switch-applet/applet.c:967
 msgid "Available"
 msgstr "ಲಭ್ಯ"
 
-#: ../gui/user-switch-applet/applet.c:971
+#: ../gui/user-switch-applet/applet.c:968
 msgid "Invisible"
 msgstr "ಅಗೋಚರ"
 
-#: ../gui/user-switch-applet/applet.c:972
+#: ../gui/user-switch-applet/applet.c:969
 msgid "Busy"
 msgstr "ಕಾರ್ಯನಿರತ"
 
-#: ../gui/user-switch-applet/applet.c:973
+#: ../gui/user-switch-applet/applet.c:970
 msgid "Away"
 msgstr "ಹೊರಹೋಗಿದ್ದಾರೆ"
 
-#: ../gui/user-switch-applet/applet.c:1133
+#: ../gui/user-switch-applet/applet.c:1117
 msgid "Account Information"
 msgstr "ಖಾತೆಯ ಮಾಹಿತಿ"
 
-#: ../gui/user-switch-applet/applet.c:1145
+#: ../gui/user-switch-applet/applet.c:1129
 msgid "System Preferences"
 msgstr "ಗಣಕದ ಆದ್ಯತೆಗಳು"
 
-#: ../gui/user-switch-applet/applet.c:1161
+#: ../gui/user-switch-applet/applet.c:1143
 msgid "Lock Screen"
 msgstr "ತೆರೆಯನ್ನು ಲಾಕ್ ಮಾಡು"
 
 #. Only show if not locked down
-#: ../gui/user-switch-applet/applet.c:1172
+#: ../gui/user-switch-applet/applet.c:1154
 msgid "Switch User"
 msgstr "ಬಳಕೆದಾರನನ್ನು ಬದಲಾಯಿಸು"
 
 #. Only show switch user if there are other users
-#: ../gui/user-switch-applet/applet.c:1183
+#: ../gui/user-switch-applet/applet.c:1165
 msgid "Quit..."
 msgstr "ನಿರ್ಗಮಿಸು..."
 
-#: ../gui/user-switch-applet/applet.c:1304
+#: ../gui/user-switch-applet/applet.c:1271
 msgid "Unknown"
 msgstr "ಗೊತ್ತಿರದ"
 
-#: ../gui/user-switch-applet/applet.c:1422
+#: ../gui/user-switch-applet/applet.c:1384
 msgid "User Switch Applet"
 msgstr "ಬಳಕೆದಾರ ಬದಲಾವಣಾ ಅನ್ವಯ"
 
-#: ../gui/user-switch-applet/applet.c:1436
+#: ../gui/user-switch-applet/applet.c:1399
 msgid "Change account settings and status"
 msgstr "ಖಾತೆಯ ಸಿದ್ಧತೆಗಳನ್ನು ಹಾಗು ಸ್ಥಿತಿಯನ್ನು ಬದಲಾಯಿಸು"
 
@@ -1070,7 +1160,7 @@ msgstr "ಬಳಕೆದಾರರು ಹಾಗು ಸಮೂಹಗಳನ್ನು 
 
 #: ../utils/gdmflexiserver.c:61
 msgid "Only the VERSION command is supported"
-msgstr ""
+msgstr "ಕೇವಲ VERSION ಆಜ್ಞೆಗೆ ಮಾತ್ರ ಬೆಂಬಲವಿದೆ"
 
 #: ../utils/gdmflexiserver.c:61
 msgid "COMMAND"
@@ -1121,9 +1211,6 @@ msgstr "ತೆರೆಯ ಒಂದು ಚಿತ್ರವನ್ನು ತೆಗೆ
 #~ msgid "Couldn't set groupid to 0"
 #~ msgstr "ಸಮೂಹಐಡಿಯನ್ನು 0 ಗೆ ಹೊಂದಿಸಲಾಗಿಲ್ಲ"
 
-#~ msgid "Force X to start on active vt"
-#~ msgstr "X ಅನ್ನು ಸಕ್ರಿಯ vt ಯಲ್ಲಿ ತೆರೆಯುವಂತೆ ಒತ್ತಾಯಿಸು"
-
 #~ msgid "%x"
 #~ msgstr "%x"
 
@@ -1136,68 +1223,11 @@ msgstr "ತೆರೆಯ ಒಂದು ಚಿತ್ರವನ್ನು ತೆಗೆ
 #~ msgid "Enable debugging mode for the greeter."
 #~ msgstr "ಸ್ವಾಗತಕಾರನಿಗಾಗಿ ದೋಷನಿವಾರಣಾ ಕ್ರಮವನ್ನು ಶಕ್ತಗೊಳಿಸಿ."
 
-#~ msgid "Fingerprint Authentication"
-#~ msgstr "ಫಿಂಗರ್ಪ್ರಿಂಟ್ ದೃಢೀಕರಣ"
+#~ msgid "Manager"
+#~ msgstr "ವ್ಯವಸ್ಥಾಪಕ"
 
-#~ msgid "Log into session with fingerprint"
-#~ msgstr "ಫಿಂಗರ್ಪ್ರಿಂಟನ್ನು ಬಳಸಿಕೊಂಡು ಅಧಿವೇಶನಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
-
-#~ msgid "Password Authentication"
-#~ msgstr "ಗುಪ್ತಪದ ದೃಢೀಕರಣ"
-
-#~ msgid "Log into session with username and password"
-#~ msgstr "ಬಳಕೆದಾರಪದ ಹಾಗು ಗುಪ್ತಪದದೊಂದಿಗೆ ಅಧಿವೇಶನಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
-
-#~ msgid "Slot ID"
-#~ msgstr "ಸ್ಲಾಟ್ ID"
-
-#~ msgid "The slot the card is in"
-#~ msgstr "ಕಾರ್ಡ್ ಇರುವ ಸ್ಲಾಟ್"
-
-#~ msgid "Slot Series"
-#~ msgstr "ಸ್ಲಾಟ್ ಸರಣಿಗಳು"
-
-#~ msgid "per-slot card identifier"
-#~ msgstr "ಪ್ರತಿ ಸ್ಲಾಟಿನಲ್ಲಿನ ಕಾರ್ಡಿನ ಪತ್ತೆಗಾರ"
-
-#~ msgid "name"
-#~ msgstr "ಹೆಸರು"
-
-#~ msgid "Module"
-#~ msgstr "ಮಾಡ್ಯೂಲ್"
-
-#~ msgid "smartcard driver"
-#~ msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಚಾಲಕ"
-
-#~ msgid "Smartcard Authentication"
-#~ msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ದೃಢೀಕರಣ"
-
-#~ msgid "Log into session with smartcard"
-#~ msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡನ್ನು ಬಳಸಿಕೊಂಡು ಅಧಿವೇಶನಕ್ಕೆ ಪ್ರವೇಶಿಸಿ"
-
-#~ msgid "Module Path"
-#~ msgstr "ಮಾಡ್ಯೂಲಿನ ಮಾರ್ಗ"
-
-#~ msgid "path to smartcard PKCS #11 driver"
-#~ msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ PKCS #11 ಚಾಲಕದ ಮಾರ್ಗ"
-
-#~ msgid "received error or hang up from event source"
-#~ msgstr "ಘಟನೆಯ ಆಕರದಿಂದ ದೋಷ ಅಥವ ಹ್ಯಾಂಗ್ ಅಪ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"
-
-#~ msgid "NSS security system could not be initialized"
-#~ msgstr "NSS ಸುರಕ್ಷತಾ ವ್ಯವಸ್ಥೆಯನ್ನು ಆರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
-
-#~ msgid "no suitable smartcard driver could be found"
-#~ msgstr "ಯಾವುದೆ ಸೂಕ್ತವಾದ ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಚಾಲಕವು ಕಂಡುಬಂದಿಲ್ಲ"
-
-#~ msgid "smartcard driver '%s' could not be loaded"
-#~ msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಚಾಲಕ '%s' ಅನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
-
-#~ msgid "could not watch for incoming card events - %s"
-#~ msgstr "ಒಳಬರುವ ಕಾರ್ಡ್ ಘಟನೆಗಳಿಗಾಗಿ ಗಮನಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ - %s"
-
-#~ msgid "encountered unexpected error while waiting for smartcard events"
-#~ msgstr "ಸ್ಮಾರ್ಟ್-ಕಾರ್ಡ್ ಘಟನೆಗಳಿಗಾಗಿ ಕಾಯುವಾಗ ಅನಿರೀಕ್ಷಿತವಾದ ದೋಷವು ಕಂಡುಬಂದಿದೆ"
+#~ msgid "The user manager object this user is controlled by."
+#~ msgstr "ಈ ಬಳಕೆದಾರ ನಿಯಂತ್ರಿಸಲ್ಪಡುವ ಬಳಕೆದಾರ ವ್ಯವಸ್ಥಾಪಕ ಆಬ್ಜೆಕ್ಟ್‍."
 
 #~ msgid "%l:%M:%S %p"
 #~ msgstr "%l:%M:%S %p"
