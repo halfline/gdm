@@ -780,5 +780,11 @@
         <string>bottom_right</string>
       </value>
     </entry>
+    <entry>
+      <key>/apps/notification_area_applet/prefs/padding</key>
+      <value>
+        <int>3</int>
+      </value>
+    </entry>
   </entrylist>
 </gconfentryfile>
