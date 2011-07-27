@@ -1,140 +1,142 @@
-# translation of gdm.master.ml.po to Malayalam
-# This file is distributed under the same license as the gdm package.
-# Copyright (C) 2003-2008 gdm'S COPYRIGHT HOLDER.
+# translation of ml.po to
+# translation of gdm.master.ml.po to
+# translation of gdm.HEAD.ml.po to
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 #
 # FSF-India <locale@gnu.org.in>, 2003.
 # Ani Peter <apeter@redhat.com>, 2006, 2007, 2009.
-# Praveen Arimbrathodiyil <parimbra@redhat.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: gdm.master.ml\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=gdm&component=general\n"
-"POT-Creation-Date: 2009-11-18 22:10+0000\n"
-"PO-Revision-Date: 2009-11-17 19:03+0530\n"
-"Last-Translator: Praveen Arimbrathodiyil <parimbra@redhat.com>\n"
-"Language-Team:  <smc-discuss@googlegroups.com>\n"
+"Project-Id-Version: ml\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-07-26 19:08+0530\n"
+"PO-Revision-Date: 2010-07-29 15:53+0530\n"
+"Last-Translator: \n"
+"Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"\n"
 
-#: ../common/gdm-common.c:437
+#: ../common/gdm-common.c:456
 #, c-format
 msgid "/dev/urandom is not a character device"
 msgstr "/dev/urandom ഒരു ക്യാരക്ടര്‍ ഡിവൈസ് അല്ല"
 
-#: ../daemon/factory-slave-main.c:177 ../daemon/product-slave-main.c:181
-#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:183
+#: ../daemon/factory-slave-main.c:178 ../daemon/product-slave-main.c:182
+#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:184
 msgid "Display ID"
-msgstr "ഡിസ്പ്ലെ ഐഡി"
+msgstr "ഡിസ്പ്ലെ ID"
 
-#: ../daemon/factory-slave-main.c:177 ../daemon/product-slave-main.c:181
-#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:183
+#: ../daemon/factory-slave-main.c:178 ../daemon/product-slave-main.c:182
+#: ../daemon/simple-slave-main.c:183 ../daemon/xdmcp-chooser-slave-main.c:184
 msgid "ID"
 msgstr "ഐഡി"
 
-#: ../daemon/factory-slave-main.c:189 ../daemon/product-slave-main.c:193
-#: ../daemon/simple-slave-main.c:195 ../daemon/xdmcp-chooser-slave-main.c:195
+#: ../daemon/factory-slave-main.c:190 ../daemon/product-slave-main.c:194
+#: ../daemon/simple-slave-main.c:196 ../daemon/xdmcp-chooser-slave-main.c:196
 msgid "GNOME Display Manager Slave"
-msgstr "ഗ്നോം ഡിസ്പ്ലെ മാനേജര്‍ സ്ലേവ്"
+msgstr "GNOME ഡസ്ക്ടോപ്പ് മാനേജര്‍ സ്ലേവ്"
 
 #: ../daemon/gdm-display-access-file.c:300
 #, c-format
 msgid "could not find user \"%s\" on system"
-msgstr "സിസ്റ്റത്തില്‍ \"%s\" എന്ന ഉപയോക്താവിനെ കണ്ടില്ല"
+msgstr "സിസ്റ്റമില്‍ \"%s\" എന്ന ഉപയോക്താവ് ലഭ്യമല്ല"
 
-#: ../daemon/gdm-factory-slave.c:203 ../daemon/gdm-simple-slave.c:224
+#: ../daemon/gdm-factory-slave.c:211 ../daemon/gdm-simple-slave.c:242
 msgid "Unable to initialize login system"
-msgstr "അകത്തുകയറാനുള്ള സംവിധാനം ആരംഭിക്കുവാന്‍ സാധ്യമായില്ല"
+msgstr "ലോഗിന്‍ സിസ്റ്റം ആരംഭിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-factory-slave.c:235 ../daemon/gdm-simple-slave.c:260
+#: ../daemon/gdm-factory-slave.c:245 ../daemon/gdm-simple-slave.c:280
 msgid "Unable to authenticate user"
 msgstr "ഉപയോക്താവിനെ തിരിച്ചറിയുവാന്‍ സാധിക്കുന്നില്ല"
 
-#: ../daemon/gdm-factory-slave.c:257 ../daemon/gdm-simple-slave.c:314
+#: ../daemon/gdm-factory-slave.c:269 ../daemon/gdm-simple-slave.c:338
 msgid "Unable to authorize user"
 msgstr "ഉപയോക്താവിനെ അധികാരപ്പെടുത്തുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-factory-slave.c:281 ../daemon/gdm-simple-slave.c:436
+#: ../daemon/gdm-factory-slave.c:293 ../daemon/gdm-simple-slave.c:473
 msgid "Unable to establish credentials"
 msgstr "യോഗ്യതകള്‍ സ്ഥാപിക്കുവാന്‍ കഴിഞ്ഞില്ല"
 
-#: ../daemon/gdm-factory-slave.c:662 ../daemon/gdm-product-slave.c:449
-#: ../daemon/gdm-simple-slave.c:1115
+#: ../daemon/gdm-factory-slave.c:318 ../daemon/gdm-simple-slave.c:506
+msgid "Unable to open session"
+msgstr "സെഷന്‍ ആരംഭിക്കുവാന്‍ സാധ്യമായില്ല"
+
+#: ../daemon/gdm-factory-slave.c:715 ../daemon/gdm-product-slave.c:516
+#: ../daemon/gdm-simple-slave.c:1486
 msgid ""
 "Could not start the X server (your graphical environment) due to some "
 "internal error. Please contact your system administrator or check your "
 "syslog to diagnose. In the meantime this display will be disabled.  Please "
 "restart GDM when the problem is corrected."
 msgstr ""
-"ഏതോ ആന്തരിക കാരണം X സര്‍വര്‍ (നിങ്ങളുടെ ഗ്രാഫിക്കല്‍ എന്‍വയോണ്‍മെന്റ്) ആരംഭിക്കുവാനായില്ല. "
+"ഏതോ ആന്തരിക കാരണം X സര്‍വര്‍ (നിങ്ങളുടെ ഗ്രാഫിക്കല്‍ എന്‍വയോണ്‍മെന്റ് )ആരംഭിക്കുവാനായില്ല. "
 "നിങ്ങളുടെ syslog പരിശോധിക്കുന്നതിനായി ദയവായി സിസ്റ്റം  അഡ്മിനിസ്ട്രേറ്ററിനെ സമീപിക്കുക. "
-"ഇപ്പോള്‍ ഈ ഡിസ്പ്ലെ പ്രവര്‍ത്തന രഹിതമാക്കുന്നതായിരിക്കും. പ്രശ്നം പരിഹരിച്ച ശേഷം ജിഡിഎം വീണ്ടും "
+"ഇതിനുള്ളില്‍ ഈ ഡിസ്പ്ലെ പ്രവര്‍ത്തന രഹിതമാക്കുന്നതായിരിക്കും. പ്രശ്നം പരിഹരിച്ച ശേഷം GDM വീണ്ടും "
 "ആരംഭിക്കുക."
 
-#: ../daemon/gdm-server.c:246
+#: ../daemon/gdm-server.c:253
 #, c-format
 msgid "%s: failed to connect to parent display '%s'"
-msgstr "%s: പേരന്റ് ഡിസ്പ്ളെ '%s'-മായി കണക്ട് ചെയ്യുന്നതില്‍ പരാജയപ്പെട്ടു"
+msgstr "%s: പേരന്റ് ഡിസ്പ്ളെ '%s'-മായി കണക്ട് ചെയ്യുന്നതിന്‍ പരാജയപ്പെട്ടു"
 
-#: ../daemon/gdm-server.c:361
+#: ../daemon/gdm-server.c:368
 #, c-format
 msgid "Server was to be spawned by user %s but that user doesn't exist"
-msgstr "സെര്‍വര്‍ തുടങ്ങേണ്ട ഉപയോക്താവു് %s ആയിരുന്നെങ്കിലും ആ ഉപയോക്താവു് നിലവിലില്ല"
+msgstr "Server was to be spawned by user %s but that user doesn't exist"
 
-#: ../daemon/gdm-server.c:372 ../daemon/gdm-welcome-session.c:451
+#: ../daemon/gdm-server.c:379 ../daemon/gdm-server.c:399
+#: ../daemon/gdm-welcome-session.c:561 ../daemon/gdm-welcome-session.c:581
 #, c-format
 msgid "Couldn't set groupid to %d"
 msgstr "groupid %d ആയി സജ്ജമാക്കുവാന്‍ സാധിച്ചില്ല"
 
-#: ../daemon/gdm-server.c:378 ../daemon/gdm-welcome-session.c:457
+#: ../daemon/gdm-server.c:385 ../daemon/gdm-welcome-session.c:567
 #, c-format
 msgid "initgroups () failed for %s"
 msgstr "%s-നുളള initgroups () പരാജയപ്പെട്ടു"
 
-#: ../daemon/gdm-server.c:384 ../daemon/gdm-welcome-session.c:463
+#: ../daemon/gdm-server.c:391 ../daemon/gdm-welcome-session.c:573
 #, c-format
 msgid "Couldn't set userid to %d"
 msgstr "userid %d ആയി സജ്ജമാക്കുവാന്‍ സാധിച്ചില്ല"
 
-#: ../daemon/gdm-server.c:392 ../daemon/gdm-welcome-session.c:471
-msgid "Couldn't set groupid to 0"
-msgstr "groupid 0 ആയി സജ്ജമാക്കുവാന്‍ സാധിച്ചില്ല"
-
-#: ../daemon/gdm-server.c:431
+#: ../daemon/gdm-server.c:438
 #, c-format
 msgid "%s: Could not open logfile for display %s!"
 msgstr "%s: ഡിസ്പ്ളെ %s-നുളള logfile തുറക്കുവാന്‍ സാധിച്ചില്ല!"
 
-#: ../daemon/gdm-server.c:442 ../daemon/gdm-server.c:448
-#: ../daemon/gdm-server.c:454
+#: ../daemon/gdm-server.c:449 ../daemon/gdm-server.c:455
+#: ../daemon/gdm-server.c:461
 #, c-format
 msgid "%s: Error setting %s to %s"
 msgstr "%s: %s-നെ %s-ലേക്ക് സെറ്റ് ചെയ്യുന്നതില്‍ പിഴവ്"
 
-#: ../daemon/gdm-server.c:469
+#: ../daemon/gdm-server.c:481
 #, c-format
 msgid "%s: Server priority couldn't be set to %d: %s"
-msgstr "%s: സെര്‍വറിന്റെ മുന്‍ഗണന %d ആയി സെറ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല: %s"
+msgstr "%s: സര്‍വറിന്റെ മുന്‍ഗണന %d ആയി സെറ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല: %s"
 
-#: ../daemon/gdm-server.c:621
+#: ../daemon/gdm-server.c:634
 #, c-format
 msgid "%s: Empty server command for display %s"
-msgstr "%s: ഡിസ്പ്ളെ %s-ന് ശൂന്യമായ സെര്‍വര്‍ നിര്‍ദ്ദേശം"
+msgstr "%s: ഡിസ്പ്ളെ %s-ന് ശൂന്യമായ സര്‍വര്‍ നിര്‍ദ്ദേശം"
 
 #: ../daemon/gdm-session-auditor.c:90
 msgid "Username"
-msgstr "ഉപയോക്താവിന്റെ പേരു്"
+msgstr "ഉപയോക്തൃ നാമം"
 
 #: ../daemon/gdm-session-auditor.c:91
 msgid "The username"
-msgstr "ഉപയോക്താവിന്റെ പേരു്"
+msgstr "ഉപയോക്തൃനാമം"
 
 #: ../daemon/gdm-session-auditor.c:95
 msgid "Hostname"
-msgstr "ഹോസ്റ്റ്നെയിം"
+msgstr "ഹോസ്റ്റ്നാമം"
 
 #: ../daemon/gdm-session-auditor.c:96
 msgid "The hostname"
@@ -148,210 +150,208 @@ msgstr "ഡിസ്പ്ലെ ഡിവൈസ്"
 msgid "The display device"
 msgstr "ഡിസ്പ്ലെ ഡിവൈസ്"
 
-#: ../daemon/gdm-session-worker.c:1295
+#: ../daemon/gdm-session-worker.c:1310
 #, c-format
 msgid "error initiating conversation with authentication system - %s"
 msgstr "error initiating conversation with authentication system - %s"
 
-#: ../daemon/gdm-session-worker.c:1296
+#: ../daemon/gdm-session-worker.c:1311
 msgid "general failure"
 msgstr "സാധാരണ പരാജയം"
 
-#: ../daemon/gdm-session-worker.c:1297
+#: ../daemon/gdm-session-worker.c:1312
 msgid "out of memory"
 msgstr "മെമ്മറി ലഭ്യമല്ല"
 
-#: ../daemon/gdm-session-worker.c:1298
+#: ../daemon/gdm-session-worker.c:1313
 msgid "application programmer error"
 msgstr "ആപ്ലിക്കേഷന്‍ പ്രോഗ്രാമര്‍ പിശക്"
 
-#: ../daemon/gdm-session-worker.c:1299
+#: ../daemon/gdm-session-worker.c:1314
 msgid "unknown error"
 msgstr "അപരിചിതമായ പിശക്"
 
-#: ../daemon/gdm-session-worker.c:1306
+#: ../daemon/gdm-session-worker.c:1321
 msgid "Username:"
 msgstr "ഉപയോക്തൃ നാമം:"
 
-#: ../daemon/gdm-session-worker.c:1312
+#: ../daemon/gdm-session-worker.c:1327
 #, c-format
 msgid "error informing authentication system of preferred username prompt - %s"
-msgstr ""
-"error informing authentication system of preferred username prompt - %s"
+msgstr "error informing authentication system of preferred username prompt - %s"
 
-#: ../daemon/gdm-session-worker.c:1326
+#: ../daemon/gdm-session-worker.c:1341
 #, c-format
 msgid "error informing authentication system of user's hostname - %s"
 msgstr "error informing authentication system of user's hostname - %s"
 
-#: ../daemon/gdm-session-worker.c:1341
+#: ../daemon/gdm-session-worker.c:1356
 #, c-format
 msgid "error informing authentication system of user's console - %s"
 msgstr "error informing authentication system of user's console - %s"
 
-#: ../daemon/gdm-session-worker.c:1354
+#: ../daemon/gdm-session-worker.c:1369
 #, c-format
 msgid "error informing authentication system of display string - %s"
 msgstr "error informing authentication system of display string - %s"
 
-#: ../daemon/gdm-session-worker.c:1369
+#: ../daemon/gdm-session-worker.c:1384
 #, c-format
 msgid "error informing authentication system of display xauth credentials - %s"
-msgstr ""
-"error informing authentication system of display xauth credentials - %s"
+msgstr "error informing authentication system of display xauth credentials - %s"
 
-#: ../daemon/gdm-session-worker.c:1650 ../daemon/gdm-session-worker.c:1669
+#: ../daemon/gdm-session-worker.c:1687 ../daemon/gdm-session-worker.c:1704
 #, c-format
 msgid "no user account available"
 msgstr "ഉപയോക്താവിനുള്ള അക്കൌണ്ട് ലഭ്യമല്ല"
 
-#: ../daemon/gdm-session-worker.c:1696
+#: ../daemon/gdm-session-worker.c:1731
 msgid "Unable to change to user"
 msgstr "ഉപയോക്താവായി മാറുവാന്‍ സാധ്യമല്ല"
 
-#: ../daemon/gdm-welcome-session.c:429
+#: ../daemon/gdm-welcome-session.c:535
 #, c-format
 msgid "User %s doesn't exist"
 msgstr "ഉപയോക്താവു് %s നിലവിലില്ല."
 
-#: ../daemon/gdm-welcome-session.c:436
+#: ../daemon/gdm-welcome-session.c:542
 #, c-format
 msgid "Group %s doesn't exist"
 msgstr "%s ഗ്രൂപ്പ് നിലവിലില്ല."
 
-#: ../daemon/gdm-xdmcp-display-factory.c:595
+#: ../daemon/gdm-xdmcp-display-factory.c:604
 msgid "Could not create socket!"
 msgstr "സോക്കറ്റ് നിര്‍മ്മിക്കുവാന്‍ സാധ്യമല്ല!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:862
+#: ../daemon/gdm-xdmcp-display-factory.c:873
 #, c-format
 msgid "Denied XDMCP query from host %s"
 msgstr "ഹോസ്റ്റ് %s-ല്‍ നിന്നുമുളള XDMCP ക്വറി നിഷേധിച്ചിരിക്കുന്നു"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1019
-#: ../daemon/gdm-xdmcp-display-factory.c:1240
+#: ../daemon/gdm-xdmcp-display-factory.c:1031
+#: ../daemon/gdm-xdmcp-display-factory.c:1255
 msgid "Could not extract authlist from packet"
 msgstr "പാക്കറ്റില്‍ നിന്നും authlist ലഭ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1032
-#: ../daemon/gdm-xdmcp-display-factory.c:1255
+#: ../daemon/gdm-xdmcp-display-factory.c:1044
+#: ../daemon/gdm-xdmcp-display-factory.c:1270
 msgid "Error in checksum"
 msgstr "checksum-ല്‍ പിഴവ്"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1506
+#: ../daemon/gdm-xdmcp-display-factory.c:1523
 msgid "Bad address"
 msgstr "തെറ്റായ മേല്‍വിലാസം"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1587
+#: ../daemon/gdm-xdmcp-display-factory.c:1607
 #, c-format
 msgid "%s: Could not read display address"
 msgstr "%s: ഡിസ്പ്ളെ മേല്‍വിലാസം വായിക്കുവാന്‍ സാധ്യല്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1595
+#: ../daemon/gdm-xdmcp-display-factory.c:1615
 #, c-format
 msgid "%s: Could not read display port number"
 msgstr "%s: ഡിസ്പ്ളെ പോര്‍ട്ട് നംബര്‍ വായിക്കുവാന്‍ സാധ്യല്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1604
+#: ../daemon/gdm-xdmcp-display-factory.c:1624
 #, c-format
 msgid "%s: Could not extract authlist from packet"
 msgstr "%s: പാക്കറ്റില്‍ നിന്നും authlist ലഭ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:1624
+#: ../daemon/gdm-xdmcp-display-factory.c:1644
 #, c-format
 msgid "%s: Error in checksum"
 msgstr "%s: checksum-ല്‍ പിഴവ്"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2133
+#: ../daemon/gdm-xdmcp-display-factory.c:2200
 #, c-format
 msgid "%s: Got REQUEST from banned host %s"
 msgstr "%s: റദ്ദാക്കിയ ഹോസ്റ്റ് %s-ല്‍ നിന്നും REQUEST ലഭിച്ചിരിക്കുന്നു"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2143
-#: ../daemon/gdm-xdmcp-display-factory.c:2498
-#: ../daemon/gdm-xdmcp-display-factory.c:2750
+#: ../daemon/gdm-xdmcp-display-factory.c:2210
+#: ../daemon/gdm-xdmcp-display-factory.c:2568
+#: ../daemon/gdm-xdmcp-display-factory.c:2822
 #, c-format
 msgid "%s: Could not read Display Number"
 msgstr "%s: ഡിസ്പ്ളെ പോര്‍ട്ട് നംബര്‍ വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2150
+#: ../daemon/gdm-xdmcp-display-factory.c:2217
 #, c-format
 msgid "%s: Could not read Connection Type"
 msgstr "%s: ഏത് തരം കണക്ഷന്‍ ആണ് എന്ന് വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2157
+#: ../daemon/gdm-xdmcp-display-factory.c:2224
 #, c-format
 msgid "%s: Could not read Client Address"
 msgstr "%s:ക്ലൈന്റ് മേല്‍വിലാസം വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2165
+#: ../daemon/gdm-xdmcp-display-factory.c:2232
 #, c-format
 msgid "%s: Could not read Authentication Names"
 msgstr "%s: അധികൃത പേരുകള്‍ വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2174
+#: ../daemon/gdm-xdmcp-display-factory.c:2241
 #, c-format
 msgid "%s: Could not read Authentication Data"
 msgstr "%s: അതികൃത ഡേറ്റാ വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2184
+#: ../daemon/gdm-xdmcp-display-factory.c:2251
 #, c-format
 msgid "%s: Could not read Authorization List"
 msgstr "%s: ഓഥറൈസേഷന്‍ ലിസ്റ്റ് വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2203
+#: ../daemon/gdm-xdmcp-display-factory.c:2270
 #, c-format
 msgid "%s: Could not read Manufacturer ID"
 msgstr "%s: നിര്‍മ്മാതാവിന്റെ ID വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2230
+#: ../daemon/gdm-xdmcp-display-factory.c:2297
 #, c-format
 msgid "%s: Failed checksum from %s"
 msgstr "%s: %s-ല്‍ നിന്നുളള checksum പരാജയപ്പെട്ടു"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2482
+#: ../daemon/gdm-xdmcp-display-factory.c:2552
 #, c-format
 msgid "%s: Got Manage from banned host %s"
 msgstr "%s: റദ്ദാക്കിയ ഹോസ്റ്റ് %s-ല്‍ നിന്നും നിരീക്ഷണം ലഭിച്ചിരിക്കുന്നു"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2491
-#: ../daemon/gdm-xdmcp-display-factory.c:2757
+#: ../daemon/gdm-xdmcp-display-factory.c:2561
+#: ../daemon/gdm-xdmcp-display-factory.c:2829
 #, c-format
 msgid "%s: Could not read Session ID"
 msgstr "%s: സെഷന്‍ ID വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2505
+#: ../daemon/gdm-xdmcp-display-factory.c:2575
 #, c-format
 msgid "%s: Could not read Display Class"
 msgstr "%s: ഡിസ്പ്ളെ ക്ളാസ്സ് വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2610
-#: ../daemon/gdm-xdmcp-display-factory.c:2660
-#: ../daemon/gdm-xdmcp-display-factory.c:2666
+#: ../daemon/gdm-xdmcp-display-factory.c:2681
+#: ../daemon/gdm-xdmcp-display-factory.c:2731
+#: ../daemon/gdm-xdmcp-display-factory.c:2737
 #, c-format
 msgid "%s: Could not read address"
 msgstr "%s: മേല്‍വിലാസം വായിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2740
+#: ../daemon/gdm-xdmcp-display-factory.c:2812
 #, c-format
 msgid "%s: Got KEEPALIVE from banned host %s"
 msgstr "%s: റദ്ദാക്കിയ ഹോസ്റ്റ് %s-ല്‍ നിന്നും KEEPALIVE ലഭിച്ചിരിക്കുന്നു"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2829
+#: ../daemon/gdm-xdmcp-display-factory.c:2902
 msgid "GdmXdmcpDisplayFactory: Could not read XDMCP header!"
 msgstr "GdmXdmcpDisplayFactory: XDMCP ഹെഡര്‍ വായിക്കുവാന്‍ സാധ്യമല്ല!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2835
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:226
+#: ../daemon/gdm-xdmcp-display-factory.c:2908
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:227
 msgid "XMDCP: Incorrect XDMCP version!"
 msgstr "XDMCP: XDMCP-യുടെ തെറ്റായ പതിപ്പു്!"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:2841
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:232
+#: ../daemon/gdm-xdmcp-display-factory.c:2914
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:233
 msgid "XMDCP: Unable to parse address"
 msgstr "XMDCP: വിലാസം പാഴ്സ് ചെയ്യുവാന്‍ സാധ്യമായില്ല"
 
-#: ../daemon/gdm-xdmcp-display-factory.c:3286
+#: ../daemon/gdm-xdmcp-display-factory.c:3359
 #, c-format
 msgid "Could not get server hostname: %s!"
 msgstr "സര്‍വറിന്റെ ഹോസ്റ്റ് നാമം ലഭ്യമല്ല: %s!"
@@ -376,67 +376,71 @@ msgstr "Authdir %s നിലവിലില്ല. നിര്‍ത്തു�
 msgid "Authdir %s is not a directory. Aborting."
 msgstr "Authdir %s ഒരു ഡയറക്ടറി അല്ല. നിര്‍ത്തുന്നു."
 
-#: ../daemon/main.c:365
+#: ../daemon/main.c:371
 #, c-format
 msgid "Authdir %s is not owned by user %d, group %d. Aborting."
 msgstr "Authdir %s-യുടെ ഉടമസ്ഥന്‍ ഉപയോക്താവ് %d-ഉം, ഗ്രൂപ്പ് %d-ഉം അല്ല. നിര്‍ത്തുന്നു."
 
-#: ../daemon/main.c:372
+#: ../daemon/main.c:378
 #, c-format
 msgid "Authdir %s has wrong permissions %o. Should be %o. Aborting."
 msgstr " Authdir %s-ന് തെറ്റായ അനുവാദങ്ങള്‍ %o. %o ആയിരിക്കണം. നിര്‍ത്തുന്നു."
 
-#: ../daemon/main.c:409
+#: ../daemon/main.c:415
 #, c-format
 msgid "Can't find the GDM user '%s'. Aborting!"
 msgstr "'%s' എന്ന GDM ഉപയോഗ്താവിനെ കണ്ടെത്താനായില്ല. ഒഴിവാക്കട്ടെ!"
 
-#: ../daemon/main.c:415
+#: ../daemon/main.c:421
 msgid "The GDM user should not be root. Aborting!"
 msgstr "GDM ഉപയോഗ്താവ്  root ആയിരിക്കരുത്. ഒഴിവാക്കട്ടെ!"
 
-#: ../daemon/main.c:421
+#: ../daemon/main.c:427
 #, c-format
 msgid "Can't find the GDM group '%s'. Aborting!"
 msgstr "'%s' എന്ന GDM ഗ്രൂപ്പ് കണ്ടെത്താനായില്ല. ഒഴിവാക്കട്ടെ!"
 
-#: ../daemon/main.c:427
+#: ../daemon/main.c:433
 msgid "The GDM group should not be root. Aborting!"
 msgstr "GDM ഗ്രൂപ്പ് root ആയിരിക്കരുത്. ഒഴിവാക്കട്ടെ!"
 
-#: ../daemon/main.c:533
+#: ../daemon/main.c:539
 msgid "Make all warnings fatal"
 msgstr "എല്ലാ മുന്നറിയിപ്പുകളും മാരകമാക്കുക"
 
-#: ../daemon/main.c:534
+#: ../daemon/main.c:540
 msgid "Exit after a time - for debugging"
 msgstr "ഒരു സമയത്തിനു് ശേഷം പുറത്ത് കടക്കുക - ഡീബഗ്ഗിങിനായി"
 
-#: ../daemon/main.c:535
+#: ../daemon/main.c:541
 msgid "Print GDM version"
 msgstr "GDM വേര്‍ഷന്‍ പ്രിന്റ് ചെയ്യുക"
 
-#: ../daemon/main.c:550
+#: ../daemon/main.c:556
 msgid "GNOME Display Manager"
 msgstr "ഗ്നോം ഡിസ്പ്ലെ മാനേജര്‍"
 
 #. make sure the pid file doesn't get wiped
-#: ../daemon/main.c:611
+#: ../daemon/main.c:622
 msgid "Only the root user can run GDM"
-msgstr "root ഉപയോക്താവിനു് മാത്രമേ ജിഡിഎം പ്രവര്‍ത്തിപ്പിയ്ക്കാനാവൂ"
+msgstr "റൂട്ടിനു് മാത്രമേ ജിഡിഎം പ്രവര്‍ത്തിപ്പിക്കുവാന്‍ സാധിക്കൂ"
 
 #: ../daemon/session-worker-main.c:156
 msgid "GNOME Display Manager Session Worker"
 msgstr "ഗ്നോം ഡിസ്പ്ളെ മാനേജര്‍ സെഷന്‍ വര്‍ക്കര്‍"
+
+#: ../daemon/simple-slave-main.c:184
+msgid "Force X to start on active vt"
+msgstr "സജീവമായ വിടിയില്‍ എക്സ് ആരംഭിക്കുന്നതിനു് നിര്‍ബന്ധിക്കുക"
 
 #: ../data/greeter-autostart/at-spi-registryd-wrapper.desktop.in.in.h:1
 msgid "AT SPI Registry Wrapper"
 msgstr "AT SPI രജിസ്ട്രി റാപ്പര്‍"
 
 #: ../data/greeter-autostart/gdm-simple-greeter.desktop.in.in.h:1
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:1463
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:2346
 msgid "Login Window"
-msgstr "ലോഗിന്‍ ജാലകം"
+msgstr "പ്രവേശന ജാലകം"
 
 #: ../data/greeter-autostart/gnome-power-manager.desktop.in.in.h:1
 msgid "Power Manager"
@@ -478,7 +482,7 @@ msgstr "ഓര്‍കാ സ്ക്രീന്‍ റീഡര്‍"
 msgid "Present on-screen information as speech or braille"
 msgstr "ഓണ്‍ സ്ക്രീന്‍ വിവരങ്ങള്‍ ഒരു സംഭാഷണം അല്ലെങ്കില്‍ ബ്രെയിലി ആയി ലഭ്യമാക്കുക"
 
-#: ../data/greeter-autostart/polkit-gnome-authentication-agent-1.desktop.in.h:1
+#: ../data/greeter-autostart/polkit-gnome-authentication-agent-1.desktop.in.in.h:1
 msgid "PolicyKit Authentication Agent"
 msgstr "പോളിസിക്കിറ്റ് ഓഥന്റിക്കേഷന്‍ ഏജന്റ്"
 
@@ -486,11 +490,11 @@ msgstr "പോളിസിക്കിറ്റ് ഓഥന്റിക്ക�
 msgid "Select System"
 msgstr "സിസ്റ്റം തെരഞ്ഞെടുക്കുക"
 
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:214
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:215
 msgid "XDMCP: Could not create XDMCP buffer!"
 msgstr "XDMCP: XDMCP ബഫര്‍ നിര്‍മ്മിക്കുവാന്‍ സാധ്യമല്ല!"
 
-#: ../gui/simple-chooser/gdm-host-chooser-widget.c:220
+#: ../gui/simple-chooser/gdm-host-chooser-widget.c:221
 msgid "XDMCP: Could not read XDMCP header!"
 msgstr "XDMCP: XDMCP ഹെഡര്‍ വായിക്കുവാന്‍ സാധ്യമായില്ല!"
 
@@ -502,29 +506,29 @@ msgstr "മൂല്ല്യം"
 msgid "percentage of time complete"
 msgstr "പൂര്‍ണ്ണമാക്കിയ സമയത്തിന്റെ ശതമാനം"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1281
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1451
 msgid "Inactive Text"
 msgstr "സജീവമല്ലാത്ത വാചകം"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1282
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1452
 msgid "The text to use in the label if the user hasn't picked an item yet"
 msgstr "ഉപയോക്താവു് ഒരു വസ്തു എടുത്തിട്ടില്ല എങ്കില്‍ ലേബലില്‍ ഉപയോഗിക്കേണ്ട വാചകം"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1290
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1460
 msgid "Active Text"
 msgstr "സജീവമായ വാചകം"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1291
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1461
 msgid "The text to use in the label if the user has picked an item"
 msgstr "ഉപയോക്താവു് ഒരു വസ്തു എടുത്തിട്ടുണ്ടെങ്കില്‍ ലേബലില്‍ ഉപയോഗിക്കേണ്ട വാചകം"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1300
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1470
 msgid "List Visible"
 msgstr "ദൃശ്യമായവ കാണിക്കുക"
 
-#: ../gui/simple-greeter/gdm-chooser-widget.c:1301
+#: ../gui/simple-greeter/gdm-chooser-widget.c:1471
 msgid "Whether the chooser list is visible"
-msgstr "തെരഞ്ഞെടുക്കുവാനുള്ള പട്ടിക കാണാമോ എന്നു്"
+msgstr "തെരഞ്ഞെടുക്കുവാനുള്ള പട്ടിക കാണുവാന്‍ സാധ്യമാണോ എന്നു്"
 
 #. translators: This is the time format to use when both
 #. * the date and time with seconds are being shown together.
@@ -547,14 +551,6 @@ msgstr "%a %b %e, %l:%M %p"
 msgid "%a %l:%M:%S %p"
 msgstr "%a %l:%M:%S %p"
 
-#. translators: This is the time format to use for the date
-#.
-#: ../gui/simple-greeter/gdm-clock-widget.c:87
-#: ../gui/simple-greeter/gdm-clock-widget.c:94
-#, c-format
-msgid "%x"
-msgstr "%x"
-
 #. translators: This is the time format to use when there is
 #. * no date, just weekday and time without seconds.
 #.
@@ -562,52 +558,51 @@ msgstr "%x"
 msgid "%a %l:%M %p"
 msgstr "%a %l:%M %p"
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:279
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:312
 msgid "Automatically logging in..."
-msgstr "സ്വയമേ പ്രവേശിക്കുക..."
+msgstr "സ്വയമേ പ്രവേശിക്കുന്നു..."
 
 #. need to wait for response from backend
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:573
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:816
 msgid "Cancelling..."
 msgstr "റദ്ദാക്കുന്നു..."
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.c:873
+#. just wait for the user to select language and stuff
+#: ../gui/simple-greeter/gdm-greeter-login-window.c:1348
 msgid "Select language and click Log In"
-msgstr "ഭാഷ തെരഞ്ഞെടുത്തു് ലോഗിന്‍ ചെയ്യുക എന്നതില്‍ ക്ലിക്ക് ചെയ്യുക"
+msgstr "ഭാഷ തെരഞ്ഞെടുത്തു് പ്രവേശിക്കുക എന്നതില്‍ ക്ലിക്ക് ചെയ്യുക"
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.glade.h:1
-msgid "Authentication Dialog"
-msgstr "തിരിച്ചറിയല്‍ സംവാദം"
-
-#: ../gui/simple-greeter/gdm-greeter-login-window.glade.h:2
+#: ../gui/simple-greeter/gdm-greeter-login-window.ui.h:1
 msgid "Computer Name"
-msgstr "കമ്പ്യൂട്ടറിന്റെ പേരു്"
+msgstr "കമ്പ്യൂട്ടറിന്റെ നാമം"
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.glade.h:3
+#: ../gui/simple-greeter/gdm-greeter-login-window.ui.h:2
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:308
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:488
 msgid "Log In"
 msgstr "പ്രവേശിക്കുക"
 
-#: ../gui/simple-greeter/gdm-greeter-login-window.glade.h:4
+#: ../gui/simple-greeter/gdm-greeter-login-window.ui.h:3
 msgid "Version"
 msgstr "പതിപ്പു്"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:852
+#: ../gui/simple-greeter/gdm-greeter-panel.c:738
 msgid "Panel"
-msgstr "പാളി"
+msgstr "പാനല്‍"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:923
+#: ../gui/simple-greeter/gdm-greeter-panel.c:803
 msgid "Shutdown Options..."
-msgstr "നിര്‍ത്തിവയ്ക്കാനുള്ള ഐച്ഛികങ്ങള്‍..."
+msgstr "അടച്ചുപൂട്ടല്‍ ഐച്ഛികങ്ങള്‍..."
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:945
+#: ../gui/simple-greeter/gdm-greeter-panel.c:825
 msgid "Suspend"
-msgstr "മയങ്ങുക"
+msgstr "താല്‍കാലികമായി നിര്‍ത്തലാക്കുക"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:950
+#: ../gui/simple-greeter/gdm-greeter-panel.c:830
 msgid "Restart"
-msgstr "വീണ്ടും തുടങ്ങുക"
+msgstr "വീണ്ടും ആരംഭിക്കുക"
 
-#: ../gui/simple-greeter/gdm-greeter-panel.c:954
+#: ../gui/simple-greeter/gdm-greeter-panel.c:834
 msgid "Shut Down"
 msgstr "അടച്ചു പൂട്ടുക"
 
@@ -615,31 +610,31 @@ msgstr "അടച്ചു പൂട്ടുക"
 msgid "Languages"
 msgstr "ഭാഷകള്‍"
 
-#: ../gui/simple-greeter/gdm-language-chooser-widget.c:272
+#: ../gui/simple-greeter/gdm-language-chooser-widget.c:276
 msgid "_Languages:"
 msgstr "_ഭാഷകള്‍:"
 
-#: ../gui/simple-greeter/gdm-language-chooser-widget.c:273
+#: ../gui/simple-greeter/gdm-language-chooser-widget.c:277
 msgid "_Language:"
 msgstr "_ഭാഷ:"
-
-#: ../gui/simple-greeter/gdm-language-option-widget.c:274
-msgid "Language"
-msgstr "ഭാഷ"
 
 #. translators: This brings up a dialog
 #. * with a list of languages to choose from
 #.
-#: ../gui/simple-greeter/gdm-language-option-widget.c:243
+#: ../gui/simple-greeter/gdm-language-option-widget.c:231
 msgctxt "language"
 msgid "Other..."
 msgstr "മറ്റുളളവ..."
 
-#: ../gui/simple-greeter/gdm-language-option-widget.c:244
+#: ../gui/simple-greeter/gdm-language-option-widget.c:232
 msgid "Choose a language from the full list of available languages."
 msgstr "ലഭ്യമായ ഭാഷകളില്‍ നിന്നും ഒരു ഭാഷ തെരഞ്ഞെടുക്കുക."
 
-#: ../gui/simple-greeter/gdm-languages.c:609
+#: ../gui/simple-greeter/gdm-language-option-widget.c:262
+msgid "Language"
+msgstr "ഭാഷ"
+
+#: ../gui/simple-greeter/gdm-languages.c:699
 msgid "Unspecified"
 msgstr "വ്യക്തമാക്കിയിട്ടില്ലാത്ത"
 
@@ -647,50 +642,50 @@ msgstr "വ്യക്തമാക്കിയിട്ടില്ലാത്
 msgid "Keyboard layouts"
 msgstr "കീബോര്‍ഡ് ശൈലികള്‍"
 
-#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:200
-#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:201
+#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:202
+#: ../gui/simple-greeter/gdm-layout-chooser-widget.c:203
 msgid "_Keyboard:"
 msgstr "_കീബോര്‍ഡ്:"
-
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:266
-msgid "Keyboard"
-msgstr "കീബോര്‍ഡ്:"
 
 #. translators: This brings up a dialog of
 #. * available keyboard layouts
 #.
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:235
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:223
 msgctxt "keyboard"
 msgid "Other..."
 msgstr "മറ്റുളളവ..."
 
-#: ../gui/simple-greeter/gdm-layout-option-widget.c:236
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:224
 msgid "Choose a keyboard layout from the full list of available layouts."
 msgstr "ലഭ്യമായ ശൈലികളില്‍ നിന്നും ഒരു കീബോര്‍ഡ് ശൈലി തെരഞ്ഞെടുക്കുക."
 
-#: ../gui/simple-greeter/gdm-option-widget.c:521
+#: ../gui/simple-greeter/gdm-layout-option-widget.c:254
+msgid "Keyboard"
+msgstr "കീബോര്‍ഡ്"
+
+#: ../gui/simple-greeter/gdm-option-widget.c:505
 msgid "Label Text"
 msgstr "ലേബല്‍ ടെക്സ്റ്റ്"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:522
+#: ../gui/simple-greeter/gdm-option-widget.c:506
 msgid "The text to use as a label"
 msgstr "ഒരു ലേബല്‍ ആയി ഉപയോഗിക്കുന്നതിനുള്ള വാചകം"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:529
+#: ../gui/simple-greeter/gdm-option-widget.c:513
 msgid "Icon name"
 msgstr "പ്രതിരൂപത്തിന്റെ പേരു്"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:530
+#: ../gui/simple-greeter/gdm-option-widget.c:514
 msgid "The icon to use with the label"
 msgstr "ലേബലിനൊപ്പം ഉപയോഗിക്കുവാനുള്ള ചിഹ്നം"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:538
+#: ../gui/simple-greeter/gdm-option-widget.c:522
 msgid "Default Item"
 msgstr "സ്വതവേയുള്ള വസ്തു"
 
-#: ../gui/simple-greeter/gdm-option-widget.c:539
+#: ../gui/simple-greeter/gdm-option-widget.c:523
 msgid "The ID of the default item"
-msgstr "സഹജമായ പ്രമേയത്തിന്റെ ഐഡി"
+msgstr "സ്വതവേയുള്ള വസ്തുവിന്റെ ഐഡി"
 
 #: ../gui/simple-greeter/gdm-recent-option-widget.c:310
 msgid "Max Item Count"
@@ -716,7 +711,7 @@ msgstr "മറ്റൊരു കമ്പ്യൂട്ടറില്‍ ന�
 
 #: ../gui/simple-greeter/gdm-session-option-widget.c:162
 msgid "Session"
-msgstr "സെഷനുകള്‍"
+msgstr "സെഷന്‍"
 
 #: ../gui/simple-greeter/gdm-simple-greeter.schemas.in.h:1
 msgid "Banner message text"
@@ -767,8 +762,7 @@ msgid "Recently selected languages"
 msgstr "ഏറ്റവും ഒടുവില്‍ തെരഞ്ഞെടുത്ത ഭാഷകള്‍"
 
 #: ../gui/simple-greeter/gdm-simple-greeter.schemas.in.h:13
-msgid ""
-"Set to a list of keyboard layouts to be shown by default at the login window."
+msgid "Set to a list of keyboard layouts to be shown by default at the login window."
 msgstr "ലോഗിന്‍ ജാലകത്തില്‍ കീബോര്‍ഡ് ശൈലികള്‍ സ്വതവേ കാണിക്കുന്നതിനായി സജ്ജമാക്കുക"
 
 #: ../gui/simple-greeter/gdm-simple-greeter.schemas.in.h:14
@@ -797,8 +791,7 @@ msgstr "പശ്ചാത്തല സജ്ജീകരണ മാനേജര�
 
 #: ../gui/simple-greeter/gdm-simple-greeter.schemas.in.h:19
 msgid "Set to true to enable the media-keys settings manager plugin."
-msgstr ""
-"media-keys സജ്ജീകരണ മാനേജര്‍ പ്ലഗിന്‍ പ്രവര്‍ത്തന സജ്ജമാക്കുന്നതിനു് true ആയി സജ്ജമാക്കുക."
+msgstr "media-keys സജ്ജീകരണ മാനേജര്‍ പ്ലഗിന്‍ പ്രവര്‍ത്തന സജ്ജമാക്കുന്നതിനു് true ആയി സജ്ജമാക്കുക."
 
 #: ../gui/simple-greeter/gdm-simple-greeter.schemas.in.h:20
 msgid "Set to true to enable the on-screen keyboard."
@@ -900,76 +893,159 @@ msgstr "പ്രവര്‍ത്തിക്കുന്നുണ്ടോ?"
 msgid "Whether the timer is currently ticking"
 msgstr "ടൈമര്‍ നിലവില്‍ പ്രവര്‍ത്തിക്കുന്നുണ്ടോ എന്നു്"
 
-#: ../gui/simple-greeter/gdm-user.c:245
-msgid "Manager"
-msgstr "പരിപാലകന്‍"
-
-#: ../gui/simple-greeter/gdm-user.c:246
-msgid "The user manager object this user is controlled by."
-msgstr "ഈ ഉപയോക്താവിനെ നിയന്ത്രിക്കുന്ന യൂസര്‍ മാനേജര്‍ ഒബ്ജക്ട്."
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:188
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:487
+#, c-format
+msgid "Log in as %s"
+msgstr "%s ആയി പ്രവേശിക്കുക"
 
 #. translators: This option prompts
 #. * the user to type in a username
 #. * manually instead of choosing from
 #. * a list.
 #.
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:166
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:244
 msgctxt "user"
 msgid "Other..."
 msgstr "മറ്റുള്ളവര്‍..."
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:167
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:245
 msgid "Choose a different account"
 msgstr "മറ്റൊരു അക്കൌണ്ട് തെരഞ്ഞെടുക്കുക"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:179
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:259
 msgid "Guest"
 msgstr "ഗസ്റ്റ്"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:180
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:260
 msgid "Login as a temporary guest"
 msgstr "താല്‍ക്കാലിക ഗസ്റ്റായി പ്രവേശിക്കുക"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:193
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:275
 msgid "Automatic Login"
 msgstr "സ്വയമേയുള്ള പ്രവേശനം"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:194
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:276
 msgid "Automatically login to the system after selecting options"
 msgstr "ഉപാധികള്‍ തെരഞ്ഞെടുത്ത ശേഷം സ്വയമേ സിസ്റ്റമിലേക്ക് പ്രവേശിക്കുക"
 
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:385
-#, c-format
-msgid "Log in as %s"
-msgstr "%s ആയി പ്രവേശിക്കുക"
-
-#: ../gui/simple-greeter/gdm-user-chooser-widget.c:738
+#: ../gui/simple-greeter/gdm-user-chooser-widget.c:999
 msgid "Currently logged in"
 msgstr "നിലവില്‍ ലോഗിന്‍ ചെയ്തിരിക്കുന്നു"
 
-#: ../gui/user-switch-applet/applet.c:165
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:182
+msgid "Password Authentication"
+msgstr "അടയാളവാക്ക് പരിശോധന"
+
+#: ../gui/simple-greeter/plugins/password/gdm-password-extension.c:188
+msgid "Log into session with username and password"
+msgstr "ഉപയോക്തൃനാമവും അടയാളവാക്കും ഉപയോഗിച്ചു് സെഷനിലേക്ക് പ്രവേശിക്കുക"
+
+#: ../gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c:184
+msgid "Fingerprint Authentication"
+msgstr "ഫിംഗര്‍പ്രിന്റ് ഒഥന്റിക്കേഷന്‍"
+
+#: ../gui/simple-greeter/plugins/fingerprint/gdm-fingerprint-extension.c:190
+msgid "Log into session with fingerprint"
+msgstr "ഫിംഗര്‍പ്രിന്റ് ഉപയോഗിച്ചു് സെഷനിലേക്ക് പ്രവേശിക്കുക"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:305
+msgid "Smartcard Authentication"
+msgstr "സ്മാര്‍ട്ട്കാര്‍ഡ് ഒഥന്റിക്കേഷന്‍"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-extension.c:311
+msgid "Log into session with smartcard"
+msgstr "സ്മാര്‍ട്ട്കാര്‍ഡ് ഉപയോഗിച്ചു് സെഷനിലേക്ക് പ്രവേശിക്കുക"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:186
+msgid "Module Path"
+msgstr "ഘടകത്തിന്റെ പാഥ്"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:187
+msgid "path to smartcard PKCS #11 driver"
+msgstr "സ്മാര്‍ട്ട്കാര്‍ഡ് PKCS #11 ഡ്രൈവറിനുള്ള പാഥ്"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:530
+msgid "received error or hang up from event source"
+msgstr "ഇവന്റ് സോഴ്സില്‍ നിന്നും പിശക് ലഭിച്ചിരിക്കുന്നു"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:664
+#, c-format
+msgid "NSS security system could not be initialized"
+msgstr "എന്‍എസ്എസ് സുരക്ഷാ സിസ്റ്റം ആരംഭിക്കുവാന്‍ സാധ്യമായില്ല"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:792
+#, c-format
+msgid "no suitable smartcard driver could be found"
+msgstr "അനുയോജ്യമായ സ്മാര്‍ട്ട്കാര്‍ഡ് ഡ്രൈവര്‍ കണ്ടുപിടിക്കുവാന്‍ സാധ്യമായില്ല"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:806
+#, c-format
+msgid "smartcard driver '%s' could not be loaded"
+msgstr "സ്മാര്‍ട്ട്കാര്‍ഡ് ഡ്രൈവര്‍ '%s' ലഭ്യമാക്കുവാന്‍ സാധ്യമായില്ല"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:879
+#, c-format
+msgid "could not watch for incoming card events - %s"
+msgstr "അകത്തേയ്ക്ക് വരുന്ന കാര്‍ഡ് ഈവന്റുകള്‍ നിരീക്ഷിക്കുവാന്‍ സാധ്യമായില്ല - %s"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard-manager.c:1277
+#, c-format
+msgid "encountered unexpected error while waiting for smartcard events"
+msgstr "സ്മാര്‍ട്ട്കാര്‍ഡ് ഈവന്റുകള്‍ക്കായി കാത്തിരിക്കുമ്പോള്‍ അപ്രതീക്ഷിതമായ പിശക് ഉണ്ടായിരിക്കുന്നു"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:156
+msgid "Slot ID"
+msgstr "സ്ലോട്ട് ഐഡി"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:157
+msgid "The slot the card is in"
+msgstr "കാര്‍ഡുള്ള സ്ലോട്ട്"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:163
+msgid "Slot Series"
+msgstr "സ്ലോട്ട് സീരീസ്"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:164
+msgid "per-slot card identifier"
+msgstr "ഓരോ സ്ലോട്ടിനുമുള്ള ഐഡന്റിഫയര്‍"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:170
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:171
+msgid "name"
+msgstr "നാമം"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:175
+msgid "Module"
+msgstr "ഘടകം"
+
+#: ../gui/simple-greeter/plugins/smartcard/gdm-smartcard.c:176
+msgid "smartcard driver"
+msgstr "സ്മാര്‍ട്ട്കാര്‍ഡ് ഡ്രൈവര്‍"
+
+#: ../gui/user-switch-applet/applet.c:162
 msgid ""
 "The User Switch Applet is free software; you can redistribute it and/or "
 "modify it under the terms of the GNU General Public License as published by "
 "the Free Software Foundation; either version 2 of the License, or (at your "
 "option) any later version."
 msgstr ""
-"യൂസര്‍ സ്വിച്ച് ലഘുപ്രയോഗം ഒരു സ്വതന്ത്ര സോഫ്റ്റ്‌വെയറാണു്, നിങ്ങള്‍ക്കതു് പുനര്‍വിതരണം നടത്തുകയോ സ്വതന്ത്ര "
-"സോഫ്റ്റ്‌വെയര്‍ ഫൌണ്ടേഷന്‍ പ്രസിദ്ധീകരിച്ച ഗ്നു ജനറല്‍ പബ്ലിക് ലൈസന്‍സ് ലക്കം 2 ഓ അതിനേക്കാള്‍ പുതിയ "
-"പതിപ്പോ (നിങ്ങളുടെ ഇഷ്ടപ്രകാരം) പ്രകാരം ഭേദഗതി വരുത്താവുന്നതോ ആണു്."
+"യൂസര്‍ സ്വിച്ച് ആപ്ലെറ്റ് ഒരു സ്വതന്ത്ര സോഫ്റ്റ്‌വെയറാണു്, നിങ്ങള്‍ക്കതു് പുനര്‍വിതരണം നടത്തുകയോ സ്വതന്ത്ര "
+"സോഫ്റ്റ്‌വെയര്‍ ഫൌണ്ടേഷന്‍ പ്രസിദ്ധീകരിച്ച ഗ്നു ജനറല്‍ പബ്ലിക് ലൈസന്‍സ് ലക്കം 2 അല്ലെങ്കില്‍ അതിനേക്കാള്‍ "
+"പുതിയ പതിപ്പോ (നിങ്ങളുടെ ഇഷ്ടപ്രകാരം) പ്രകാരം ഭേദഗതി വരുത്താവുന്നതോ ആണു്."
 
-#: ../gui/user-switch-applet/applet.c:169
+#: ../gui/user-switch-applet/applet.c:166
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 msgstr ""
-"ഈ പ്രോഗ്രാം നിങ്ങള്‍ക്കു് പ്രയോജനപ്പെടും എന്ന പ്രതീക്ഷയില്‍ വിതരണം ചെയ്യുന്നതാണു്.പക്ഷേ, ഇതിന് ഒരു "
-"വാറണ്ടിയും ലഭ്യമല്ല; വ്യാപാരയോഗ്യതയോ ഒരു പ്രത്യേക കാര്യത്തിനു്ചേരുന്നതാണെന്നോ ഉള്ള പരോക്ഷമായ "
+"ഈ പ്രോഗ്രാം നിങ്ങള്‍ക്കു് പ്രയോജനപ്പെടും എന്ന പ്രതീക്ഷയില്‍ വിതരണം ചെയ്യുന്നതാണു്. പക്ഷേ, ഇതിന് ഒരു "
+"വാറണ്ടിയും ലഭ്യമല്ല; വ്യാപാരയോഗ്യതയോ ഒരു പ്രത്യേക കാര്യത്തിനു് ചേരുന്നതാണെന്നോ ഉള്ള പരോക്ഷമായ "
 "ഒരു വാറണ്ടി പോലും ഇല്ല. കൂടുതല്‍ വിവരങ്ങള്‍ക്കു് ഗ്നു ജനറല്‍ പബ്ലിക് ലൈസന്‍സ് കാണുക."
 
-#: ../gui/user-switch-applet/applet.c:173
+#: ../gui/user-switch-applet/applet.c:170
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -980,80 +1056,78 @@ msgstr ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
 "USA."
 
-#: ../gui/user-switch-applet/applet.c:187
+#: ../gui/user-switch-applet/applet.c:184
 msgid "A menu to quickly switch between users."
 msgstr "ഉപയോക്താക്കള്‍ തമ്മില്‍ പെട്ടെന്നു് മാറുവാനുള്ള മെനു."
 
-#: ../gui/user-switch-applet/applet.c:191
+#: ../gui/user-switch-applet/applet.c:188
 msgid "translator-credits"
-msgstr ""
-"അനി പീറ്റര്‍ <apeter@redhat.com>\n"
-"എഫ്എസ്എഫ്-ഇന്ത്യ <locale@gnu.org.in>"
+msgstr "അനി പീറ്റര്‍ | Ani Peter <apeter@redhat.com>"
 
-#: ../gui/user-switch-applet/applet.c:650
-#: ../gui/user-switch-applet/applet.c:787
-#: ../gui/user-switch-applet/applet.c:826
+#: ../gui/user-switch-applet/applet.c:656
+#: ../gui/user-switch-applet/applet.c:785
+#: ../gui/user-switch-applet/applet.c:824
 #, c-format
 msgid "Can't lock screen: %s"
 msgstr "സ്ക്രീന്‍ പൂട്ടുവാന്‍ സാധിക്കുന്നില്ല: %s"
 
-#: ../gui/user-switch-applet/applet.c:672
+#: ../gui/user-switch-applet/applet.c:678
 #, c-format
 msgid "Can't temporarily set screensaver to blank screen: %s"
-msgstr "തല്‍ക്കാലത്തേക്ക് സ്ക്രീന്‍സേവറിനെ ശൂന്യ സ്ക്രീനായി സജ്ജമാക്കുവാന്‍ സാധ്യമല്ല: %s"
+msgstr "തല്‍ക്കാലത്തേക്ക് സ്ക്രീന്‍സേവറിനെ ശൂന്യമായി സജ്ജമാക്കുവാന്‍ സാധ്യമല്ല: %s"
 
-#: ../gui/user-switch-applet/applet.c:885
+#: ../gui/user-switch-applet/applet.c:883
 #, c-format
 msgid "Can't logout: %s"
-msgstr "പുറത്തിറങ്ങുവാന്‍ സാധിക്കുന്നില്ല: %s"
+msgstr "പുറത്തു് കടക്കുവാന്‍ സാധിക്കുന്നില്ല: %s"
 
-#: ../gui/user-switch-applet/applet.c:969
+#: ../gui/user-switch-applet/applet.c:967
 msgid "Available"
 msgstr "ലഭ്യമാണു്"
 
-#: ../gui/user-switch-applet/applet.c:970
+#: ../gui/user-switch-applet/applet.c:968
 msgid "Invisible"
 msgstr "അദൃശ്യം"
 
-#: ../gui/user-switch-applet/applet.c:971
+#: ../gui/user-switch-applet/applet.c:969
 msgid "Busy"
 msgstr "തിരക്കാണു്"
 
-#: ../gui/user-switch-applet/applet.c:972
+#: ../gui/user-switch-applet/applet.c:970
 msgid "Away"
-msgstr "അടുത്തല്ല"
+msgstr "അടുത്തില്ല"
 
-#: ../gui/user-switch-applet/applet.c:1132
-msgid "Account Information..."
-msgstr "അക്കൌണ്ട് വിവരങ്ങള്‍..."
+#: ../gui/user-switch-applet/applet.c:1117
+msgid "Account Information"
+msgstr "അക്കൌണ്ട് വിവരങ്ങള്‍"
 
-#: ../gui/user-switch-applet/applet.c:1144
-msgid "System Preferences..."
-msgstr "സിസ്റ്റത്തിനുള്ള മുന്‍ഗണനകള്‍..."
+#: ../gui/user-switch-applet/applet.c:1129
+msgid "System Preferences"
+msgstr "സിസ്റ്റത്തിനുള്ള മുന്‍ഗണനകള്‍"
 
-#: ../gui/user-switch-applet/applet.c:1160
+#: ../gui/user-switch-applet/applet.c:1143
 msgid "Lock Screen"
 msgstr "സ്ക്രീന്‍ പൂട്ടുക"
 
 #. Only show if not locked down
-#: ../gui/user-switch-applet/applet.c:1171
+#: ../gui/user-switch-applet/applet.c:1154
 msgid "Switch User"
 msgstr "ഉപയോക്താവിനെ മാറ്റുക"
 
 #. Only show switch user if there are other users
-#: ../gui/user-switch-applet/applet.c:1182
+#: ../gui/user-switch-applet/applet.c:1165
 msgid "Quit..."
-msgstr "പുറത്തു് കടക്കുക..."
+msgstr "പുറത്ത് കടക്കുക..."
 
-#: ../gui/user-switch-applet/applet.c:1303
+#: ../gui/user-switch-applet/applet.c:1271
 msgid "Unknown"
 msgstr "അപരിചിതം"
 
-#: ../gui/user-switch-applet/applet.c:1421
+#: ../gui/user-switch-applet/applet.c:1384
 msgid "User Switch Applet"
-msgstr "ഉപയോക്താവ് മാറുന്നതിനുള്ള ലഘുപ്രയോഗം"
+msgstr "ഉപയോക്താവ് മാറുന്നതിനുള്ള ആപ്ലറ്റ്"
 
-#: ../gui/user-switch-applet/applet.c:1435
+#: ../gui/user-switch-applet/applet.c:1399
 msgid "Change account settings and status"
 msgstr "അക്കൌണ്ട് ക്രമീകരണങ്ങളും അവസ്ഥയും മാറ്റുക"
 
@@ -1067,7 +1141,7 @@ msgstr "യൂസര്‍ സ്വിച്ചര്‍"
 
 #: ../gui/user-switch-applet/GNOME_FastUserSwitchApplet.server.in.in.h:3
 msgid "User Switcher Applet Factory"
-msgstr "യൂസര്‍ സ്വിച്ചര്‍ ലഘുപ്രയോഗ ഫാക്ടറി"
+msgstr "യൂസര്‍ സ്വിച്ചര്‍ ആപ്ലെറ്റ് ഫാക്ടറി"
 
 #: ../gui/user-switch-applet/GNOME_FastUserSwitchApplet.xml.h:1
 msgid "Edit Personal _Information"
@@ -1075,7 +1149,7 @@ msgstr "സ്വകാര്യ _വിവരം ചിട്ടപ്പെട
 
 #: ../gui/user-switch-applet/GNOME_FastUserSwitchApplet.xml.h:2
 msgid "_About"
-msgstr "_അണിയറ വിശേഷങ്ങള്‍"
+msgstr "_സംബന്ധിച്ചുള്ള"
 
 #: ../gui/user-switch-applet/GNOME_FastUserSwitchApplet.xml.h:3
 msgid "_Edit Users and Groups"
@@ -1083,7 +1157,7 @@ msgstr "ഉപയോക്താക്കളും ഗ്രൂപ്പുക�
 
 #: ../utils/gdmflexiserver.c:61
 msgid "Only the VERSION command is supported"
-msgstr "VERSION എന്നുള്ള ആജ്ഞ മാത്രമേ പിന്തുണയ്ക്കുന്നുള്ളൂ"
+msgstr "VERSION കമാന്‍ഡ് മാത്രമേ പിന്തുണയ്ക്കുന്നുള്ളൂ"
 
 #: ../utils/gdmflexiserver.c:61
 msgid "COMMAND"
@@ -1096,7 +1170,7 @@ msgstr "Ignored - retained for compatibility"
 
 #: ../utils/gdmflexiserver.c:64 ../utils/gdm-screenshot.c:43
 msgid "Debugging output"
-msgstr "ഔട്ട് പുട്ട് ഡീബഗ്ഗ് ചെയ്യുന്നു"
+msgstr "ഔട്ട്പുട്ട് ഡീബഗ്ഗ് ചെയ്യുന്നു"
 
 #: ../utils/gdmflexiserver.c:68
 msgid "Version of this application"
@@ -1110,7 +1184,7 @@ msgstr "നിലവിലുള്ള സെഷന്‍ തിരിച്ച�
 #. Option parsing
 #: ../utils/gdmflexiserver.c:711
 msgid "- New GDM login"
-msgstr "- പുതിയ ജിഡിഎം വഴി അകത്തു് കയറുക"
+msgstr "- പുതിയ ജിഡിഎം പ്രവേശനം"
 
 #: ../utils/gdmflexiserver.c:767
 msgid "Unable to start new display"
@@ -1123,22 +1197,5 @@ msgstr "സ്ക്രീന്‍ഷോട്ട് എടുത്തിര�
 #. Option parsing
 #: ../utils/gdm-screenshot.c:281
 msgid "Take a picture of the screen"
-msgstr "ഇപ്പോള്‍ കാണുന്ന സ്ക്രീനിന്റെ ഒരു സ്ക്രീന്‍ഷോട്ട് എടുക്കുക."
+msgstr "ഇപ്പോള്‍ കാണുന്ന സ്ക്രീനിന്റെ സ്ക്രീന്‍ഷോട്ട് എടുക്കുക."
 
-#~ msgid "Enable debugging code"
-#~ msgstr "ഡീബഗ്ഗിങ് കോഡ് സജ്ജമാക്കുക"
-
-#~ msgid "id"
-#~ msgstr "id"
-
-#~ msgid "%a %b %e"
-#~ msgstr "%a %b %e"
-
-#~ msgid "%1$s, %2$s"
-#~ msgstr "%1$s, %2$s"
-
-#~ msgid "Enable debugging"
-#~ msgstr "ഡീബഗ്ഗിങ് സജ്ജമാക്കുക"
-
-#~ msgid "Enable debugging mode for the greeter."
-#~ msgstr "ഗ്രീറ്ററിനുള്ള ഡീബഗ്ഗിങ് മോഡ് സജ്ജമാക്കുക."
