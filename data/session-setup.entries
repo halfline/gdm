@@ -774,5 +774,11 @@
         <string>/bin/true</string>
       </value>
     </entry>
+    <entry>
+      <key>/apps/notification-daemon/popup_location</key>
+      <value>
+        <string>bottom_right</string>
+      </value>
+    </entry>
   </entrylist>
 </gconfentryfile>
