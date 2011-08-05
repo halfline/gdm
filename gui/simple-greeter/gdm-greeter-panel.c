@@ -44,6 +44,9 @@
 #include <devkit-power-gobject/devicekit-power.h>
 #endif
 
+#include <libgnomekbd/gkbd-indicator.h>
+#include <libxklavier/xkl_engine.h>
+
 #include "gdm-languages.h"
 #include "gdm-greeter-panel.h"
 #include "gdm-clock-widget.h"
@@ -79,6 +82,7 @@ struct GdmGreeterPanelPrivate
         GtkWidget              *shutdown_button;
         GtkWidget              *shutdown_menu;
         GtkWidget              *language_option_widget;
+        GtkWidget              *keyboard_indicator_widget;
         GtkWidget              *session_option_widget;
 
         GdmTimer               *animation_timer;
@@ -697,11 +701,98 @@ on_shutdown_menu_deactivate (GdmGreeterPanel *panel)
 }
 
 static void
+show_or_hide_keyboard_indicator (GdmGreeterPanel *panel)
+{
+        XklEngine *engine;
+        guint num_groups;
+
+        engine = gkbd_indicator_get_xkl_engine ();
+
+        num_groups = xkl_engine_get_num_groups (engine);
+        if (num_groups > 1) {
+                gtk_widget_show (panel->priv->keyboard_indicator_widget);
+        } else {
+                gtk_widget_hide (panel->priv->keyboard_indicator_widget);
+        }
+}
+
+static void
+on_num_groups_changed (XklEngine       *engine,
+                       GParamSpec      *pspec,
+                       GdmGreeterPanel *panel)
+{
+    show_or_hide_keyboard_indicator (panel);
+}
+
+static void
+on_x_config_changed (XklEngine       *engine,
+                     GdmGreeterPanel *panel)
+{
+    show_or_hide_keyboard_indicator (panel);
+}
+
+static void
+on_x_state_changed (XklEngine            *engine,
+                    XklEngineStateChange  type,
+                    int                   num,
+                    gboolean              predicate,
+                    GdmGreeterPanel      *panel)
+{
+    show_or_hide_keyboard_indicator (panel);
+}
+
+static void
+activate_keyboard_layout (GdmGreeterPanel *panel)
+{
+        XklEngine    *engine;
+        XklConfigRec *config;
+
+        engine = gkbd_indicator_get_xkl_engine ();
+        config = xkl_config_rec_new ();
+
+        if (xkl_config_rec_get_from_server (config, engine)) {
+                int i;
+
+                for (i = 1; config->layouts[i] != NULL; i++) {
+                        /* put us at the front of the list, since usernames and
+                         * passwords are usually ascii
+                         */
+                        if (strcmp (config->layouts[i], "us") == 0) {
+                                char *temp_layout;
+                                char *temp_variant = NULL;
+                                char *temp_options = NULL;
+
+                                temp_layout = config->layouts[0];
+                                config->layouts[0] = config->layouts[i];
+                                config->layouts[i] = temp_layout;
+
+                                if (config->variants != NULL) {
+                                        temp_variant = config->variants[0];
+                                        config->variants[0] = config->variants[i];
+                                        config->variants[i] = temp_variant;
+                                }
+
+                                if (config->options != NULL) {
+                                        temp_options = config->options[0];
+                                        config->options[0] = config->options[i];
+                                        config->options[i] = temp_options;
+                                }
+                                break;
+                        }
+                }
+                xkl_config_rec_activate (config, engine);
+        }
+
+}
+
+static void
 setup_panel (GdmGreeterPanel *panel)
 {
         NaTray    *tray;
         GtkWidget *spacer;
         int        padding;
+
+        XklEngine    *engine;
 
         gdm_profile_start (NULL);
 
@@ -816,6 +907,27 @@ setup_panel (GdmGreeterPanel *panel)
         gtk_box_pack_end (GTK_BOX (panel->priv->hbox),
                             GTK_WIDGET (panel->priv->clock), FALSE, FALSE, 6);
         gtk_widget_show (panel->priv->clock);
+
+        panel->priv->keyboard_indicator_widget = gkbd_indicator_new ();
+
+        gtk_box_pack_end (GTK_BOX (panel->priv->hbox),
+                          GTK_WIDGET (panel->priv->keyboard_indicator_widget), FALSE, FALSE, 6);
+
+        activate_keyboard_layout (panel);
+        show_or_hide_keyboard_indicator (panel);
+
+        engine = gkbd_indicator_get_xkl_engine ();
+        g_signal_connect (engine, "notify::num-groups",
+                          G_CALLBACK (on_num_groups_changed),
+                          panel);
+
+        g_signal_connect (engine, "X-config-changed",
+                          G_CALLBACK (on_x_config_changed),
+                          panel);
+
+        g_signal_connect (engine, "X-state-changed",
+                          G_CALLBACK (on_x_state_changed),
+                          panel);
 
         tray = na_tray_new_for_screen (gtk_window_get_screen (GTK_WINDOW (panel)),
                                        GTK_ORIENTATION_HORIZONTAL);
