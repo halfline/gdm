@@ -23,6 +23,8 @@ AM_CPPFLAGS = \
 	$(DISABLE_DEPRECATED_CFLAGS)			\
 	$(GTK_CFLAGS)					\
 	$(SIMPLE_GREETER_CFLAGS)			\
+	$(LIBGNOMEKBDUI_CFLAGS)		\
+	$(LIBXKLAVIER_CFLAGS)             \
 	$(NULL)
 
 @INTLTOOL_SCHEMAS_RULE@
@@ -92,6 +94,7 @@ test_greeter_login_window_LDADD =	\
 	$(COMMON_LIBS)			\
 	$(SIMPLE_GREETER_LIBS)		\
 	$(RBAC_LIBS)			\
+	$(LIBXKLAVIER_LIBS)		\
 	$(NULL)
 
 test_greeter_panel_SOURCES = 	\
@@ -133,6 +136,7 @@ test_greeter_panel_LDADD =	\
 	$(SIMPLE_GREETER_LIBS)		\
 	$(GTK_LIBS)			\
 	$(GCONF_LIBS)			\
+	$(LIBGNOMEKBDUI_LIBS)		\
 	$(DEVKIT_POWER_LIBS)		\
 	$(NULL)
 
@@ -288,6 +292,7 @@ gdm_simple_greeter_LDADD = 		\
 	$(EXTRA_GREETER_LIBS)   	\
 	$(SIMPLE_GREETER_LIBS)		\
 	$(RBAC_LIBS)			\
+	$(LIBGNOMEKBDUI_LIBS)		\
 	$(DEVKIT_POWER_LIBS)		\
 	$(NULL)
 
