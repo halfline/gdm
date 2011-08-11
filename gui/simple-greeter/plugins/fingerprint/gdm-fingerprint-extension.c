@@ -26,6 +26,8 @@
 #include "gdm-conversation.h"
 #include "gdm-task.h"
 
+#include <dbus/dbus-glib.h>
+
 #include <glib/gi18n-lib.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
@@ -39,6 +41,8 @@ struct _GdmFingerprintExtensionPrivate
         GtkWidget *message_label;
         GtkWidget *prompt_label;
         GtkWidget *prompt_entry;
+
+        DBusGConnection *bus_connection;
 
         guint      answer_pending : 1;
 };
@@ -199,6 +203,10 @@ gdm_fingerprint_extension_is_choosable (GdmTask *task)
 gboolean
 gdm_fingerprint_extension_is_visible (GdmTask *task)
 {
+        GdmFingerprintExtension *extension = GDM_FINGERPRINT_EXTENSION (task);
+        DBusGProxy *proxy;
+        GError *error;
+        char *object_path;
         char *contents, **lines;
         gboolean ret;
         guint i;
@@ -232,6 +240,41 @@ gdm_fingerprint_extension_is_visible (GdmTask *task)
         }
 
         g_strfreev (lines);
+
+        if (!ret) {
+                return FALSE;
+        }
+
+        if (extension->priv->bus_connection == NULL) {
+                return FALSE;
+        }
+
+        proxy = dbus_g_proxy_new_for_name (extension->priv->bus_connection,
+                                           "net.reactivated.Fprint",
+                                           "/net/reactivated/Fprint/Manager",
+                                           "net.reactivated.Fprint.Manager");
+
+        error = NULL;
+        object_path = NULL,
+        ret = dbus_g_proxy_call (proxy,
+                                 "GetDefaultDevice",
+                                 &error,
+                                 G_TYPE_INVALID,
+                                 DBUS_TYPE_G_OBJECT_PATH,
+                                 &object_path,
+                                 G_TYPE_INVALID);
+        g_object_unref (proxy);
+
+        if (!ret) {
+                return FALSE;
+        }
+
+        if (object_path == NULL) {
+                ret = FALSE;
+        } else {
+                ret = TRUE;
+        }
+        g_free (object_path);
 
         return ret;
 }
@@ -343,5 +386,8 @@ gdm_fingerprint_extension_init (GdmFingerprintExtension *extension)
         extension->priv->icon = g_themed_icon_new ("gdm-fingerprint");
         create_page (extension);
         create_actions (extension);
+
+        extension->priv->bus_connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, NULL);
+
         gdm_fingerprint_extension_reset (GDM_CONVERSATION (extension));
 }
