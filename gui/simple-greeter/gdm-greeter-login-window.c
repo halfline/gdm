@@ -119,12 +119,14 @@ struct GdmGreeterLoginWindowPrivate
         GList           *tasks;
         GdmTask         *active_task;
         GList           *tasks_to_enable;
+        GList           *tasks_to_stop;
 
         gboolean         banner_message_enabled;
         guint            gconf_cnxn;
 
         guint            last_mode;
         guint            dialog_mode;
+        guint            next_mode;
 
         gboolean         user_list_disabled;
         guint            num_queries;
@@ -229,14 +231,13 @@ set_focus (GdmGreeterLoginWindow *login_window)
 
 }
 
-static gboolean
-set_task_conversation_message (GdmTask     *task,
-                               const char  *message)
+static void
+queue_message_for_conversation (GdmConversation *conversation,
+                                const char      *message)
 {
-
-        gdm_conversation_set_message (GDM_CONVERSATION (task), message);
-        g_object_set_data (G_OBJECT (task), "message-pending", GINT_TO_POINTER (TRUE));
-        return FALSE;
+        gdm_conversation_queue_message (conversation,
+                                        message,
+                                        GDM_SERVICE_MESSAGE_TYPE_INFO);
 }
 
 static void
@@ -246,7 +247,7 @@ set_message (GdmGreeterLoginWindow *login_window,
         g_return_if_fail (GDM_IS_GREETER_LOGIN_WINDOW (login_window));
 
         g_list_foreach (login_window->priv->tasks,
-                        (GFunc) set_task_conversation_message,
+                        (GFunc) queue_message_for_conversation,
                         (gpointer) text);
 }
 
@@ -797,6 +798,9 @@ reset_dialog (GdmGreeterLoginWindow *login_window,
 
         login_window->priv->num_queries = 0;
 
+        g_free (login_window->priv->service_name_of_session_ready_to_start);
+        login_window->priv->service_name_of_session_ready_to_start = NULL;
+
         if (dialog_mode == MODE_SELECTION) {
                 if (login_window->priv->timed_login_enabled) {
                         gdm_chooser_widget_set_item_timer (GDM_CHOOSER_WIDGET (login_window->priv->user_chooser),
@@ -851,6 +855,41 @@ restart_conversations (GdmGreeterLoginWindow *login_window)
         set_busy (login_window);
         set_sensitive (login_window, FALSE);
         g_signal_emit (login_window, signals[CANCELLED], 0);
+}
+
+static gboolean
+has_queued_messages (GdmGreeterLoginWindow *login_window)
+{
+        GList *node;
+
+        node = login_window->priv->tasks;
+        while (node != NULL) {
+                GdmTask *task;
+
+                task = GDM_TASK (node->data);
+
+                if (gdm_conversation_has_queued_messages (GDM_CONVERSATION (task))) {
+                        return TRUE;
+                }
+                node = node->next;
+        }
+
+        return FALSE;
+}
+
+
+static void
+reset_dialog_after_messages (GdmGreeterLoginWindow *login_window,
+                             guint                  dialog_mode)
+{
+        if (has_queued_messages (login_window)) {
+                g_debug ("GdmGreeterLoginWindow: will reset dialog after pending messages");
+                login_window->priv->next_mode = dialog_mode;
+        } else {
+                g_debug ("GdmGreeterLoginWindow: resetting dialog");
+                reset_dialog (login_window, dialog_mode);
+        }
+
 }
 
 static void
@@ -914,6 +953,7 @@ handle_stopped_conversation (GdmGreeterLoginWindow *login_window,
         if (login_window->priv->dialog_mode == MODE_AUTHENTICATION) {
                 g_debug ("GdmGreeterLoginWindow: conversation failed, starting over");
                 restart_conversations (login_window);
+                reset_dialog_after_messages (login_window, MODE_AUTHENTICATION);
                 return;
         } else if (login_window->priv->dialog_mode != MODE_MULTIPLE_AUTHENTICATION) {
                 g_warning ("conversation %s stopped when it shouldn't have been running (mode %d)",
@@ -927,7 +967,7 @@ handle_stopped_conversation (GdmGreeterLoginWindow *login_window,
         if (task != NULL) {
                 gdm_conversation_reset (GDM_CONVERSATION (task));
 
-                g_object_set_data (G_OBJECT (task), "needs-to-be-stopped", GINT_TO_POINTER (FALSE));
+                login_window->priv->tasks_to_stop = g_list_remove (login_window->priv->tasks_to_stop, task);
         }
 
         /* If every conversation has failed, then just start over.
@@ -959,8 +999,7 @@ gdm_greeter_login_window_conversation_stopped (GdmGreeterLoginWindow *login_wind
 
         task = find_task_with_service_name (login_window, service_name);
         if (task != NULL && gdm_task_is_enabled (task)) {
-
-                messages_pending = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (task), "message-pending"));
+                messages_pending = gdm_conversation_has_queued_messages (GDM_CONVERSATION (task));
         } else {
                 messages_pending = FALSE;
         }
@@ -970,7 +1009,8 @@ gdm_greeter_login_window_conversation_stopped (GdmGreeterLoginWindow *login_wind
         } else {
                 g_assert (task != NULL);
 
-                g_object_set_data (G_OBJECT (task), "needs-to-be-stopped", GINT_TO_POINTER (TRUE));
+                login_window->priv->tasks_to_stop = g_list_prepend (login_window->priv->tasks_to_stop, task);
+
         }
 
         return TRUE;
@@ -982,7 +1022,8 @@ restart_task_conversation (GdmTask               *task,
 {
         char *service_name;
 
-        g_object_set_data (G_OBJECT (task), "needs-to-be-stopped", GINT_TO_POINTER (FALSE));
+        login_window->priv->tasks_to_stop = g_list_remove (login_window->priv->tasks_to_stop, task);
+
         service_name = gdm_conversation_get_service_name (GDM_CONVERSATION (task));
         if (service_name != NULL) {
                 char *name;
@@ -1028,9 +1069,9 @@ gdm_greeter_login_window_info (GdmGreeterLoginWindow *login_window,
         task = find_task_with_service_name (login_window, service_name);
 
         if (task != NULL) {
-                g_object_set_data (G_OBJECT (task), "message-pending", GINT_TO_POINTER (TRUE));
-                gdm_conversation_set_message (GDM_CONVERSATION (task),
-                                              text);
+                gdm_conversation_queue_message (GDM_CONVERSATION (task),
+                                                text,
+                                                GDM_SERVICE_MESSAGE_TYPE_INFO);
                 show_task_actions (task);
         }
 
@@ -1051,13 +1092,11 @@ gdm_greeter_login_window_problem (GdmGreeterLoginWindow *login_window,
         task = find_task_with_service_name (login_window, service_name);
 
         if (task != NULL) {
-                g_object_set_data (G_OBJECT (task), "message-pending", GINT_TO_POINTER (TRUE));
-                gdm_conversation_set_message (GDM_CONVERSATION (task),
-                                              text);
+                gdm_conversation_queue_message (GDM_CONVERSATION (task),
+                                                text,
+                                                GDM_SERVICE_MESSAGE_TYPE_PROBLEM);
                 show_task_actions (task);
         }
-
-        gdk_window_beep (GTK_WIDGET (login_window)->window);
 
         return TRUE;
 }
@@ -1172,22 +1211,14 @@ gdm_greeter_login_window_start_session_when_ready (GdmGreeterLoginWindow *login_
                                                    const char            *service_name)
 {
         if (login_window->priv->is_interactive) {
-                gboolean messages_pending;
                 GdmTask *task;
 
                 set_sensitive (GDM_GREETER_LOGIN_WINDOW (login_window), FALSE);
 
                 task = find_task_with_service_name (login_window, service_name);
 
-                if (task != NULL) {
-                        messages_pending = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (task), "message-pending"));
-
-                } else {
-                        messages_pending = FALSE;
-                }
-
                 login_window->priv->service_name_of_session_ready_to_start = g_strdup (service_name);
-                if (!messages_pending) {
+                if (!gdm_conversation_has_queued_messages (GDM_CONVERSATION (task))) {
                         gdm_greeter_login_window_start_session (login_window);
                 }
         } else {
@@ -2204,31 +2235,6 @@ on_conversation_chose_user (GdmGreeterLoginWindow *login_window,
         return TRUE;
 }
 
-static void
-on_conversation_message_set (GdmGreeterLoginWindow *login_window,
-                             GdmConversation       *conversation)
-{
-        gboolean needs_to_be_stopped;
-
-        g_object_set_data (G_OBJECT (conversation), "message-pending", GINT_TO_POINTER (FALSE));
-
-        needs_to_be_stopped = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (conversation), "needs-to-be-stopped"));
-
-        if (needs_to_be_stopped) {
-                char *service_name;
-
-                service_name = gdm_conversation_get_service_name (conversation);
-                handle_stopped_conversation (login_window, service_name);
-                g_free (service_name);
-        }
-
-        if (login_window->priv->service_name_of_session_ready_to_start != NULL ) {
-                if (login_window->priv->active_task == GDM_TASK (conversation)) {
-                        gdm_greeter_login_window_start_session (login_window);
-                }
-        }
-}
-
 void
 gdm_greeter_login_window_remove_extension (GdmGreeterLoginWindow *login_window,
  GdmGreeterExtension *extension)
@@ -2238,6 +2244,31 @@ gdm_greeter_login_window_remove_extension (GdmGreeterLoginWindow *login_window,
 
         if (!GDM_IS_CONVERSATION (extension)) {
                 return;
+        }
+}
+
+static void
+on_conversation_messages_set (GdmGreeterLoginWindow *login_window,
+                              GdmConversation       *conversation)
+{
+        gboolean needs_to_be_stopped;
+
+        needs_to_be_stopped = g_list_find (login_window->priv->tasks_to_stop, conversation) != NULL;
+
+        if (needs_to_be_stopped) {
+                char *service_name;
+
+                service_name = gdm_conversation_get_service_name (conversation);
+                handle_stopped_conversation (login_window, service_name);
+                g_free (service_name);
+        }
+
+        if (login_window->priv->service_name_of_session_ready_to_start != NULL) {
+                if (login_window->priv->active_task == GDM_TASK (conversation)) {
+                        gdm_greeter_login_window_start_session (login_window);
+                }
+        } else if (login_window->priv->next_mode != MODE_UNDEFINED) {
+                reset_dialog_after_messages (login_window, login_window->priv->next_mode);
         }
 }
 
@@ -2393,7 +2424,7 @@ gdm_greeter_login_window_add_extension (GdmGreeterLoginWindow *login_window,
                                   login_window);
         g_signal_connect_swapped (GDM_CONVERSATION (extension),
                                   "message-set",
-                                  G_CALLBACK (on_conversation_message_set),
+                                  G_CALLBACK (on_conversation_messages_set),
                                   login_window);
 
         g_debug ("GdmGreeterLoginWindow: new extension '%s - %s' added",
