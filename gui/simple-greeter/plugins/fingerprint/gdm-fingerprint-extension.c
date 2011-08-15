@@ -45,8 +45,6 @@ struct _GdmFingerprintExtensionPrivate
         DBusGConnection *bus_connection;
 
         guint      answer_pending : 1;
-
-        guint      message_timeout_id;
 };
 
 static void gdm_fingerprint_extension_finalize (GObject *object);
@@ -65,17 +63,6 @@ G_DEFINE_TYPE_WITH_CODE (GdmFingerprintExtension,
                          G_IMPLEMENT_INTERFACE (GDM_TYPE_CONVERSATION,
                                                 gdm_conversation_iface_init));
 
-static gboolean
-on_message_expired (GdmConversation *conversation)
-{
-        GdmFingerprintExtension *extension = GDM_FINGERPRINT_EXTENSION (conversation);
-        extension->priv->message_timeout_id = 0;
-
-        gdm_conversation_message_set (conversation);
-
-        return FALSE;
-}
-
 static void
 gdm_fingerprint_extension_set_message (GdmConversation *conversation,
                                        const char *message)
@@ -83,11 +70,6 @@ gdm_fingerprint_extension_set_message (GdmConversation *conversation,
         GdmFingerprintExtension *extension = GDM_FINGERPRINT_EXTENSION (conversation);
         gtk_widget_show (extension->priv->message_label);
         gtk_label_set_text (GTK_LABEL (extension->priv->message_label), message);
-
-        if (extension->priv->message_timeout_id  != 0) {
-                g_source_remove (extension->priv->message_timeout_id);
-        }
-        extension->priv->message_timeout_id = g_timeout_add_seconds (2, (GSourceFunc) on_message_expired, conversation);
 }
 
 static void
@@ -344,7 +326,6 @@ static void
 gdm_fingerprint_extension_finalize (GObject *object)
 {
         GdmFingerprintExtension *extension = GDM_FINGERPRINT_EXTENSION (object);
-        g_source_remove (extension->priv->message_timeout_id);
 }
 
 static void
