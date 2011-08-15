@@ -36,6 +36,11 @@ enum {
         LAST_SIGNAL
 };
 
+typedef struct {
+        char                  *text;
+        GdmServiceMessageType  type;
+} QueuedMessage;
+
 static guint signals [LAST_SIGNAL] = { 0, };
 
 static void gdm_conversation_class_init (gpointer g_iface);
@@ -112,6 +117,180 @@ gdm_conversation_set_message  (GdmConversation   *conversation,
         GDM_CONVERSATION_GET_IFACE (conversation)->set_message (conversation, message);
 }
 
+static void
+free_queued_message (QueuedMessage *message)
+{
+        g_free (message->text);
+        g_slice_free (QueuedMessage, message);
+}
+
+static void
+purge_message_queue (GdmConversation *conversation)
+{
+        GQueue    *message_queue;
+        guint      message_timeout_id;
+
+        message_queue = g_object_get_data (G_OBJECT (conversation),
+                                           "gdm-conversation-message-queue");
+        message_timeout_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (conversation),
+                                                "gdm-conversation-message-timeout-id"));
+
+        if (message_timeout_id) {
+                g_source_remove (message_timeout_id);
+                g_object_set_data (G_OBJECT (conversation),
+                                   "gdm-conversation-message-timeout-id",
+                                   GINT_TO_POINTER (0));
+        }
+        g_queue_foreach (message_queue,
+                         (GFunc) free_queued_message,
+                         NULL);
+        g_queue_clear (message_queue);
+}
+
+static gboolean
+dequeue_message (GdmConversation *conversation)
+{
+        GQueue    *message_queue;
+        guint      message_timeout_id;
+
+        message_queue = g_object_get_data (G_OBJECT (conversation),
+                                           "gdm-conversation-message-queue");
+        message_timeout_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (conversation),
+                                                "gdm-conversation-message-timeout-id"));
+
+        if (!g_queue_is_empty (message_queue)) {
+                QueuedMessage *message;
+                int duration;
+                gboolean needs_beep;
+
+                message = (QueuedMessage *) g_queue_pop_head (message_queue);
+
+                switch (message->type) {
+                        case GDM_SERVICE_MESSAGE_TYPE_INFO:
+                                needs_beep = FALSE;
+                                break;
+                        case GDM_SERVICE_MESSAGE_TYPE_PROBLEM:
+                                needs_beep = TRUE;
+                                break;
+                        default:
+                                g_assert_not_reached ();
+                }
+
+                gdm_conversation_set_message (conversation, message->text);
+
+                duration = (int) (g_utf8_strlen (message->text, -1) / 66.0) * 1000;
+                duration = CLAMP (duration, 3000, 7000);
+
+                message_timeout_id = g_timeout_add (duration,
+                                                    (GSourceFunc) dequeue_message,
+                                                    conversation);
+
+                g_object_set_data (G_OBJECT (conversation),
+                                   "gdm-conversation-message-timeout-id",
+                                   GINT_TO_POINTER (message_timeout_id));
+
+                if (needs_beep) {
+                        gdk_window_beep (gtk_widget_get_window (GTK_WIDGET (gdm_conversation_get_page (GDM_CONVERSATION (conversation)))));
+                }
+
+                free_queued_message (message);
+        } else {
+                gdm_conversation_set_message (conversation, "");
+
+                g_object_set_data (G_OBJECT (conversation),
+                                   "gdm-conversation-message-timeout-id",
+                                   GINT_TO_POINTER (0));
+
+                gdm_conversation_message_set (conversation);
+        }
+
+        return FALSE;
+}
+
+static void
+on_page_visible (GtkWidget       *widget,
+                 GParamSpec      *pspec,
+                 GdmConversation *conversation)
+{
+        guint message_timeout_id;
+
+        if (!gtk_widget_get_visible (widget)) {
+                return;
+        }
+
+        message_timeout_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (conversation),
+                                                "gdm-conversation-message-timeout-id"));
+
+        if (gdm_conversation_has_queued_messages (conversation) && message_timeout_id == 0) {
+                dequeue_message (conversation);
+        }
+}
+
+void
+gdm_conversation_queue_message (GdmConversation   *conversation,
+                                const char        *text,
+                                GdmServiceMessageType type)
+{
+        GQueue    *message_queue;
+        guint      message_timeout_id;
+        QueuedMessage *message;
+        GtkWidget *page;
+
+        message_queue = g_object_get_data (G_OBJECT (conversation),
+                                           "gdm-conversation-message-queue");
+        message_timeout_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (conversation),
+                                              "gdm-conversation-message-timeout-id"));
+        page = gdm_conversation_get_page (conversation);
+
+        if (message_queue == NULL) {
+                message_queue = g_queue_new ();
+                g_object_set_data (G_OBJECT (conversation),
+                                   "gdm-conversation-message-queue",
+                                   message_queue);
+                g_signal_connect (G_OBJECT (page),
+                                  "notify::visible",
+                                  G_CALLBACK (on_page_visible),
+                                  conversation);
+        }
+
+        message = g_slice_new (QueuedMessage);
+        message->text = g_strdup (text);
+        message->type = type;
+
+        g_queue_push_tail (message_queue, message);
+
+        if (message_timeout_id == 0 && gtk_widget_get_visible (page)) {
+                dequeue_message (conversation);
+        }
+}
+
+gboolean
+gdm_conversation_has_queued_messages (GdmConversation *conversation)
+{
+        GQueue    *message_queue;
+        guint      message_timeout_id;
+
+        message_queue = g_object_get_data (G_OBJECT (conversation),
+                                           "gdm-conversation-message-queue");
+
+        if (message_queue == NULL) {
+                return FALSE;
+        }
+
+        message_timeout_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (conversation),
+                                                "gdm-conversation-message-timeout-id"));
+
+        if (message_timeout_id != 0) {
+                return TRUE;
+        }
+
+        if (!g_queue_is_empty (message_queue)) {
+                return TRUE;
+        }
+
+        return FALSE;
+}
+
 void
 gdm_conversation_ask_question (GdmConversation   *conversation,
                                const char        *message)
@@ -129,6 +308,10 @@ gdm_conversation_ask_secret (GdmConversation   *conversation,
 void
 gdm_conversation_reset (GdmConversation *conversation)
 {
+
+        gdm_conversation_set_message (conversation, "");
+        purge_message_queue (conversation);
+
         return GDM_CONVERSATION_GET_IFACE (conversation)->reset (conversation);
 }
 
@@ -199,5 +382,13 @@ gdm_conversation_choose_user (GdmConversation *conversation,
 void
 gdm_conversation_message_set (GdmConversation *conversation)
 {
-        g_signal_emit (conversation, signals [MESSAGE_SET], 0);
+
+        GQueue    *message_queue;
+
+        message_queue = g_object_get_data (G_OBJECT (conversation),
+                                           "gdm-conversation-message-queue");
+
+        if (message_queue == NULL || g_queue_is_empty (message_queue)) {
+                g_signal_emit (conversation, signals [MESSAGE_SET], 0);
+        }
 }

@@ -39,6 +39,11 @@ G_BEGIN_DECLS
 typedef struct _GdmConversation      GdmConversation;
 typedef struct _GdmConversationIface GdmConversationIface;
 
+typedef enum {
+        GDM_SERVICE_MESSAGE_TYPE_INFO,
+        GDM_SERVICE_MESSAGE_TYPE_PROBLEM
+} GdmServiceMessageType;
+
 struct _GdmConversationIface
 {
         GTypeInterface base_iface;
@@ -69,6 +74,10 @@ GType  gdm_conversation_get_type     (void) G_GNUC_CONST;
 
 void   gdm_conversation_set_message  (GdmConversation   *conversation,
                                       const char        *message);
+void   gdm_conversation_queue_message (GdmConversation   *conversation,
+                                       const char        *message,
+                                       GdmServiceMessageType type);
+gboolean  gdm_conversation_has_queued_messages (GdmConversation *conversation);
 void   gdm_conversation_ask_question (GdmConversation   *conversation,
                                       const char        *message);
 void   gdm_conversation_ask_secret   (GdmConversation   *conversation,
