@@ -1434,6 +1434,8 @@ else
    XSESSION_SHELL=/bin/sh
 fi
 
+AC_DEFINE_UNQUOTED(GDM_INITIAL_VT, "1", [Initial Virtual Terminal])
+
 # Set configuration choices.
 #
 AC_SUBST(XSESSION_SHELL)

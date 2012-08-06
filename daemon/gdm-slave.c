@@ -96,6 +96,7 @@ struct GdmSlavePrivate
         char            *windowpath;
 
         GArray          *display_x11_cookie;
+        gboolean         display_is_initial;
 
         DBusGProxy      *display_proxy;
         DBusGConnection *connection;
@@ -110,7 +111,8 @@ enum {
         PROP_DISPLAY_IS_LOCAL,
         PROP_FORCE_ACTIVE_VT,
         PROP_DISPLAY_SEAT_ID,
-        PROP_DISPLAY_X11_AUTHORITY_FILE
+        PROP_DISPLAY_X11_AUTHORITY_FILE,
+        PROP_DISPLAY_IS_INITIAL,
 };
 
 enum {
@@ -912,6 +914,24 @@ gdm_slave_real_start (GdmSlave *slave)
                 return FALSE;
         }
 
+        error = NULL;
+        res = dbus_g_proxy_call (slave->priv->display_proxy,
+                                 "IsInitial",
+                                 &error,
+                                 G_TYPE_INVALID,
+                                 G_TYPE_BOOLEAN, &slave->priv->display_is_initial,
+                                 G_TYPE_INVALID);
+        if (! res) {
+                if (error != NULL) {
+                        g_warning ("Failed to get value: %s", error->message);
+                        g_error_free (error);
+                } else {
+                        g_warning ("Failed to get value");
+                }
+
+                return FALSE;
+        }
+
         return TRUE;
 }
 
@@ -1605,10 +1625,10 @@ _gdm_slave_set_display_is_local (GdmSlave   *slave,
 }
 
 static void
-_gdm_slave_set_force_active_vt (GdmSlave   *slave,
-                                gboolean    force_active_vt)
+_gdm_slave_set_display_is_initial (GdmSlave   *slave,
+                                   gboolean    is)
 {
-        slave->priv->force_active_vt = force_active_vt;
+        slave->priv->display_is_initial = is;
 }
 
 static void
@@ -1643,8 +1663,8 @@ gdm_slave_set_property (GObject      *object,
         case PROP_DISPLAY_IS_LOCAL:
                 _gdm_slave_set_display_is_local (self, g_value_get_boolean (value));
                 break;
-        case PROP_FORCE_ACTIVE_VT:
-                _gdm_slave_set_force_active_vt (self, g_value_get_boolean (value));
+        case PROP_DISPLAY_IS_INITIAL:
+                _gdm_slave_set_display_is_initial (self, g_value_get_boolean (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1684,8 +1704,8 @@ gdm_slave_get_property (GObject    *object,
         case PROP_DISPLAY_IS_LOCAL:
                 g_value_set_boolean (value, self->priv->display_is_local);
                 break;
-        case PROP_FORCE_ACTIVE_VT:
-                g_value_set_boolean (value, self->priv->force_active_vt);
+        case PROP_DISPLAY_IS_INITIAL:
+                g_value_set_boolean (value, self->priv->display_is_initial);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1811,13 +1831,12 @@ gdm_slave_class_init (GdmSlaveClass *klass)
                                                                "display is local",
                                                                TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
-
         g_object_class_install_property (object_class,
-                                         PROP_FORCE_ACTIVE_VT,
-                                         g_param_spec_boolean ("force-active-vt",
-                                                               "Force Active VT",
-                                                               "Force display to active VT",
-                                                               TRUE,
+                                         PROP_DISPLAY_IS_INITIAL,
+                                         g_param_spec_boolean ("display-is-initial",
+                                                               NULL,
+                                                               NULL,
+                                                               FALSE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
         signals [STOPPED] =
