@@ -48,8 +48,7 @@ typedef struct
 } GdmSimpleSlaveClass;
 
 GType               gdm_simple_slave_get_type   (void);
-GdmSlave *          gdm_simple_slave_new        (const char       *id,
-                                                 gboolean          force_active_vt);
+GdmSlave *          gdm_simple_slave_new        (const char       *id);
 
 G_END_DECLS
 
