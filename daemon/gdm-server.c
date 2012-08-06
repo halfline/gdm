@@ -84,7 +84,8 @@ struct GdmServerPrivate
         char    *display_device;
         char    *auth_file;
 
-        gboolean is_parented;
+        guint    is_parented : 1;
+        guint    is_initial : 1;
         char    *parent_display_name;
         char    *parent_auth_file;
         char    *chosen_hostname;
@@ -107,6 +108,7 @@ enum {
         PROP_SESSION_ARGS,
         PROP_LOG_DIR,
         PROP_DISABLE_TCP,
+        PROP_IS_INITIAL,
 };
 
 enum {
@@ -678,44 +680,6 @@ gdm_server_spawn (GdmServer  *server,
         return ret;
 }
 
-static int
-get_active_vt (void)
-{
-        int console_fd;
-        struct vt_stat console_state = { 0 };
-
-        console_fd = open ("/dev/tty0", O_RDONLY | O_NOCTTY);
-
-        if (console_fd < 0) {
-                goto out;
-        }
-
-        if (ioctl (console_fd, VT_GETSTATE, &console_state) < 0) {
-                goto out;
-        }
-
-out:
-        if (console_fd >= 0) {
-                close (console_fd);
-        }
-
-        return console_state.v_active;
-}
-
-static char *
-get_active_vt_as_string (void)
-{
-        int vt;
-
-        vt = get_active_vt ();
-
-        if (vt <= 0) {
-                return NULL;
-        }
-
-        return g_strdup_printf ("vt%d", vt);
-}
-
 /**
  * gdm_server_start:
  * @disp: Pointer to a GdmDisplay structure
@@ -727,34 +691,15 @@ gboolean
 gdm_server_start (GdmServer *server)
 {
         gboolean res;
+        const char *vtarg = NULL;
 
-        /* fork X server process */
-        res = gdm_server_spawn (server, NULL);
-
-        return res;
-}
-
-gboolean
-gdm_server_start_on_active_vt (GdmServer *server)
-{
-        gboolean res;
-        gboolean debug = FALSE;
-        const char *logverbose;
-        char *vt;
-
-        gdm_settings_direct_get_boolean (GDM_KEY_DEBUG, &debug);
-
-        if (debug) {
-                logverbose = " -logverbose 7";
-        } else {
-                logverbose = "";
+        /* Hardcode the VT for the initial X server, but nothing else */
+        if (server->priv->is_initial) {
+                vtarg = "vt" GDM_INITIAL_VT;
         }
 
-        g_free (server->priv->command);
-        server->priv->command = g_strdup_printf (X_SERVER " -nr -verbose -audit 4 %s", logverbose);
-        vt = get_active_vt_as_string ();
-        res = gdm_server_spawn (server, vt);
-        g_free (vt);
+        /* fork X server process */
+        res = gdm_server_spawn (server, vtarg);
 
         return res;
 }
@@ -844,6 +789,13 @@ _gdm_server_set_disable_tcp (GdmServer  *server,
 }
 
 static void
+_gdm_server_set_is_initial (GdmServer  *server,
+                            gboolean    initial)
+{
+        server->priv->is_initial = initial;
+}
+
+static void
 gdm_server_set_property (GObject      *object,
                          guint         prop_id,
                          const GValue *value,
@@ -865,6 +817,9 @@ gdm_server_set_property (GObject      *object,
                 break;
         case PROP_DISABLE_TCP:
                 _gdm_server_set_disable_tcp (self, g_value_get_boolean (value));
+                break;
+        case PROP_IS_INITIAL:
+                _gdm_server_set_is_initial (self, g_value_get_boolean (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -898,6 +853,9 @@ gdm_server_get_property (GObject    *object,
                 break;
         case PROP_DISABLE_TCP:
                 g_value_set_boolean (value, self->priv->disable_tcp);
+                break;
+        case PROP_IS_INITIAL:
+                g_value_set_boolean (value, self->priv->is_initial);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -999,6 +957,13 @@ gdm_server_class_init (GdmServerClass *klass)
                                                                NULL,
                                                                TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+        g_object_class_install_property (object_class,
+                                         PROP_IS_INITIAL,
+                                         g_param_spec_boolean ("is-initial",
+                                                               NULL,
+                                                               NULL,
+                                                               FALSE,
+                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
 
 }
 
@@ -1007,7 +972,6 @@ gdm_server_init (GdmServer *server)
 {
         gboolean debug = FALSE;
         const char *logverbose;
-        char *vt;
 
         server->priv = GDM_SERVER_GET_PRIVATE (server);
 
@@ -1058,13 +1022,15 @@ gdm_server_finalize (GObject *object)
 
 GdmServer *
 gdm_server_new (const char *display_name,
-                const char *auth_file)
+                const char *auth_file,
+                gboolean    initial)
 {
         GObject *object;
 
         object = g_object_new (GDM_TYPE_SERVER,
                                "display-name", display_name,
                                "auth-file", auth_file,
+                               "is-initial", initial,
                                NULL);
 
         return GDM_SERVER (object);

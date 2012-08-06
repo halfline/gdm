@@ -665,7 +665,7 @@ gdm_factory_slave_run (GdmFactorySlave *slave)
         if (display_is_local) {
                 gboolean res;
 
-                slave->priv->server = gdm_server_new (display_name, auth_file);
+                slave->priv->server = gdm_server_new (display_name, auth_file, FALSE);
                 g_signal_connect (slave->priv->server,
                                   "exited",
                                   G_CALLBACK (on_server_exited),
