@@ -79,7 +79,8 @@ struct GdmServerPrivate
         char    *display_device;
         char    *auth_file;
 
-        gboolean is_parented;
+        guint    is_parented : 1;
+        guint    is_initial : 1;
         char    *parent_display_name;
         char    *parent_auth_file;
         char    *chosen_hostname;
@@ -102,6 +103,7 @@ enum {
         PROP_SESSION_ARGS,
         PROP_LOG_DIR,
         PROP_DISABLE_TCP,
+        PROP_IS_INITIAL,
 };
 
 enum {
@@ -684,6 +686,13 @@ gboolean
 gdm_server_start (GdmServer *server)
 {
         gboolean res;
+        const char *vtarg = NULL;
+
+        /* Hardcode the VT for the initial X server, but nothing else */
+        if (server->priv->is_initial
+            && g_strcmp0 (server->priv->display_seat_id, "seat0") == 0) {
+                vtarg = "vt" GDM_INITIAL_VT;
+        }
 
         /* fork X server process */
         res = gdm_server_spawn (server, NULL);

@@ -65,7 +65,8 @@ struct GdmDisplayPrivate
         gsize                 x11_cookie_size;
         GdmDisplayAccessFile *access_file;
 
-        gboolean              is_local;
+        guint                 is_local : 1;
+        guint                 is_initial : 1;
         guint                 finish_idle_id;
 
         GdmSlaveProxy        *slave_proxy;
@@ -85,6 +86,7 @@ enum {
         PROP_X11_AUTHORITY_FILE,
         PROP_IS_LOCAL,
         PROP_SLAVE_COMMAND,
+        PROP_IS_INITIAL
 };
 
 static void     gdm_display_class_init  (GdmDisplayClass *klass);
@@ -489,6 +491,20 @@ gdm_display_get_seat_id (GdmDisplay *display,
        return TRUE;
 }
 
+gboolean
+gdm_display_is_initial (GdmDisplay  *display,
+                        gboolean    *is_initial,
+                        GError     **error)
+{
+        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
+
+        if (is_initial != NULL) {
+                *is_initial = display->priv->is_initial;
+        }
+
+        return TRUE;
+}
+
 static gboolean
 finish_idle (GdmDisplay *display)
 {
@@ -832,6 +848,13 @@ _gdm_display_set_slave_command (GdmDisplay     *display,
 }
 
 static void
+_gdm_display_set_is_initial (GdmDisplay     *display,
+                             gboolean        initial)
+{
+        display->priv->is_initial = initial;
+}
+
+static void
 gdm_display_set_property (GObject        *object,
                           guint           prop_id,
                           const GValue   *value,
@@ -868,6 +891,9 @@ gdm_display_set_property (GObject        *object,
                 break;
         case PROP_SLAVE_COMMAND:
                 _gdm_display_set_slave_command (self, g_value_get_string (value));
+                break;
+        case PROP_IS_INITIAL:
+                _gdm_display_set_is_initial (self, g_value_get_boolean (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -916,6 +942,9 @@ gdm_display_get_property (GObject        *object,
                 break;
         case PROP_SLAVE_COMMAND:
                 g_value_set_string (value, self->priv->slave_command);
+                break;
+        case PROP_IS_INITIAL:
+                g_value_set_boolean (value, self->priv->is_initial);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1084,7 +1113,13 @@ gdm_display_class_init (GdmDisplayClass *klass)
                                                                NULL,
                                                                TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-
+         g_object_class_install_property (object_class,
+                                          PROP_IS_INITIAL,
+                                          g_param_spec_boolean ("is-initial",
+                                                                NULL,
+                                                                NULL,
+                                                                FALSE,
+                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
         g_object_class_install_property (object_class,
                                          PROP_SLAVE_COMMAND,
                                          g_param_spec_string ("slave-command",
