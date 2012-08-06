@@ -25,6 +25,9 @@
     <method name="IsLocal">
       <arg name="local" direction="out" type="b"/>
     </method>
+    <method name="IsInitial">
+      <arg name="is_initial" direction="out" type="b"/>
+    </method>
     <method name="AddUserAuthorization">
       <arg name="username" direction="in" type="s"/>
       <arg name="filename" direction="out" type="s"/>

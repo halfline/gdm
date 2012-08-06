@@ -122,6 +122,9 @@ gboolean            gdm_display_get_timed_login_details        (GdmDisplay *disp
                                                                 char      **username,
                                                                 int        *delay,
                                                                 GError    **error);
+gboolean            gdm_display_is_initial                     (GdmDisplay  *display,
+                                                                gboolean    *initial,
+                                                                GError     **error);
 
 /* exported but protected */
 gboolean            gdm_display_get_x11_cookie                 (GdmDisplay *display,

@@ -66,8 +66,7 @@ struct GdmDisplayPrivate
         GdmDisplayAccessFile *access_file;
 
         guint                 is_local : 1;
-        guint                 force_active_vt : 1;
-
+        guint                 is_initial : 1;
         guint                 finish_idle_id;
 
         GdmSlaveProxy        *slave_proxy;
@@ -86,8 +85,8 @@ enum {
         PROP_X11_COOKIE,
         PROP_X11_AUTHORITY_FILE,
         PROP_IS_LOCAL,
-        PROP_FORCE_ACTIVE_VT,
         PROP_SLAVE_COMMAND,
+        PROP_IS_INITIAL
 };
 
 static void     gdm_display_class_init  (GdmDisplayClass *klass);
@@ -492,6 +491,20 @@ gdm_display_get_seat_id (GdmDisplay *display,
        return TRUE;
 }
 
+gboolean
+gdm_display_is_initial (GdmDisplay  *display,
+                        gboolean    *is_initial,
+                        GError     **error)
+{
+        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
+
+        if (is_initial != NULL) {
+                *is_initial = display->priv->is_initial;
+        }
+
+        return TRUE;
+}
+
 static gboolean
 finish_idle (GdmDisplay *display)
 {
@@ -577,10 +590,9 @@ gdm_display_real_prepare (GdmDisplay *display)
         gdm_slave_proxy_set_log_path (display->priv->slave_proxy, log_path);
         g_free (log_path);
 
-        command = g_strdup_printf ("%s --display-id %s %s",
+        command = g_strdup_printf ("%s --display-id %s",
                                    display->priv->slave_command,
-                                   display->priv->id,
-                                   display->priv->force_active_vt? "--force-active-vt" : "");
+                                   display->priv->id);
         gdm_slave_proxy_set_command (display->priv->slave_proxy, command);
         g_free (command);
 
@@ -828,18 +840,18 @@ _gdm_display_set_is_local (GdmDisplay     *display,
 }
 
 static void
-_gdm_display_set_force_active_vt (GdmDisplay     *display,
-                                  gboolean        force_active_vt)
-{
-        display->priv->force_active_vt = force_active_vt;
-}
-
-static void
 _gdm_display_set_slave_command (GdmDisplay     *display,
                                 const char     *command)
 {
         g_free (display->priv->slave_command);
         display->priv->slave_command = g_strdup (command);
+}
+
+static void
+_gdm_display_set_is_initial (GdmDisplay     *display,
+                             gboolean        initial)
+{
+        display->priv->is_initial = initial;
 }
 
 static void
@@ -877,11 +889,11 @@ gdm_display_set_property (GObject        *object,
         case PROP_IS_LOCAL:
                 _gdm_display_set_is_local (self, g_value_get_boolean (value));
                 break;
-        case PROP_FORCE_ACTIVE_VT:
-                _gdm_display_set_force_active_vt (self, g_value_get_boolean (value));
-                break;
         case PROP_SLAVE_COMMAND:
                 _gdm_display_set_slave_command (self, g_value_get_string (value));
+                break;
+        case PROP_IS_INITIAL:
+                _gdm_display_set_is_initial (self, g_value_get_boolean (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -928,11 +940,11 @@ gdm_display_get_property (GObject        *object,
         case PROP_IS_LOCAL:
                 g_value_set_boolean (value, self->priv->is_local);
                 break;
-        case PROP_FORCE_ACTIVE_VT:
-                g_value_set_boolean (value, self->priv->force_active_vt);
-                break;
         case PROP_SLAVE_COMMAND:
                 g_value_set_string (value, self->priv->slave_command);
+                break;
+        case PROP_IS_INITIAL:
+                g_value_set_boolean (value, self->priv->is_initial);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1101,14 +1113,13 @@ gdm_display_class_init (GdmDisplayClass *klass)
                                                                NULL,
                                                                TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-        g_object_class_install_property (object_class,
-                                         PROP_FORCE_ACTIVE_VT,
-                                         g_param_spec_boolean ("force-active-vt",
-                                                               NULL,
-                                                               NULL,
-                                                               FALSE,
-                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-
+         g_object_class_install_property (object_class,
+                                          PROP_IS_INITIAL,
+                                          g_param_spec_boolean ("is-initial",
+                                                                NULL,
+                                                                NULL,
+                                                                FALSE,
+                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
         g_object_class_install_property (object_class,
                                          PROP_SLAVE_COMMAND,
                                          g_param_spec_string ("slave-command",
