@@ -2223,9 +2223,22 @@ on_conversation_chose_user (GdmGreeterLoginWindow *login_window,
                 return FALSE;
         }
 
-        /* If we're already authenticating then we can't pick a user
+        /* If we're already authenticating...
          */
         if (login_window->priv->dialog_mode == MODE_AUTHENTICATION || login_window->priv->dialog_mode == MODE_MULTIPLE_AUTHENTICATION) {
+                /* and the user list is disabled and we're suppose to pick a special item from the user list, fake it */
+		if (login_window->priv->user_list_disabled && find_task_with_service_name (login_window, username) != NULL) {
+                        reset_dialog (login_window, MODE_AUTHENTICATION);
+
+                        g_signal_emit (G_OBJECT (login_window), signals[USER_SELECTED],
+                                        0, username);
+
+                        g_debug ("GdmGreeterLoginWindow: Starting single auth conversation");
+                        begin_single_service_verification (login_window, username);
+                        return TRUE;
+                }
+
+                /* Otherwise, ignore the request and fail */
                 return FALSE;
         }
 
