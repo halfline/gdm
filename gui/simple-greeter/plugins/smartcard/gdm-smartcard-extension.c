@@ -374,7 +374,7 @@ gdm_smartcard_extension_is_visible (GdmTask *task)
 
         g_strfreev (lines);
 
-        return TRUE;
+        return ret;
 }
 
 static void
