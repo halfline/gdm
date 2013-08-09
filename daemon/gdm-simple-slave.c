@@ -206,6 +206,21 @@ greeter_reset_timeout (GdmSimpleSlave *slave)
         return FALSE;
 }
 
+static gboolean
+postlogin_failed_reset_timeout (GdmSimpleSlave *slave)
+{
+        g_debug ("GdmSimpleSlave: PostLogin script failed resetting slave");
+
+        if (slave->priv->greeter_server != NULL) {
+                reset_session (slave);
+        } else {
+                start_greeter (slave);
+                create_new_session (slave);
+        }
+        slave->priv->greeter_reset_id = 0;
+        return FALSE;
+}
+
 static void
 queue_greeter_reset (GdmSimpleSlave *slave)
 {
@@ -214,6 +229,17 @@ queue_greeter_reset (GdmSimpleSlave *slave)
         }
 
         slave->priv->greeter_reset_id = g_idle_add ((GSourceFunc)greeter_reset_timeout, slave);
+}
+
+static void
+queue_postlogin_failed_reset (GdmSimpleSlave *slave)
+{
+        /* use the greeter reset idle id so we don't do both at once */
+        if (slave->priv->greeter_reset_id > 0) {
+                return;
+        }
+
+        slave->priv->greeter_reset_id = g_idle_add ((GSourceFunc)postlogin_failed_reset_timeout, slave);
 }
 
 static void
@@ -344,31 +370,40 @@ try_migrate_session (GdmSimpleSlave *slave)
         return res;
 }
 
-static void
+static gboolean
 stop_greeter (GdmSimpleSlave *slave)
 {
         char *username;
+        gboolean postlogin_script_ran;
 
         g_debug ("GdmSimpleSlave: Stopping greeter");
 
         if (slave->priv->greeter == NULL) {
                 g_debug ("GdmSimpleSlave: No greeter running");
-                return;
+                return TRUE;
         }
 
-        /* Run the PostLogin script. gdmslave suspends until script has terminated */
+        /* Obtain username */
         username = gdm_session_direct_get_username (slave->priv->session);
 
         if (username != NULL) {
-                gdm_slave_run_script (GDM_SLAVE (slave), GDMCONFDIR "/PostLogin", username);
+                /* Run the PostLogin script. gdmslave suspends until script has terminated */
+                postlogin_script_ran = gdm_slave_run_script (GDM_SLAVE (slave), GDMCONFDIR "/PostLogin", username);
+                g_debug ("GdmSimpleSlave: PostLogin: %d", postlogin_script_ran);
+                if (!postlogin_script_ran) {
+                        destroy_session (slave);
+                        queue_postlogin_failed_reset (slave);
+                        return FALSE;
+                }
+                g_free (username);
         }
-        g_free (username);
 
         gdm_welcome_session_stop (GDM_WELCOME_SESSION (slave->priv->greeter));
         gdm_greeter_server_stop (slave->priv->greeter_server);
 
         g_object_unref (slave->priv->greeter);
         slave->priv->greeter = NULL;
+        return TRUE;
 }
 
 static gboolean
@@ -377,6 +412,7 @@ start_session_timeout (GdmSimpleSlave *slave)
 
         char    *auth_file;
         gboolean migrated;
+        gboolean greeter_stopped;
 
         g_debug ("GdmSimpleSlave: accredited");
 
@@ -394,7 +430,11 @@ start_session_timeout (GdmSimpleSlave *slave)
                 goto out;
         }
 
-        stop_greeter (slave);
+        greeter_stopped = stop_greeter (slave);
+        g_debug ("GdmSimpleSlave: greeter stopped: %d", greeter_stopped);
+        if (! greeter_stopped) {
+                goto out;
+        }
 
         auth_file = NULL;
         add_user_authorization (slave, &auth_file);
