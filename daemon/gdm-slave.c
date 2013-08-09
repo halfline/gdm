@@ -347,7 +347,7 @@ gdm_slave_run_script (GdmSlave   *slave,
 
         if (WIFEXITED (status)) {
                 g_debug ("GdmSlave: Process exit status: %d", WEXITSTATUS (status));
-                ret = WEXITSTATUS (status) != 0;
+                ret = WEXITSTATUS (status) == 0;
         } else {
                 ret = TRUE;
         }
