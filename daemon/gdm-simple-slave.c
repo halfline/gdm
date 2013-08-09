@@ -70,6 +70,7 @@ struct GdmSimpleSlavePrivate
 
         guint              greeter_reset_id;
         guint              start_session_id;
+        guint              stop_conversation_id;
 
         int                ping_interval;
 
@@ -106,23 +107,8 @@ on_session_started (GdmSession       *session,
                     int               pid,
                     GdmSimpleSlave   *slave)
 {
-        char *username;
-
         g_debug ("GdmSimpleSlave: session started %d", pid);
 
-        /* Run the PreSession script. gdmslave suspends until script has terminated */
-        username = gdm_session_direct_get_username (slave->priv->session);
-        if (username != NULL) {
-                gdm_slave_run_script (GDM_SLAVE (slave), GDMCONFDIR "/PreSession", username);
-        }
-        g_free (username);
-
-        /* FIXME: should we do something here?
-         * Note that error return status from PreSession script should
-         * be ignored in the case of a X-GDM-BypassXsession session, which can
-         * be checked by calling:
-         * gdm_session_direct_bypasses_xsession (session)
-         */
 }
 
 static void
@@ -453,6 +439,26 @@ start_session_timeout (GdmSimpleSlave *slave)
         return FALSE;
 }
 
+static gboolean
+stop_conversation_timeout (GdmSimpleSlave *slave)
+{
+        destroy_session (slave);
+        queue_greeter_reset (slave);
+        slave->priv->stop_conversation_id = 0;
+
+        return FALSE;
+}
+
+static void
+queue_stop_conversation (GdmSimpleSlave *slave)
+{
+        if (slave->priv->stop_conversation_id > 0) {
+                return;
+        }
+
+        slave->priv->stop_conversation_id = g_idle_add ((GSourceFunc)stop_conversation_timeout, slave);
+}
+
 static void
 queue_start_session (GdmSimpleSlave *slave)
 {
@@ -509,7 +515,29 @@ static void
 on_session_opened (GdmSession     *session,
                    GdmSimpleSlave *slave)
 {
-        queue_start_session (slave);
+        char *username;
+
+        gboolean presession_failed = FALSE;
+
+        /* Run the PreSession script. gdmslave suspends until script has terminated */
+        username = gdm_session_direct_get_username (slave->priv->session);
+        if (username != NULL) {
+                if (!gdm_slave_run_script (GDM_SLAVE (slave), GDMCONFDIR "/PreSession", username)) {
+                        presession_failed = TRUE;
+                }
+        }
+        g_free (username);
+
+        /* Note that error return status from PreSession script should
+         * be ignored in the case of a X-GDM-BypassXsession session, which can
+         * be checked by calling:
+         * gdm_session_direct_bypasses_xsession (session)
+         */
+        if (presession_failed && !gdm_session_direct_bypasses_xsession (GDM_SESSION_DIRECT (slave->priv->session))) {
+                queue_stop_conversation (slave);
+        } else {
+                queue_start_session (slave);
+        }
 }
 
 static void
