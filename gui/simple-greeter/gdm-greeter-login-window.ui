@@ -168,6 +168,7 @@
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel" id="auth-prompt-label">
+                                <property name="wrap">True</property>
                                 <property name="visible">True</property>
 
                                 <accessibility>
@@ -210,6 +211,7 @@
                             <child>
                               <object class="GtkLabel" id="auth-message-label">
                                 <property name="visible">True</property>
+                                <property name="wrap">True</property>
                               </object>
                               <packing>
                                 <property name="position">0</property>
