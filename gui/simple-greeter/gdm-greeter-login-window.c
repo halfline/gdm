@@ -1274,10 +1274,12 @@ gdm_greeter_login_window_size_request (GtkWidget      *widget,
         requisition->width += 2 * GTK_CONTAINER (widget)->border_width;
         requisition->height += 2 * GTK_CONTAINER (widget)->border_width;
 
-        /* Make width be at least 33% screen width
+        /* Make width be at least 33% screen width, and at
+         * most 80% screen width, and at most 600pixels,
          * and height be at most 80% of screen height
          */
-        requisition->width = MAX (requisition->width, .33 * area.width);
+        requisition->width = CLAMP (requisition->width, .33 * area.width, .80 * area.width);
+        requisition->width = MIN (requisition->width, 600);
         requisition->height = MIN (requisition->height, .80 * area.height);
 
        /* Don't ever shrink window width
