@@ -738,14 +738,16 @@ load_driver (GdmSmartcardManager  *manager,
                 g_free (module_spec);
                 module_spec = NULL;
 
-                if (!SECMOD_HasRemovableSlots (module) ||
-                    !module->loaded) {
-                        modules = g_list_prepend (modules, module);
-                } else {
-                        g_debug ("fallback module found but not %s",
-                                 SECMOD_HasRemovableSlots (module)?
-                                 "removable" : "loaded");
-                        SECMOD_DestroyModule (module);
+                if (module != NULL) {
+                        if (!SECMOD_HasRemovableSlots (module) ||
+                            !module->loaded) {
+                                g_debug ("fallback module found but not %s",
+                                         !SECMOD_HasRemovableSlots (module)?
+                                         "removable" : "loaded");
+                                SECMOD_DestroyModule (module);
+                        } else {
+                                modules = g_list_prepend (modules, module);
+                        }
                 }
 
         } else {
@@ -774,12 +776,16 @@ load_driver (GdmSmartcardManager  *manager,
                         g_free (module_spec);
                         module_spec = NULL;
 
-                        if (!SECMOD_HasRemovableSlots (module) ||
-                            !module->loaded) {
-                                modules = g_list_prepend (modules, module);
-                        } else {
-                                g_debug ("fallback module found but not loaded");
-                                SECMOD_DestroyModule (module);
+                        if (module != NULL) {
+                                if (!SECMOD_HasRemovableSlots (module) ||
+                                    !module->loaded) {
+                                        g_debug ("fallback module found but not %s",
+                                                 !SECMOD_HasRemovableSlots (module)?
+                                                 "removable" : "loaded");
+                                        SECMOD_DestroyModule (module);
+                                } else {
+                                        modules = g_list_prepend (modules, module);
+                                }
                         }
                 }
 
