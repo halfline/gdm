@@ -29,7 +29,6 @@
 
 static GMainLoop *event_loop;
 static GdmSmartcardManager *manager;
-static int signal_pipe_fds[2] = { -1, -1 };
 
 static void
 on_smartcard_event (const char *event_string)
@@ -104,35 +103,6 @@ stop_watching_for_smartcards (void)
 }
 
 static void
-on_alrm_signal (int signal_number)
-{
-        raise (SIGKILL);
-}
-
-static void
-on_term_signal (int signal_number)
-{
-        close (signal_pipe_fds[1]);
-        signal_pipe_fds[1] = -1;
-
-        /* Give us 10 seconds to clean up orderly.
-         * If that fails, then the smartcard stack
-         * is hung up and we need to die hard
-         */
-        alarm (10);
-        signal (SIGALRM, on_alrm_signal);
-}
-
-static gboolean
-after_term_signal (GIOChannel   *io_channel,
-                   GIOCondition  condition,
-                   gpointer      data)
-{
-        g_main_loop_quit (event_loop);
-        return FALSE;
-}
-
-static void
 on_debug_message (const char     *log_domain,
                   GLogLevelFlags  log_level,
                   const char     *message,
@@ -145,8 +115,6 @@ int
 main (int    argc,
       char **argv)
 {
-        GIOChannel *io_channel;
-
         setlocale (LC_ALL, "");
 
         g_type_init ();
@@ -156,24 +124,6 @@ main (int    argc,
         event_loop = g_main_loop_new (NULL, FALSE);
 
         watch_for_smartcards ();
-
-        if (pipe (signal_pipe_fds) != 0) {
-                return 1;
-        }
-        fcntl (signal_pipe_fds[0], F_SETFD, FD_CLOEXEC);
-        fcntl (signal_pipe_fds[1], F_SETFD, FD_CLOEXEC);
-
-        io_channel = g_io_channel_unix_new (signal_pipe_fds[0]);
-        g_io_channel_set_flags (io_channel, G_IO_FLAG_NONBLOCK, NULL);
-        g_io_channel_set_encoding (io_channel, NULL, NULL);
-        g_io_channel_set_buffered (io_channel, FALSE);
-        g_io_add_watch (io_channel, G_IO_HUP, after_term_signal, NULL);
-        g_io_channel_set_close_on_unref (io_channel, TRUE);
-        g_io_channel_unref (io_channel);
-
-        signal (SIGTERM, on_term_signal);
-        signal (SIGPIPE, on_term_signal);
-
 #ifdef HAVE_SYS_PRCTL_H
         prctl (PR_SET_PDEATHSIG, SIGTERM);
 #endif
