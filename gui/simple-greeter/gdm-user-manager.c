@@ -185,6 +185,7 @@ static void     queue_load_seat_and_users   (GdmUserManager *manager);
 static void     monitor_local_users         (GdmUserManager *manager);
 
 static void     load_new_session_incrementally (GdmUserManagerNewSession *new_session);
+static void     maybe_set_is_loaded (GdmUserManager *manager);
 
 static gpointer user_manager_object = NULL;
 
@@ -2108,8 +2109,8 @@ static gboolean
 load_idle (GdmUserManager *manager)
 {
         manager->priv->seat.state = GDM_USER_MANAGER_SEAT_STATE_UNLOADED + 1;
-        load_seat_incrementally (manager);
         load_users (manager);
+        load_seat_incrementally (manager);
         manager->priv->load_id = 0;
 
         return FALSE;
