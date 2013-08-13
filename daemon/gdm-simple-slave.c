@@ -405,8 +405,6 @@ start_session_timeout (GdmSimpleSlave *slave)
         migrated = try_migrate_session (slave);
         g_debug ("GdmSimpleSlave: migrated: %d", migrated);
         if (migrated) {
-                destroy_session (slave);
-
                 /* We don't stop the slave here because
                    when Xorg exits it switches to the VT it was
                    started from.  That interferes with fast
