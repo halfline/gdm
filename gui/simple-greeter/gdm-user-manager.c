@@ -2077,8 +2077,6 @@ load_sessions (GdmUserManager *manager)
 static void
 load_seat_incrementally (GdmUserManager *manager)
 {
-        g_assert (manager->priv->seat.proxy == NULL);
-
         switch (manager->priv->seat.state) {
         case GDM_USER_MANAGER_SEAT_STATE_GET_SESSION_ID:
                 get_current_session_id (manager);
@@ -2108,6 +2106,9 @@ load_seat_incrementally (GdmUserManager *manager)
 static gboolean
 load_idle (GdmUserManager *manager)
 {
+        if (manager->priv->is_loaded) {
+                return FALSE;
+        }
         manager->priv->seat.state = GDM_USER_MANAGER_SEAT_STATE_UNLOADED + 1;
         load_users (manager);
         load_seat_incrementally (manager);
