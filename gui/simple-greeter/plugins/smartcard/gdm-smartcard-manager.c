@@ -564,6 +564,10 @@ stop_worker (GdmSmartcardManagerWorker *worker)
 
         if (worker->thread != NULL) {
                 SECMOD_CancelWait (worker->module);
+                /* FIXME: The function above doesn't seem to
+                 * always wake up WaitForAnyTokenEvent
+                 */
+                exit (0);
                 worker->thread = NULL;
         }
 
@@ -1386,6 +1390,12 @@ gdm_smartcard_manager_worker_run (GdmSmartcardManagerWorker *worker)
         GError *error;
         gboolean should_continue;
 
+        sigset_t set;
+
+        sigemptyset(&set);
+        sigaddset(&set, SIGTERM);
+        pthread_sigmask(SIG_UNBLOCK, &set, NULL);
+
         do
         {
                 error = NULL;
@@ -1408,6 +1418,7 @@ gdm_smartcard_manager_create_worker (GdmSmartcardManager  *manager,
 {
         GdmSmartcardManagerWorker *worker;
         gint write_fd, read_fd;
+        sigset_t set;
 
         write_fd = -1;
         read_fd = -1;
@@ -1420,11 +1431,18 @@ gdm_smartcard_manager_create_worker (GdmSmartcardManager  *manager,
                                                    read_fd,
                                                    module);
 
+        sigemptyset(&set);
+        sigaddset(&set, SIGTERM);
+        pthread_sigmask(SIG_BLOCK, &set, NULL);
+
         worker->thread = g_thread_create ((GThreadFunc)
                                           gdm_smartcard_manager_worker_run,
                                           worker, FALSE, NULL);
 
         if (worker->thread == NULL) {
+                sigemptyset(&set);
+                sigaddset(&set, SIGTERM);
+                pthread_sigmask(SIG_UNBLOCK, &set, NULL);
                 gdm_smartcard_manager_worker_free (worker);
                 return NULL;
         }
