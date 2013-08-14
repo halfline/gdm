@@ -55,6 +55,8 @@
 #include "gdm-session-private.h"
 #include "gdm-session-direct-glue.h"
 
+#include "gdm-languages.h"
+
 #include "gdm-session-record.h"
 #include "gdm-session-worker-job.h"
 
@@ -594,11 +596,19 @@ get_session_command_for_name (const char *name,
 static const char *
 get_default_language_name (GdmSessionDirect *session)
 {
+    const char *locale;
+    static char *system_language = NULL;
+
     if (session->priv->saved_language != NULL) {
                 return session->priv->saved_language;
     }
 
-    return setlocale (LC_MESSAGES, NULL);
+    if (system_language == NULL) {
+                locale = setlocale (LC_MESSAGES, NULL);
+                system_language = gdm_normalize_language_name (locale);
+    }
+
+    return system_language;
 }
 
 static char *
