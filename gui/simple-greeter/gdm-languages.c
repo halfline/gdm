@@ -69,6 +69,9 @@ static char * construct_language_name (const char *language,
                                        const char *modifier);
 
 static gboolean language_name_is_valid (const char *language_name);
+static void language_name_get_codeset_details (const char  *language_name,
+                                               char       **pcodeset,
+                                               gboolean    *is_utf8);
 
 static void
 gdm_locale_free (GdmLocale *locale)
@@ -189,13 +192,22 @@ gdm_parse_language_name (const char *name,
         }
 
         if (codesetp != NULL && *codesetp != NULL) {
+                char *canonicalized_codeset = NULL;
                 normalized_codeset = normalize_codeset (*codesetp);
                 normalized_name = construct_language_name (language_codep ? *language_codep : NULL,
                                                            territory_codep ? *territory_codep : NULL,
                                                            normalized_codeset,
                                                            modifierp ? *modifierp : NULL);
+                canonicalized_codeset = NULL;
+                language_name_get_codeset_details (normalized_name,
+                                                   &canonicalized_codeset,
+                                                   NULL);
 
-                if (language_name_is_valid (normalized_name)) {
+                if (canonicalized_codeset != NULL) {
+                        g_free (normalized_codeset);
+                        g_free (*codesetp);
+                        *codesetp = canonicalized_codeset;
+                } else if (language_name_is_valid (normalized_name)) {
                         g_free (*codesetp);
                         *codesetp = normalized_codeset;
                 } else {
