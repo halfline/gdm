@@ -378,6 +378,13 @@ gdm_local_display_factory_start (GdmDisplayFactory *base_factory)
 
         ret = TRUE;
 
+        if (!g_file_test(X_SERVER, G_FILE_TEST_EXISTS)) {
+                g_spawn_command_line_sync ("/bin/plymouth quit", NULL, NULL, NULL, NULL);
+                g_debug ("GdmLocalDisplayFactory: No X server available, so skipping local display initialization");
+
+                return TRUE;
+        }
+
         /* FIXME: use seat configuration */
         display = create_display (factory);
         if (display == NULL) {
