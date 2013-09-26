@@ -797,6 +797,7 @@ reset_dialog (GdmGreeterLoginWindow *login_window,
         set_sensitive (login_window, FALSE);
 
         login_window->priv->num_queries = 0;
+        login_window->priv->next_mode = MODE_UNDEFINED;
 
         g_free (login_window->priv->service_name_of_session_ready_to_start);
         login_window->priv->service_name_of_session_ready_to_start = NULL;
