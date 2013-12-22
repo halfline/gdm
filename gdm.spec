@@ -12,7 +12,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.11.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -149,7 +149,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/gdm
 
 # add logo to shell greeter
-cp $RPM_SOURCE_DIR/org.gnome.login-screen.gschema.override $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas
 
 # gets rebuilt in posttrans
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/dconf/db/gdm
@@ -262,7 +262,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f gdm.lang
-%doc AUTHORS COPYING NEWS README TODO
+%doc AUTHORS COPYING NEWS README
 
 %dir %{_sysconfdir}/gdm
 %config(noreplace) %{_sysconfdir}/gdm/custom.conf
@@ -323,6 +323,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/girepository-1.0/Gdm-1.0.typelib
 
 %changelog
+* Sun Dec 22 2013 Ville Skyttä <ville.skytta@iki.fi> - 1:3.11.3-2
+- Drop empty TODO from docs, trivial rpmlint fixes.
+
 * Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 1:3.11.3-1
 - Update to 3.11.3
 
@@ -533,12 +536,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 
 * Wed Nov 09 2011 Adam Williamson <awilliam@redhat.com> 1:3.2.1.1-8
 - sync with recent changes on f16 branch:
-	+ update to 3.2.1.1
-	+ properly set up PAM files
-	+ auth fixes
-	+ put fallback plugin development files in -devel
-	+ require metacity to fix #746693
-	+ fix logo in fallback mode - just set it to a Fedora file
+  + update to 3.2.1.1
+  + properly set up PAM files
+  + auth fixes
+  + put fallback plugin development files in -devel
+  + require metacity to fix #746693
+  + fix logo in fallback mode - just set it to a Fedora file
 
 * Thu Nov 03 2011 Ray Strode <rstrode@redhat.com> 3.2.1-3
 - Drop fprintd-pam dependency and make Harald's laptop
@@ -2402,7 +2405,7 @@ p
 - change default title font to work in CJK, #51698
 
 * Wed Aug  8 2001 Bill Nottingham <notting@redhat.com>
-- fix %pre for using /var/gdm as home dir
+- fix %%pre for using /var/gdm as home dir
 
 * Sun Aug  5 2001 Nalin Dahyabhai <nalin@redhat.com>
 - Tweak PAM setup for gdmconfig to match other consolehelper users
@@ -2563,7 +2566,7 @@ p
 
 * Fri Feb 04 2000 Havoc Pennington <hp@redhat.com>
 - Fix the fix to the fix (8877)
-- remove docs/gdm-manual.txt which doesn't seem to exist from %doc
+- remove docs/gdm-manual.txt which doesn't seem to exist from %%doc
 
 * Fri Feb 04 2000 Havoc Pennington <hp@redhat.com>
 - Enhance 8877 fix by not deleting the "Please login"
