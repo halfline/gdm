@@ -72,6 +72,7 @@ BuildRequires: pkgconfig(libsystemd-login)
 BuildRequires: pkgconfig(libsystemd-daemon)
 BuildRequires: pkgconfig(ply-boot-client)
 BuildRequires: systemd
+BuildRequires: dconf
 
 Requires(post):   systemd
 Requires(preun):  systemd
