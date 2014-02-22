@@ -23,6 +23,7 @@ Source1: org.gnome.login-screen.gschema.override
 
 Requires(pre): /usr/sbin/useradd
 
+Requires: dconf
 Requires: pam >= 0:%{pam_version}
 Requires: /sbin/nologin
 Requires: system-logos
@@ -77,9 +78,6 @@ BuildRequires: dconf
 Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
-
-# these are all just for rewriting gdm.d/00-upstream-settings
-Requires(posttrans): dconf
 
 Provides: service(graphical-login) = %{name}
 
@@ -151,9 +149,6 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/gdm
 
 # add logo to shell greeter
 cp %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas
-
-# gets rebuilt in posttrans
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/dconf/db/gdm
 
 # docs go elsewhere
 rm -rf $RPM_BUILD_ROOT/%{_prefix}/doc
@@ -258,7 +253,6 @@ fi
 %systemd_postun
 
 %posttrans
-dconf update
 gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
@@ -293,8 +287,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_sbindir}/gdm
 %{_bindir}/gdmflexiserver
 %{_bindir}/gdm-screenshot
+%{_datadir}/dconf/profile/gdm
 %{_datadir}/gdm/greeter/applications/*
 %{_datadir}/gdm/greeter/autostart/*
+%{_datadir}/gdm/greeter-dconf-defaults
 %{_datadir}/gdm/locale.alias
 %{_datadir}/gdm/gdb-cmd
 %{_libdir}/libgdm*.so*
@@ -302,11 +298,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %attr(1770, gdm, gdm) %dir %{_localstatedir}/lib/gdm
 %attr(0711, root, gdm) %dir /run/gdm
 %attr(1755, root, gdm) %dir %{_localstatedir}/cache/gdm
-%dir %{_sysconfdir}/dconf/db/gdm.d/locks
-%dir %{_sysconfdir}/dconf/db/gdm.d
-%{_sysconfdir}/dconf/db/gdm.d/00-upstream-settings
-%{_sysconfdir}/dconf/db/gdm.d/locks/00-upstream-settings-locks
-%{_sysconfdir}/dconf/profile/gdm
 %{_datadir}/icons/hicolor/*/*/*.png
 %config %{_sysconfdir}/pam.d/gdm-pin
 %config %{_sysconfdir}/pam.d/gdm-smartcard
