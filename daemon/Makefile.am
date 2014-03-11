@@ -302,6 +302,13 @@ gdm_SOURCES = 			\
 	gdm-local-display-factory.h	\
 	gdm-display.c			\
 	gdm-display.h			\
+	gdm-session.c			\
+	gdm-session.h			\
+	gdm-session-record.c		\
+	gdm-session-record.h		\
+	gdm-session-worker-common.c	\
+	gdm-session-worker-common.h	\
+	gdm-session-worker-job.c	\
 	gdm-static-display.c		\
 	gdm-static-display.h		\
 	gdm-transient-display.c		\
@@ -325,6 +332,12 @@ nodist_gdm_SOURCES = 			\
 	gdm-transient-display-glue.c		\
 	gdm-static-display-glue.h		\
 	gdm-static-display-glue.c		\
+	gdm-session-enum-types.c		\
+	gdm-session-enum-types.h		\
+	gdm-session-glue.c			\
+	gdm-session-glue.h			\
+	gdm-session-worker-glue.c		\
+	gdm-session-worker-glue.h		\
 	gdm-slave-glue.h			\
 	gdm-slave-glue.c			\
 	$(NULL)
