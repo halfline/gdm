@@ -282,8 +282,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libexecdir}/gdm-host-chooser
 %{_libexecdir}/gdm-session-worker
 %{_libexecdir}/gdm-simple-chooser
-%{_libexecdir}/gdm-simple-slave
-%{_libexecdir}/gdm-xdmcp-chooser-slave
 %{_sbindir}/gdm
 %{_bindir}/gdmflexiserver
 %{_bindir}/gdm-screenshot
