@@ -12,7 +12,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.12.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -82,6 +82,9 @@ Requires: system-logos
 Requires: xorg-x11-server-utils
 Requires: xorg-x11-xinit
 
+Obsoletes: gdm-libs < 1:3.12.0-3
+Provides: gdm-libs%{?_isa} = %{epoch}:%{version}-%{release}
+
 # Swallow up old fingerprint/smartcard plugins
 Obsoletes: gdm-plugin-smartcard < 1:3.2.1
 Provides: gdm-plugin-smartcard = %{epoch}:%{version}-%{release}
@@ -89,19 +92,10 @@ Provides: gdm-plugin-smartcard = %{epoch}:%{version}-%{release}
 Obsoletes: gdm-plugin-fingerprint < 1:3.2.1
 Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 
-%package libs
-Summary: Client-side library to talk to gdm
+%package devel
+Summary: Development files for gdm
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
-
-%description libs
-The gdm-libs package contains libraries that can
-be used for writing custom greeters.
-
-%package devel
-Summary: Development files for gdm-libs
-Group: Development/Libraries
-Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description devel
 The gdm-devel package contains headers and other
@@ -290,6 +284,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/gdm/greeter-dconf-defaults
 %{_datadir}/gdm/locale.alias
 %{_datadir}/gdm/gdb-cmd
+%{_libdir}/girepository-1.0/Gdm-1.0.typelib
 %{_libdir}/libgdm*.so*
 %dir %{_localstatedir}/log/gdm
 %attr(1770, gdm, gdm) %dir %{_localstatedir}/lib/gdm
@@ -308,10 +303,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/gir-1.0/Gdm-1.0.gir
 %{_libdir}/pkgconfig/gdm.pc
 
-%files libs
-%{_libdir}/girepository-1.0/Gdm-1.0.typelib
-
 %changelog
+* Sat Apr 05 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.0-3
+- Fold -libs into the main gdm package
+
 * Sat Apr 05 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.0-2
 - Tighten subpackage deps
 
