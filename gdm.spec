@@ -21,27 +21,6 @@ URL: http://download.gnome.org/sources/gdm
 Source: http://download.gnome.org/sources/gdm/3.12/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
-Requires(pre): /usr/sbin/useradd
-
-Requires: dconf
-Requires: pam >= 0:%{pam_version}
-Requires: /sbin/nologin
-Requires: system-logos
-Requires: xorg-x11-server-utils
-Requires: setxkbmap
-Requires: xorg-x11-xinit
-Requires: systemd >= 186
-Requires: accountsservice
-Requires: gnome-settings-daemon >= 2.21.92
-Requires: gnome-icon-theme-symbolic
-Requires: iso-codes
-Requires: gnome-session
-Requires: gnome-shell
-# since we use it, and pam spams the log if the module is missing
-Requires: gnome-keyring-pam
-Requires: pulseaudio-gdm-hooks
-# We need 1.0.4-5 since it lets us use "localhost" in auth cookies
-Requires: libXau >= 1.0.4-4
 BuildRequires: pkgconfig(libcanberra-gtk)
 BuildRequires: pango-devel >= 0:%{pango_version}
 BuildRequires: gtk3-devel >= 0:%{gtk3_version}
@@ -75,13 +54,33 @@ BuildRequires: pkgconfig(ply-boot-client)
 BuildRequires: systemd
 BuildRequires: dconf
 
+Requires(pre):    /usr/sbin/useradd
 Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
 
 Provides: service(graphical-login) = %{name}
 
+Requires: accountsservice
 Requires: audit-libs >= %{libauditver}
+Requires: dconf
+Requires: gnome-icon-theme-symbolic
+# since we use it, and pam spams the log if the module is missing
+Requires: gnome-keyring-pam
+Requires: gnome-session
+Requires: gnome-settings-daemon >= 2.21.92
+Requires: gnome-shell
+Requires: iso-codes
+# We need 1.0.4-5 since it lets us use "localhost" in auth cookies
+Requires: libXau >= 1.0.4-4
+Requires: pam >= 0:%{pam_version}
+Requires: pulseaudio-gdm-hooks
+Requires: /sbin/nologin
+Requires: setxkbmap
+Requires: systemd >= 186
+Requires: system-logos
+Requires: xorg-x11-server-utils
+Requires: xorg-x11-xinit
 
 # Swallow up old fingerprint/smartcard plugins
 Obsoletes: gdm-plugin-smartcard < 1:3.2.1
