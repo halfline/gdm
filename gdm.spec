@@ -12,7 +12,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.12.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -92,7 +92,7 @@ Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 %package libs
 Summary: Client-side library to talk to gdm
 Group: Development/Libraries
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description libs
 The gdm-libs package contains libraries that can
@@ -101,7 +101,7 @@ be used for writing custom greeters.
 %package devel
 Summary: Development files for gdm-libs
 Group: Development/Libraries
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description devel
 The gdm-devel package contains headers and other
@@ -312,6 +312,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/girepository-1.0/Gdm-1.0.typelib
 
 %changelog
+* Sat Apr 05 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.0-2
+- Tighten subpackage deps
+
 * Tue Mar 25 2014 Richard Hughes <rhughes@redhat.com> - 1:3.12.0-1
 - Update to 3.12.0
 
