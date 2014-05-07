@@ -12,7 +12,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.12.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -64,7 +64,6 @@ Provides: service(graphical-login) = %{name}
 Requires: accountsservice
 Requires: audit-libs >= %{libauditver}
 Requires: dconf
-Requires: gnome-icon-theme-symbolic
 # since we use it, and pam spams the log if the module is missing
 Requires: gnome-keyring-pam
 Requires: gnome-session
@@ -304,6 +303,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Wed May 07 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.1-2
+- Drop gnome-icon-theme-symbolic dependency
+
 * Wed Apr 16 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.1-1
 - Update to 3.12.1
 
