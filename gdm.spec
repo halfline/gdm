@@ -11,8 +11,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.12.1
-Release: 3%{?dist}
+Version: 3.12.2
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -20,7 +20,6 @@ URL: http://download.gnome.org/sources/gdm
 #VCS: git:git://git.gnome.org/gdm
 Source: http://download.gnome.org/sources/gdm/3.12/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
-Patch0: fix-path.patch
 
 BuildRequires: pkgconfig(libcanberra-gtk)
 BuildRequires: pango-devel >= 0:%{pango_version}
@@ -110,7 +109,6 @@ Development files and headers for writing GDM greeters.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-patch
 
 autoreconf -i -f
 intltoolize -f
@@ -305,6 +303,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Fri May 16 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.2-1
+- Update to 3.12.2
+
 * Thu May 08 2014 Ray Strode <rstrode@redhat.com> - 1:3.12.1-3
 - Fix PATH
   Resolves: #1095344
