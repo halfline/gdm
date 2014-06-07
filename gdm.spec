@@ -12,7 +12,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.12.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -303,6 +303,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.12.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Fri May 16 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.12.2-1
 - Update to 3.12.2
 
