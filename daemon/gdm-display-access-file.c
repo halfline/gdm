@@ -32,12 +32,14 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
 
 #include <glib.h>
 #include <glib-object.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
 
+#include <X11/X.h>
 #include <X11/Xauth.h>
 
 #include "gdm-display-access-file.h"
@@ -575,11 +577,42 @@ _get_auth_info_for_display (GdmDisplayAccessFile *file,
                 } else {
                         *address = g_strdup ("localhost");
                 }
+	       *address_length = strlen (*address);
         } else {
-                *family = FamilyWild;
-                gdm_display_get_remote_hostname (display, address, NULL);
+                char *remote_hostname;
+                int s;
+
+                gdm_display_get_remote_hostname (display, &remote_hostname, NULL);
+                g_debug ("GdmDisplayAccessFile: looking up hostname: %s", remote_hostname);
+#ifdef ENABLE_IPV6
+                *address = g_malloc0 (sizeof (struct in6_addr));
+#else
+                *address = g_malloc0 (sizeof (struct in_addr));
+#endif
+                if ((s = inet_pton(AF_INET, remote_hostname, *address)) > 0) {
+                    /* Success, ipv4 address */
+                    g_debug ("GdmDisplayAccessFile: %s recognized as IPv4", remote_hostname);
+                    g_free (remote_hostname);
+                    *family = FamilyInternet;
+                    *address_length = (sizeof (struct in_addr));
+                }
+#ifdef ENABLE_IPV6
+                else if ((s = inet_pton(AF_INET6, remote_hostname, *address)) > 0) {
+                    /* Success, ipv6 address */
+                    g_debug ("GdmDisplayAccessFile: %s recognized as IPv6", remote_hostname);
+                    g_free (remote_hostname);
+                    *family = FamilyInternet6;
+                    *address_length = (sizeof (struct in6_addr));
+                }
+#endif
+                else { /* Not an address */
+                    g_debug ("GdmDisplayAccessFile: %s not recognized as an address", remote_hostname);
+                    g_free (*address);
+                    *family = FamilyWild;
+                    *address = remote_hostname;
+                    *address_length = strlen (*address);
+                } 
         }
-        *address_length = strlen (*address);
 
         gdm_display_get_x11_display_number (display, &display_number, NULL);
         *number = g_strdup_printf ("%d", display_number);
@@ -628,6 +661,89 @@ gdm_display_access_file_add_display (GdmDisplayAccessFile  *file,
         return TRUE;
 }
 
+/* 
+ * write_compat_entries_for_localhost:
+ *
+ * https://bugzilla.redhat.com/show_bug.cgi?id=867981
+ * xcb has some questionable code that makes it automatically
+ * treat display connections coming to localhost as FamilyLocal.
+ * This means that our xauth cookie won't work, since we use
+ * FamilyInternet for XDMCP, even if it's localhost.
+ *
+ * This function adds two additional entries to the Xauthority
+ * file.  One for FamilyLocal, and one for FamilyWild to keep
+ * xcb chugging. Technically, either entry should work, but
+ * we add both for maximum compatibility.
+ */
+static gboolean
+write_compat_entries_for_localhost (GdmDisplayAccessFile  *file,
+                                    Xauth                 *auth_entry)
+{
+        Xauth     compat_auth_entry;
+        gboolean  needs_compat_entries = FALSE;
+        char      localhostname[1024] = ""; 
+        gboolean  wrote_entry = FALSE;
+
+        switch (auth_entry->family) {
+
+#ifdef ENABLE_IPV6
+                case FamilyInternet6:
+                {
+			struct in6_addr *address;
+
+                        address = (struct in6_addr *) auth_entry->address;
+
+                        if (IN6_IS_ADDR_LOOPBACK (address)) {
+                                needs_compat_entries = TRUE;
+                        }
+                }
+                break;
+#endif
+                case FamilyInternet:
+                {
+                	struct in_addr *address;
+
+                        address = (struct in_addr *) (auth_entry->address);
+
+                        if (address->s_addr == htonl (INADDR_LOOPBACK)) { 
+                                needs_compat_entries = TRUE;
+                        }
+                }
+                break;
+
+                default:
+                break;
+        }
+
+        if (!needs_compat_entries) {
+                return FALSE;
+        }
+
+        if (gethostname (localhostname, 1023) < 0) {
+                return FALSE;
+        }
+
+        compat_auth_entry = *auth_entry;
+        compat_auth_entry.address = localhostname;
+        compat_auth_entry.address_length = strlen (localhostname);
+
+        compat_auth_entry.family = FamilyLocal;
+        if (XauWriteAuth (file->priv->fp, &compat_auth_entry)) {
+                if (fflush (file->priv->fp) != EOF) {
+                        wrote_entry = TRUE;
+                }
+        }
+
+        compat_auth_entry.family = FamilyWild;
+        if (XauWriteAuth (file->priv->fp, &compat_auth_entry)) {
+                if (fflush (file->priv->fp) != EOF) {
+                        wrote_entry = TRUE;
+                }
+        }
+
+        return wrote_entry;
+}
+
 gboolean
 gdm_display_access_file_add_display_with_cookie (GdmDisplayAccessFile  *file,
                                                  GdmDisplay            *display,
@@ -668,6 +784,9 @@ gdm_display_access_file_add_display_with_cookie (GdmDisplayAccessFile  *file,
                 display_added = TRUE;
         }
 
+	if (write_compat_entries_for_localhost (file, &auth_entry)) {
+                display_added = TRUE;
+        }
 
         g_free (auth_entry.address);
         g_free (auth_entry.number);
