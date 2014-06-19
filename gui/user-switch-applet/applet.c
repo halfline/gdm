@@ -33,6 +33,7 @@
 #include <gconf/gconf-client.h>
 
 #include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-bindings.h>
 
 #include <bonobo/bonobo-main.h>
 #include <bonobo/bonobo-ui-util.h>
@@ -709,15 +710,26 @@ do_switch (GdmAppletData *adata,
 static void
 update_switch_user (GdmAppletData *adata)
 {
+        DBusGConnection *system_bus;
         gboolean can_switch;
         gboolean has_other_users;
+        gboolean has_gdm = FALSE;
+
+        system_bus = dbus_g_bus_get (DBUS_BUS_SYSTEM, NULL);
+        if (system_bus != NULL) {
+                DBusGProxy *bus_proxy;
+                bus_proxy = dbus_g_proxy_new_for_name (system_bus, DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
+                org_freedesktop_DBus_name_has_owner (bus_proxy, "org.gnome.DisplayManager", &has_gdm, NULL);
+                g_object_unref (bus_proxy);
+                dbus_g_connection_unref (system_bus);
+        }
 
         can_switch = gdm_user_manager_can_switch (adata->manager);
         g_object_get (adata->manager,
                       "has-multiple-users", &has_other_users,
                       NULL);
 
-        if (can_switch && has_other_users) {
+        if (has_gdm && can_switch && has_other_users) {
                 gtk_widget_show (adata->login_screen_item);
         } else {
 
