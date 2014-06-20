@@ -1087,7 +1087,7 @@ maybe_add_new_session (GdmUserManagerNewSession *new_session)
                 g_object_unref (user);
         }
 
-        manager->priv->seat.state = GDM_USER_MANAGER_SEAT_STATE_LOADED;
+        new_session->state = GDM_USER_MANAGER_SEAT_STATE_LOADED;
         unload_new_session (new_session);
         return;
 
