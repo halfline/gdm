@@ -217,7 +217,9 @@ set_sensitive (GdmGreeterLoginWindow *login_window,
 static void
 set_focus (GdmGreeterLoginWindow *login_window)
 {
-        gdk_window_focus (GTK_WIDGET (login_window)->window, GDK_CURRENT_TIME);
+        if (gdk_x11_display_get_user_time (gtk_widget_get_display (GTK_WIDGET (login_window))) != 0) {
+                gtk_window_present (GTK_WINDOW (login_window));
+        }
 
         if (login_window->priv->active_task != NULL &&
             gdm_conversation_focus (GDM_CONVERSATION (login_window->priv->active_task))) {
