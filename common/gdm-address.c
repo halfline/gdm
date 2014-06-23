@@ -402,8 +402,6 @@ add_local_siocgifconf (GList **list)
                                         address = gdm_address_new_from_sockaddr ((struct sockaddr *)&ifreq.ifr_addr,
                                                                                  sizeof (struct sockaddr));
 
-                                        gdm_address_debug (address);
-
                                         *list = g_list_append (*list, address);
                                 }
                         }
