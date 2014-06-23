@@ -219,14 +219,12 @@ address_family_str (GdmAddress *address)
 }
 
 static void
-_gdm_address_debug (GdmAddress *address, char *hostname, char *host, char *port)
+_gdm_address_debug (GdmAddress *address,
+                    const char *hostname,
+                    const char *host,
+                    const char *port)
 {
         g_return_if_fail (address != NULL);
-
-        hostname = NULL;
-        host = NULL;
-        port = NULL;
-
 
         g_debug ("Address family:%d (%s) hostname:%s host:%s port:%s local:%d loopback:%d",
                  address->ss->ss_family,
@@ -236,23 +234,23 @@ _gdm_address_debug (GdmAddress *address, char *hostname, char *host, char *port)
                  port ? port : "(null)",
                  gdm_address_is_local (address),
                  gdm_address_is_loopback (address));
-
-        g_free (hostname);
-        g_free (host);
-        g_free (port);
 }
 
 void
 gdm_address_debug (GdmAddress *address)
 {
-        char *hostname;
-        char *host;
-        char *port;
+        char *hostname = NULL;
+        char *host = NULL;
+        char *port = NULL;
 
         gdm_address_get_hostname (address, &hostname);
         gdm_address_get_numeric_info (address, &host, &port);
 
         _gdm_address_debug (address, hostname, host, port);
+
+        g_free (hostname);
+        g_free (host);
+        g_free (port);
 }
 
 gboolean
