@@ -220,16 +220,14 @@ address_family_str (GdmAddress *address)
 
 static void
 _gdm_address_debug (GdmAddress *address,
-                    const char *hostname,
                     const char *host,
                     const char *port)
 {
         g_return_if_fail (address != NULL);
 
-        g_debug ("Address family:%d (%s) hostname:%s host:%s port:%s local:%d loopback:%d",
+        g_debug ("Address family:%d (%s) host:%s port:%s local:%d loopback:%d",
                  address->ss->ss_family,
                  address_family_str (address) ? address_family_str (address) : "(null)",
-                 hostname ? hostname : "(null)",
                  host ? host : "(null)",
                  port ? port : "(null)",
                  gdm_address_is_local (address),
@@ -243,10 +241,9 @@ gdm_address_debug (GdmAddress *address)
         char *host = NULL;
         char *port = NULL;
 
-        gdm_address_get_hostname (address, &hostname);
         gdm_address_get_numeric_info (address, &host, &port);
 
-        _gdm_address_debug (address, hostname, host, port);
+        _gdm_address_debug (address, host, port);
 
         g_free (hostname);
         g_free (host);
@@ -281,7 +278,7 @@ gdm_address_get_hostname (GdmAddress *address,
                 err_msg = gai_strerror (res);
                 g_warning ("Unable to lookup hostname: %s",
                         err_msg ? err_msg : "(null)");
-                _gdm_address_debug (address, NULL, NULL, NULL);
+                _gdm_address_debug (address, NULL, NULL);
         }
 
         /* try numeric? */
@@ -322,7 +319,7 @@ gdm_address_get_numeric_info (GdmAddress *address,
                 err_msg = gai_strerror (res);
                 g_warning ("Unable to lookup numeric info: %s",
                         err_msg ? err_msg : "(null)");
-                _gdm_address_debug (address, NULL, NULL, NULL);
+                _gdm_address_debug (address, NULL, NULL);
         } else {
                 ret = TRUE;
         }
@@ -431,7 +428,7 @@ add_local_addrinfo (GList **list)
 
         memset (&hints, 0, sizeof (hints));
         hints.ai_family = AF_UNSPEC;
-        hints.ai_flags = AI_CANONNAME;
+        hints.ai_flags = AI_CANONNAME | AI_NUMERICHOST;
 
         g_debug ("GdmAddress: looking up hostname: %s", hostbuf);
         result = NULL;
