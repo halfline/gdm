@@ -90,6 +90,10 @@ Provides: gdm-plugin-smartcard = %{epoch}:%{version}-%{release}
 Obsoletes: gdm-plugin-fingerprint < 1:3.2.1
 Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 
+%description
+GDM provides the graphical login screen, shown shortly after boot up,
+log out, and when user-switching.
+
 %package devel
 Summary: Development files for gdm
 Group: Development/Libraries
@@ -98,13 +102,6 @@ Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 %description devel
 The gdm-devel package contains headers and other
 files needed to build custom greeters.
-
-%description
-GDM provides the graphical login screen, shown shortly after boot up,
-log out, and when user-switching.
-
-%description devel
-Development files and headers for writing GDM greeters.
 
 %prep
 %setup -q
