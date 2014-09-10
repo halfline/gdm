@@ -151,6 +151,7 @@ struct GdmUserManagerPrivate
         guint                  ck_history_watchdog_id;
         GPid                   ck_history_pid;
 
+        gboolean               load_initiated;
         gboolean               is_loaded;
         gboolean               has_multiple_users;
 };
@@ -2430,8 +2431,9 @@ gdm_user_manager_queue_load (GdmUserManager *manager)
 {
         g_return_if_fail (GDM_IS_USER_MANAGER (manager));
 
-        if (! manager->priv->is_loaded) {
+        if (! manager->priv->load_initiated) {
                 queue_load_seat_and_users (manager);
+                manager->priv->load_initiated = TRUE;
         }
 }
 
