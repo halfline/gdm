@@ -11,7 +11,7 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.14.0
+Version: 3.14.1
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -158,10 +158,6 @@ mkdir -p $RPM_BUILD_ROOT/run/gdm
 find $RPM_BUILD_ROOT -name '*.a' -delete
 find $RPM_BUILD_ROOT -name '*.la' -delete
 
-# don't install fallback greeter
-rm $RPM_BUILD_ROOT%{_datadir}/gdm/greeter/applications/gdm-simple-greeter.desktop
-rm $RPM_BUILD_ROOT%{_datadir}/gdm/greeter/applications/polkit-gnome-authentication-agent-1.desktop
-
 %find_lang gdm --with-gnome
 
 %pre
@@ -298,6 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Oct 14 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.14.1-1
+- Update to 3.14.1
+
 * Mon Sep 22 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.14.0-1
 - Update to 3.14.0
 
