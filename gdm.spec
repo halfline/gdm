@@ -11,14 +11,14 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.14.1
+Version: 3.15.2
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
 URL: http://download.gnome.org/sources/gdm
 #VCS: git:git://git.gnome.org/gdm
-Source: http://download.gnome.org/sources/gdm/3.14/gdm-%{version}.tar.xz
+Source: http://download.gnome.org/sources/gdm/3.15/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
 BuildRequires: pkgconfig(libcanberra-gtk)
@@ -294,6 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Nov 25 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.15.2-1
+- Update to 3.15.2
+
 * Tue Oct 14 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.14.1-1
 - Update to 3.14.1
 
