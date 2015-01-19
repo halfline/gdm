@@ -48,9 +48,6 @@ typedef struct
 typedef struct
 {
         GdmXdmcpDisplayClass   parent_class;
-
-        void (* hostname_selected)          (GdmXdmcpChooserDisplay *display,
-                                             const char             *hostname);
 } GdmXdmcpChooserDisplayClass;
 
 GType                     gdm_xdmcp_chooser_display_get_type                 (void);
