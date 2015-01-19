@@ -42,43 +42,19 @@
 #include "gdm-common.h"
 #include "gdm-address.h"
 
-enum {
-        LAST_SIGNAL
-};
-
-static guint signals [LAST_SIGNAL] = { 0, };
-
 static void     gdm_xdmcp_chooser_display_class_init    (GdmXdmcpChooserDisplayClass *klass);
 static void     gdm_xdmcp_chooser_display_init          (GdmXdmcpChooserDisplay      *xdmcp_chooser_display);
-static gboolean gdm_xdmcp_chooser_display_prepare       (GdmDisplay *display);
 
 G_DEFINE_TYPE (GdmXdmcpChooserDisplay, gdm_xdmcp_chooser_display, GDM_TYPE_XDMCP_DISPLAY)
 
 static void
 gdm_xdmcp_chooser_display_class_init (GdmXdmcpChooserDisplayClass *klass)
 {
-        GObjectClass    *object_class = G_OBJECT_CLASS (klass);
-        GdmDisplayClass *display_class = GDM_DISPLAY_CLASS (klass);
-
-        display_class->prepare = gdm_xdmcp_chooser_display_prepare;
 }
 
 static void
 gdm_xdmcp_chooser_display_init (GdmXdmcpChooserDisplay *xdmcp_chooser_display)
 {
-}
-
-static gboolean
-gdm_xdmcp_chooser_display_prepare (GdmDisplay *display)
-{
-        GdmXdmcpChooserSlave *slave;
-
-        if (!GDM_DISPLAY_CLASS (gdm_xdmcp_chooser_display_parent_class)->prepare (display))
-                return FALSE;
-
-        slave = GDM_XDMCP_CHOOSER_SLAVE (gdm_display_get_slave (display));
-
-        return TRUE;
 }
 
 GdmDisplay *
