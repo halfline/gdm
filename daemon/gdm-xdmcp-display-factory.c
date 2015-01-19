@@ -1988,9 +1988,9 @@ gdm_xdmcp_send_decline (GdmXdmcpDisplayFactory *factory,
 }
 
 static void
-on_hostname_selected (GdmXdmcpChooserDisplay *display,
+on_hostname_selected (GdmSlave               *slave,
                       const char             *hostname,
-                      GdmXdmcpDisplayFactory *factory)
+                      GdmXdmcpChooserDisplay *display)
 {
         struct addrinfo  hints;
         struct addrinfo *ai_list;
@@ -2007,7 +2007,7 @@ on_hostname_selected (GdmXdmcpChooserDisplay *display,
 
         g_assert (address != NULL);
 
-        ic = indirect_client_lookup (factory, address);
+        ic = indirect_client_lookup (xdmcp_display_factory_object, address);
 
         if (ic->chosen_address != NULL) {
                 gdm_address_free (ic->chosen_address);
@@ -2086,6 +2086,7 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
 {
         GdmDisplay      *display;
         GdmDisplayStore *store;
+        GdmSlave        *slave;
         gboolean         use_chooser;
 
         g_debug ("GdmXdmcpDisplayFactory: Creating xdmcp display for %s:%d",
@@ -2109,7 +2110,6 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
                                                          displaynum,
                                                          address,
                                                          get_next_session_serial (factory));
-                g_signal_connect (display, "hostname-selected", G_CALLBACK (on_hostname_selected), factory);
         } else {
                 display = gdm_xdmcp_greeter_display_new (hostname,
                                                          displaynum,
@@ -2132,6 +2132,9 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
                           "notify::status",
                           G_CALLBACK (on_display_status_changed),
                           factory);
+
+        slave = gdm_display_get_slave (display);
+        g_signal_connect (slave, "hostname-selected", G_CALLBACK (on_hostname_selected), display);
 
         store = gdm_display_factory_get_display_store (GDM_DISPLAY_FACTORY (factory));
         gdm_display_store_add (store, display);

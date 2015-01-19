@@ -43,7 +43,6 @@
 #include "gdm-address.h"
 
 enum {
-        HOSTNAME_SELECTED,
         LAST_SIGNAL
 };
 
@@ -56,33 +55,12 @@ static gboolean gdm_xdmcp_chooser_display_prepare       (GdmDisplay *display);
 G_DEFINE_TYPE (GdmXdmcpChooserDisplay, gdm_xdmcp_chooser_display, GDM_TYPE_XDMCP_DISPLAY)
 
 static void
-on_hostname_selected (GdmXdmcpChooserSlave     *slave,
-                      const char               *hostname,
-                      GdmXdmcpChooserDisplay   *display)
-{
-        g_debug ("GdmXdmcpChooserDisplay: hostname selected: %s", hostname);
-        g_signal_emit (display, signals [HOSTNAME_SELECTED], 0, hostname);
-}
-
-static void
 gdm_xdmcp_chooser_display_class_init (GdmXdmcpChooserDisplayClass *klass)
 {
         GObjectClass    *object_class = G_OBJECT_CLASS (klass);
         GdmDisplayClass *display_class = GDM_DISPLAY_CLASS (klass);
 
         display_class->prepare = gdm_xdmcp_chooser_display_prepare;
-
-        signals [HOSTNAME_SELECTED] =
-                g_signal_new ("hostname-selected",
-                              G_OBJECT_CLASS_TYPE (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdmXdmcpChooserDisplayClass, hostname_selected),
-                              NULL,
-                              NULL,
-                              g_cclosure_marshal_VOID__STRING,
-                              G_TYPE_NONE,
-                              1,
-                              G_TYPE_STRING);
 }
 
 static void
@@ -99,9 +77,6 @@ gdm_xdmcp_chooser_display_prepare (GdmDisplay *display)
                 return FALSE;
 
         slave = GDM_XDMCP_CHOOSER_SLAVE (gdm_display_get_slave (display));
-
-        g_signal_connect (slave, "hostname-selected",
-                          G_CALLBACK (on_hostname_selected), display);
 
         return TRUE;
 }
