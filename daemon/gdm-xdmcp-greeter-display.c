@@ -43,69 +43,19 @@
 
 #define GDM_XDMCP_GREETER_DISPLAY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GDM_TYPE_XDMCP_GREETER_DISPLAY, GdmXdmcpGreeterDisplayPrivate))
 
-struct GdmXdmcpGreeterDisplayPrivate
-{
-        GdmAddress             *remote_address;
-        gint32                  session_number;
-};
-
-enum {
-        PROP_0,
-        PROP_REMOTE_ADDRESS,
-        PROP_SESSION_NUMBER,
-};
-
 static void     gdm_xdmcp_greeter_display_class_init    (GdmXdmcpGreeterDisplayClass *klass);
 static void     gdm_xdmcp_greeter_display_init          (GdmXdmcpGreeterDisplay      *xdmcp_greeter_display);
-static void     gdm_xdmcp_greeter_display_finalize      (GObject                     *object);
-static gboolean gdm_xdmcp_greeter_display_finish (GdmDisplay *display);
 
 G_DEFINE_TYPE (GdmXdmcpGreeterDisplay, gdm_xdmcp_greeter_display, GDM_TYPE_XDMCP_DISPLAY)
 
 static void
 gdm_xdmcp_greeter_display_class_init (GdmXdmcpGreeterDisplayClass *klass)
 {
-        GObjectClass    *object_class = G_OBJECT_CLASS (klass);
-        GdmDisplayClass *display_class = GDM_DISPLAY_CLASS (klass);
-
-        object_class->finalize = gdm_xdmcp_greeter_display_finalize;
-        display_class->finish = gdm_xdmcp_greeter_display_finish;
-
-        g_type_class_add_private (klass, sizeof (GdmXdmcpGreeterDisplayPrivate));
 }
 
 static void
 gdm_xdmcp_greeter_display_init (GdmXdmcpGreeterDisplay *xdmcp_greeter_display)
 {
-
-        xdmcp_greeter_display->priv = GDM_XDMCP_GREETER_DISPLAY_GET_PRIVATE (xdmcp_greeter_display);
-}
-
-static void
-gdm_xdmcp_greeter_display_finalize (GObject *object)
-{
-        GdmXdmcpGreeterDisplay *xdmcp_greeter_display;
-
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (GDM_IS_XDMCP_GREETER_DISPLAY (object));
-
-        xdmcp_greeter_display = GDM_XDMCP_GREETER_DISPLAY (object);
-
-        g_return_if_fail (xdmcp_greeter_display->priv != NULL);
-
-        G_OBJECT_CLASS (gdm_xdmcp_greeter_display_parent_class)->finalize (object);
-}
-
-static gboolean
-gdm_xdmcp_greeter_display_finish (GdmDisplay *display)
-{
-        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
-
-        GDM_DISPLAY_CLASS (gdm_xdmcp_greeter_display_parent_class)->finish (display);
-
-        gdm_display_unmanage (display);
-
-        return TRUE;
 }
 
 GdmDisplay *
