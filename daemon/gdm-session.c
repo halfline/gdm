@@ -2619,12 +2619,33 @@ gdm_session_start_session (GdmSession *self,
         stop_all_other_conversations (self, conversation, FALSE);
 
         if (self->priv->selected_program == NULL) {
+                GdmSessionDisplayMode display_mode;
+                gboolean              is_x11 = TRUE;
+                gboolean              run_launcher = FALSE;
+                gboolean              run_xsession_script;
+
                 command = get_session_command (self);
 
-                if (gdm_session_bypasses_xsession (self)) {
-                        program = g_strdup (command);
-                } else {
+                display_mode = gdm_session_get_display_mode (self);
+
+#ifdef ENABLE_WAYLAND_SUPPORT
+                is_x11 = !gdm_session_is_wayland_session (self);
+#endif
+
+                if (is_x11 && display_mode == GDM_SESSION_DISPLAY_MODE_LOGIND_MANAGED) {
+                        run_launcher = TRUE;
+                }
+
+                run_xsession_script = !gdm_session_bypasses_xsession (self);
+
+                if (run_launcher) {
+                        program = g_strdup_printf (LIBEXECDIR "/gdm-x-session %s\"%s\"",
+                                                   run_xsession_script? "--run-script " : "",
+                                                   command);
+                } else if (run_xsession_script) {
                         program = g_strdup_printf (GDMCONFDIR "/Xsession \"%s\"", command);
+                } else {
+                        program = g_strdup (command);
                 }
 
                 g_free (command);
