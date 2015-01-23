@@ -53,8 +53,6 @@
 #include "gdm-display.h"
 #include "gdm-display-glue.h"
 
-#include "gdm-server.h"
-
 #define GDM_SLAVE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GDM_TYPE_SLAVE, GdmSlavePrivate))
 
 struct GdmSlavePrivate

@@ -48,7 +48,6 @@
 
 #include "gdm-simple-slave.h"
 
-#include "gdm-server.h"
 #include "gdm-session.h"
 #include "gdm-session-glue.h"
 #include "gdm-launch-environment.h"
@@ -73,8 +72,6 @@ struct GdmSimpleSlavePrivate
 
         GPid               server_pid;
         guint              connection_attempts;
-
-        GdmServer         *server;
 
         /* this spawns and controls the greeter session */
         GdmLaunchEnvironment *greeter_environment;
@@ -515,12 +512,6 @@ start_launch_environment (GdmSimpleSlave *slave,
 
         g_debug ("GdmSimpleSlave: Creating greeter for %s %s", display_name, display_hostname);
 
-        if (slave->priv->server != NULL) {
-                display_device = gdm_server_get_display_device (slave->priv->server);
-        }
-
-        /* FIXME: send a signal back to the master */
-
         /* If XDMCP setup pinging */
         slave->priv->ping_interval = DEFAULT_PING_INTERVAL;
         res = gdm_settings_direct_get_int (GDM_KEY_PING_INTERVAL,
@@ -720,47 +711,6 @@ connect_to_display_when_accountsservice_ready (GdmSimpleSlave *slave)
 }
 
 static void
-on_server_ready (GdmServer      *server,
-                 GdmSimpleSlave *slave)
-{
-        connect_to_display_when_accountsservice_ready (slave);
-}
-
-static void
-on_server_exited (GdmServer      *server,
-                  int             exit_code,
-                  GdmSimpleSlave *slave)
-{
-        g_debug ("GdmSimpleSlave: server exited with code %d\n", exit_code);
-
-        gdm_slave_stop (GDM_SLAVE (slave));
-
-#ifdef WITH_PLYMOUTH
-        if (slave->priv->plymouth_is_running) {
-                plymouth_quit_without_transition (slave);
-        }
-#endif
-}
-
-static void
-on_server_died (GdmServer      *server,
-                int             signal_number,
-                GdmSimpleSlave *slave)
-{
-        g_debug ("GdmSimpleSlave: server died with signal %d, (%s)",
-                 signal_number,
-                 g_strsignal (signal_number));
-
-        gdm_slave_stop (GDM_SLAVE (slave));
-
-#ifdef WITH_PLYMOUTH
-        if (slave->priv->plymouth_is_running) {
-                plymouth_quit_without_transition (slave);
-        }
-#endif
-}
-
-static void
 on_list_cached_users_complete (GObject       *proxy,
                                GAsyncResult  *result,
                                gpointer       user_data)
@@ -824,29 +774,6 @@ gdm_simple_slave_run (GdmSimpleSlave *slave)
          * exist */
         if (display_is_local) {
                 gboolean res;
-                gboolean disable_tcp;
-
-                slave->priv->server = gdm_server_new (display_name, seat_id, auth_file, display_is_initial);
-
-                disable_tcp = TRUE;
-                if (gdm_settings_direct_get_boolean (GDM_KEY_DISALLOW_TCP, &disable_tcp)) {
-                        g_object_set (slave->priv->server,
-                                      "disable-tcp", disable_tcp,
-                                      NULL);
-                }
-
-                g_signal_connect (slave->priv->server,
-                                  "exited",
-                                  G_CALLBACK (on_server_exited),
-                                  slave);
-                g_signal_connect (slave->priv->server,
-                                  "died",
-                                  G_CALLBACK (on_server_died),
-                                  slave);
-                g_signal_connect (slave->priv->server,
-                                  "ready",
-                                  G_CALLBACK (on_server_ready),
-                                  slave);
 
                 g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM,
                                           0, NULL,
@@ -855,33 +782,7 @@ gdm_simple_slave_run (GdmSimpleSlave *slave)
                                           "org.freedesktop.Accounts",
                                           NULL,
                                           on_accountsservice_ready, slave);
-                
-#ifdef WITH_PLYMOUTH
-                slave->priv->plymouth_is_running = plymouth_is_running ();
-
-                if (slave->priv->plymouth_is_running) {
-                        plymouth_prepare_for_transition (slave);
-                }
-#endif
-                res = gdm_server_start (slave->priv->server);
-                if (! res) {
-                        g_warning (_("Could not start the X "
-                                     "server (your graphical environment) "
-                                     "due to an internal error. "
-                                     "Please contact your system administrator "
-                                     "or check your syslog to diagnose. "
-                                     "In the meantime this display will be "
-                                     "disabled.  Please restart GDM when "
-                                     "the problem is corrected."));
-#ifdef WITH_PLYMOUTH
-                        if (slave->priv->plymouth_is_running) {
-                                plymouth_quit_without_transition (slave);
-                        }
-#endif
-                        exit (1);
-                }
-
-                g_debug ("GdmSimpleSlave: Started X server");
+                g_timeout_add (500, (GSourceFunc)idle_connect_to_display, slave);
         } else {
                 g_timeout_add (500, (GSourceFunc)idle_connect_to_display, slave);
         }
@@ -897,7 +798,7 @@ gdm_simple_slave_start (GdmSlave *slave)
 {
         GDM_SLAVE_CLASS (gdm_simple_slave_parent_class)->start (slave);
 
-        gdm_simple_slave_run (GDM_SIMPLE_SLAVE (slave));
+        g_signal_emit_by_name (slave, "started");
 
         return TRUE;
 }
@@ -912,12 +813,6 @@ gdm_simple_slave_stop (GdmSlave *slave)
         GDM_SLAVE_CLASS (gdm_simple_slave_parent_class)->stop (slave);
 
         gdm_simple_slave_stop_greeter_session (slave);
-
-        if (self->priv->server != NULL) {
-                gdm_server_stop (self->priv->server);
-                g_clear_object (&self->priv->server);
-        }
-
         g_clear_object (&self->priv->accountsservice_proxy);
 
         return TRUE;

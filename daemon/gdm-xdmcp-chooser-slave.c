@@ -40,7 +40,6 @@
 
 #include "gdm-xdmcp-chooser-slave.h"
 
-#include "gdm-server.h"
 #include "gdm-launch-environment.h"
 #include "gdm-settings-direct.h"
 #include "gdm-settings-keys.h"

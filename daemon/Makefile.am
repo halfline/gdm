@@ -194,8 +194,6 @@ gdm_SOURCES = 			\
 	gdm-launch-environment.h	\
 	gdm-manager.c			\
 	gdm-manager.h			\
-	gdm-server.c			\
-	gdm-server.h			\
 	gdm-session.c			\
 	gdm-session.h			\
 	gdm-session-record.c		\
