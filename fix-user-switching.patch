@@ -118,3 +118,157 @@ index 8c41045..0278512 100644
 -- 
 2.2.1
 
+From 259ef2d7d7acc4e7bb0602eea835b9585997413b Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Fri, 23 Jan 2015 14:25:05 -0500
+Subject: [PATCH] manager: clean seed session when its display goes away
+
+If the display goes away right before the session exits, then we
+can crash because we'll try to finish the already finished display.
+
+This commit corrects the problem by making sure to dissociate the
+display from the seed session when the display is finished.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=719418
+---
+ daemon/gdm-manager.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/daemon/gdm-manager.c b/daemon/gdm-manager.c
+index 0278512..684e462 100644
+--- a/daemon/gdm-manager.c
++++ b/daemon/gdm-manager.c
+@@ -1820,60 +1820,67 @@ start_autologin_conversation_if_necessary (GdmManager *manager,
+         if (delay == 0 && g_file_test (GDM_RAN_ONCE_MARKER_FILE, G_FILE_TEST_EXISTS)) {
+                 return;
+         }
+ 
+         if (!enabled) {
+                 return;
+         }
+ 
+         g_debug ("GdmManager: Starting automatic login conversation");
+         gdm_session_start_conversation (session, "gdm-autologin");
+ }
+ 
+ static void
+ touch_ran_once_marker_file (GdmManager *manager)
+ {
+         int fd;
+ 
+         fd = g_creat (GDM_RAN_ONCE_MARKER_FILE, 0644);
+ 
+         if (fd < 0 && errno != EEXIST) {
+                 g_warning ("could not create %s to mark run, this may cause auto login "
+                            "to repeat: %m", GDM_RAN_ONCE_MARKER_FILE);
+                 return;
+         }
+ 
+         fsync (fd);
+         close (fd);
+ }
+ 
+ static void
++clean_seed_session (GdmSession *session)
++{
++        g_object_set_data (G_OBJECT (session), "gdm-display", NULL);
++        g_object_unref (session);
++}
++
++static void
+ create_seed_session_for_display (GdmManager *manager,
+                                  GdmDisplay *display,
+                                  uid_t       allowed_user)
+ {
+         GdmSession *session;
+         gboolean    display_is_local = FALSE;
+         char       *display_name = NULL;
+         char       *display_device = NULL;
+         char       *remote_hostname = NULL;
+         char       *display_auth_file = NULL;
+         char       *display_seat_id = NULL;
+         char       *display_id = NULL;
+ 
+         g_object_get (G_OBJECT (display),
+                       "id", &display_id,
+                       "x11-display-name", &display_name,
+                       "is-local", &display_is_local,
+                       "remote-hostname", &remote_hostname,
+                       "x11-authority-file", &display_auth_file,
+                       "seat-id", &display_seat_id,
+                       NULL);
+         display_device = get_display_device (manager, display);
+ 
+         session = gdm_session_new (GDM_SESSION_VERIFICATION_MODE_LOGIN,
+                                    allowed_user,
+                                    display_name,
+                                    remote_hostname,
+                                    display_device,
+                                    display_seat_id,
+                                    display_auth_file,
+@@ -1906,61 +1913,61 @@ create_seed_session_for_display (GdmManager *manager,
+                           manager);
+         g_signal_connect (session,
+                           "cancelled",
+                           G_CALLBACK (on_session_cancelled),
+                           manager);
+         g_signal_connect (session,
+                           "conversation-started",
+                           G_CALLBACK (on_session_conversation_started),
+                           manager);
+         g_signal_connect (session,
+                           "conversation-stopped",
+                           G_CALLBACK (on_session_conversation_stopped),
+                           manager);
+         g_signal_connect (session,
+                           "session-opened",
+                           G_CALLBACK (on_session_opened),
+                           manager);
+         g_signal_connect (session,
+                           "session-started",
+                           G_CALLBACK (on_session_started),
+                           manager);
+         g_signal_connect (session,
+                           "session-exited",
+                           G_CALLBACK (on_user_session_exited),
+                           manager);
+         g_signal_connect (session,
+                           "session-died",
+                           G_CALLBACK (on_user_session_died),
+                           manager);
+         g_object_set_data (G_OBJECT (session), "gdm-display", display);
+-        g_object_set_data_full (G_OBJECT (display), "gdm-seed-session", g_object_ref (session), (GDestroyNotify) g_object_unref);
++        g_object_set_data_full (G_OBJECT (display), "gdm-seed-session", g_object_ref (session), (GDestroyNotify) clean_seed_session);
+ 
+         start_autologin_conversation_if_necessary (manager, display, session);
+ }
+ 
+ static void
+ on_display_added (GdmDisplayStore *display_store,
+                   const char      *id,
+                   GdmManager      *manager)
+ {
+         GdmDisplay *display;
+ 
+         display = gdm_display_store_lookup (display_store, id);
+ 
+         if (display != NULL) {
+                 g_dbus_object_manager_server_export (manager->priv->object_manager,
+                                                      gdm_display_get_object_skeleton (display));
+ 
+                 g_signal_connect (display, "notify::status",
+                                   G_CALLBACK (on_display_status_changed),
+                                   manager);
+                 g_signal_emit (manager, signals[DISPLAY_ADDED], 0, id);
+         }
+ }
+ 
+ GQuark
+ gdm_manager_error_quark (void)
+ {
+         static GQuark ret = 0;
+         if (ret == 0) {
+                 ret = g_quark_from_static_string ("gdm_manager_error");
+-- 
+2.2.1
+
