@@ -327,11 +327,6 @@ on_greeter_environment_session_died (GdmLaunchEnvironment    *greeter_environmen
         gdm_slave_stop (GDM_SLAVE (slave));
 }
 
-static void
-setup_server (GdmSimpleSlave *slave)
-{
-}
-
 static gboolean
 can_create_environment (const char *session_id)
 {
@@ -634,35 +629,6 @@ on_accountsservice_ready (GObject       *object,
 
         g_dbus_proxy_call (slave->priv->accountsservice_proxy, "ListCachedUsers", NULL, 0, -1, NULL,
                            on_list_cached_users_complete, slave);
-}
-                          
-
-static gboolean
-gdm_simple_slave_run (GdmSimpleSlave *slave)
-{
-        char    *display_name;
-        char    *auth_file;
-        char    *seat_id;
-        gboolean display_is_local;
-        gboolean display_is_initial;
-
-        g_object_get (slave,
-                      "display-is-local", &display_is_local,
-                      "display-name", &display_name,
-                      "display-seat-id", &seat_id,
-                      "display-x11-authority-file", &auth_file,
-                      "display-is-initial", &display_is_initial,
-                      NULL);
-
-        /* if this is local display start a server if one doesn't
-         * exist */
-        if (display_is_local) {
-        }
-
-        g_free (display_name);
-        g_free (auth_file);
-
-        return TRUE;
 }
 
 static gboolean
