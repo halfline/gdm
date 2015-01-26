@@ -60,8 +60,6 @@ struct GdmXdmcpChooserSlavePrivate
 
         int                ping_interval;
 
-        guint              connection_attempts;
-
         GdmLaunchEnvironment *chooser_environment;
 };
 
@@ -161,11 +159,6 @@ on_chooser_connected (GdmSession           *session,
                       GdmXdmcpChooserSlave *slave)
 {
         g_debug ("GdmXdmcpChooserSlave: Chooser connected");
-}
-
-static void
-setup_server (GdmXdmcpChooserSlave *slave)
-{
 }
 
 static GdmLaunchEnvironment *
@@ -279,54 +272,11 @@ run_chooser (GdmXdmcpChooserSlave *slave)
 }
 
 static gboolean
-idle_connect_to_display (GdmXdmcpChooserSlave *slave)
-{
-        gboolean res;
-
-        slave->priv->connection_attempts++;
-
-        res = gdm_slave_connect_to_x11_display (GDM_SLAVE (slave));
-        if (res) {
-                /* FIXME: handle wait-for-go */
-
-                setup_server (slave);
-                run_chooser (slave);
-        } else {
-                if (slave->priv->connection_attempts >= MAX_CONNECT_ATTEMPTS) {
-                        g_warning ("Unable to connect to display after %d tries - bailing out", slave->priv->connection_attempts);
-                        exit (1);
-                }
-                return TRUE;
-        }
-
-        return FALSE;
-}
-
-static gboolean
-gdm_xdmcp_chooser_slave_run (GdmXdmcpChooserSlave *slave)
-{
-        char    *display_name;
-        char    *auth_file;
-
-        g_object_get (slave,
-                      "display-name", &display_name,
-                      "display-x11-authority-file", &auth_file,
-                      NULL);
-
-        g_timeout_add (500, (GSourceFunc)idle_connect_to_display, slave);
-
-        g_free (display_name);
-        g_free (auth_file);
-
-        return TRUE;
-}
-
-static gboolean
 gdm_xdmcp_chooser_slave_start (GdmSlave *slave)
 {
         GDM_SLAVE_CLASS (gdm_xdmcp_chooser_slave_parent_class)->start (slave);
 
-        gdm_xdmcp_chooser_slave_run (GDM_XDMCP_CHOOSER_SLAVE (slave));
+        run_chooser (GDM_XDMCP_CHOOSER_SLAVE (slave));
 
         return TRUE;
 }

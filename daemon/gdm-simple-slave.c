@@ -56,7 +56,6 @@
 
 #define GDM_SIMPLE_SLAVE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GDM_TYPE_SIMPLE_SLAVE, GdmSimpleSlavePrivate))
 
-#define MAX_CONNECT_ATTEMPTS  10
 #define DEFAULT_PING_INTERVAL 15
 
 #define INITIAL_SETUP_USERNAME "gnome-initial-setup"
@@ -71,15 +70,12 @@ struct GdmSimpleSlavePrivate
         int                ping_interval;
 
         GPid               server_pid;
-        guint              connection_attempts;
 
         /* this spawns and controls the greeter session */
         GdmLaunchEnvironment *greeter_environment;
 
         GDBusProxy        *accountsservice_proxy;
         guint              have_existing_user_accounts : 1;
-        guint              accountsservice_ready : 1;
-        guint              waiting_to_connect_to_display : 1;
 
 #ifdef  HAVE_LOGINDEVPERM
         gboolean           use_logindevperm;
@@ -678,37 +674,6 @@ gdm_simple_slave_start_greeter_session (GdmSlave *slave)
         }
 }
 
-static gboolean
-idle_connect_to_display (GdmSimpleSlave *slave)
-{
-        gboolean res;
-
-        slave->priv->connection_attempts++;
-
-        res = gdm_slave_connect_to_x11_display (GDM_SLAVE (slave));
-        if (res) {
-                setup_server (slave);
-        } else {
-                if (slave->priv->connection_attempts >= MAX_CONNECT_ATTEMPTS) {
-                        g_warning ("Unable to connect to display after %d tries - bailing out", slave->priv->connection_attempts);
-                        exit (1);
-                }
-                return TRUE;
-        }
-
-        return FALSE;
-}
-
-static void
-connect_to_display_when_accountsservice_ready (GdmSimpleSlave *slave)
-{
-        if (slave->priv->accountsservice_ready) {
-                slave->priv->waiting_to_connect_to_display = FALSE;
-                g_idle_add ((GSourceFunc)idle_connect_to_display, slave);
-        } else {
-                slave->priv->waiting_to_connect_to_display = TRUE;
-        }
-}
 
 static void
 on_list_cached_users_complete (GObject       *proxy,
@@ -728,11 +693,7 @@ on_list_cached_users_complete (GObject       *proxy,
                 g_variant_unref (call_result);
         }
 
-        slave->priv->accountsservice_ready = TRUE;
-
-        if (slave->priv->waiting_to_connect_to_display) {
-                connect_to_display_when_accountsservice_ready (slave);
-        }
+        g_signal_emit_by_name (slave, "started");
 }
 
 static void
@@ -773,18 +734,6 @@ gdm_simple_slave_run (GdmSimpleSlave *slave)
         /* if this is local display start a server if one doesn't
          * exist */
         if (display_is_local) {
-                gboolean res;
-
-                g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM,
-                                          0, NULL,
-                                          "org.freedesktop.Accounts",
-                                          "/org/freedesktop/Accounts",
-                                          "org.freedesktop.Accounts",
-                                          NULL,
-                                          on_accountsservice_ready, slave);
-                g_timeout_add (500, (GSourceFunc)idle_connect_to_display, slave);
-        } else {
-                g_timeout_add (500, (GSourceFunc)idle_connect_to_display, slave);
         }
 
         g_free (display_name);
@@ -798,7 +747,13 @@ gdm_simple_slave_start (GdmSlave *slave)
 {
         GDM_SLAVE_CLASS (gdm_simple_slave_parent_class)->start (slave);
 
-        g_signal_emit_by_name (slave, "started");
+        g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM,
+                                  0, NULL,
+                                  "org.freedesktop.Accounts",
+                                  "/org/freedesktop/Accounts",
+                                  "org.freedesktop.Accounts",
+                                  NULL,
+                                  on_accountsservice_ready, slave);
 
         return TRUE;
 }
