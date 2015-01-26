@@ -106,8 +106,6 @@ static void     gdm_slave_finalize      (GObject       *object);
 
 G_DEFINE_ABSTRACT_TYPE (GdmSlave, gdm_slave, G_TYPE_OBJECT)
 
-#define CURSOR_WATCH XC_watch
-
 GQuark
 gdm_slave_error_quark (void)
 {
