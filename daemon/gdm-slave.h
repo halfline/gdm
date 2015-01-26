@@ -59,17 +59,6 @@ typedef struct
         void (*stopped) (GdmSlave *slave);
 } GdmSlaveClass;
 
-typedef enum
-{
-        GDM_SLAVE_ERROR_GENERIC,
-        GDM_SLAVE_ERROR_UNSUPPORTED,
-        GDM_SLAVE_ERROR_NOT_OPENED,
-        GDM_SLAVE_ERROR_WRONG_SESSION,
-} GdmSlaveError;
-
-#define GDM_SLAVE_ERROR (gdm_slave_error_quark ())
-
-GQuark              gdm_slave_error_quark            (void);
 GType               gdm_slave_get_type               (void);
 gboolean            gdm_slave_start                  (GdmSlave   *slave);
 gboolean            gdm_slave_stop                   (GdmSlave   *slave);

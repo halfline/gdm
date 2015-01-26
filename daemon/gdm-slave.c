@@ -106,17 +106,6 @@ static void     gdm_slave_finalize      (GObject       *object);
 
 G_DEFINE_ABSTRACT_TYPE (GdmSlave, gdm_slave, G_TYPE_OBJECT)
 
-GQuark
-gdm_slave_error_quark (void)
-{
-        static GQuark ret = 0;
-        if (ret == 0) {
-                ret = g_quark_from_static_string ("gdm-slave-error-quark");
-        }
-
-        return ret;
-}
-
 static void
 gdm_slave_setup_xhost_auth (XHostAddress *host_entries, XServerInterpretedAddress *si_entries)
 {
