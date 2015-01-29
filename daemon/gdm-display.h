@@ -133,13 +133,6 @@ gboolean            gdm_display_get_x11_cookie                 (GdmDisplay  *dis
 gboolean            gdm_display_get_x11_authority_file         (GdmDisplay *display,
                                                                 char      **filename,
                                                                 GError    **error);
-gboolean            gdm_display_add_user_authorization         (GdmDisplay *display,
-                                                                const char *username,
-                                                                char      **filename,
-                                                                GError    **error);
-gboolean            gdm_display_remove_user_authorization      (GdmDisplay *display,
-                                                                const char *username,
-                                                                GError    **error);
 
 void                gdm_display_set_up_greeter_session         (GdmDisplay  *display,
                                                                 char       **username);

@@ -231,44 +231,6 @@ gdm_slave_stop (GdmSlave *slave)
         return ret;
 }
 
-gboolean
-gdm_slave_add_user_authorization (GdmSlave   *slave,
-                                  const char *username,
-                                  char      **filenamep)
-{
-        gboolean                  res;
-        GError                   *error;
-        char                     *filename;
-
-        filename = NULL;
-
-        if (filenamep != NULL) {
-                *filenamep = NULL;
-        }
-
-        g_debug ("GdmSlave: Requesting user authorization");
-
-        error = NULL;
-        res = gdm_display_add_user_authorization (slave->priv->display,
-                                                  username,
-                                                  &filename,
-                                                  &error);
-
-        if (! res) {
-                g_warning ("Failed to add user authorization: %s", error->message);
-                g_error_free (error);
-        } else {
-                g_debug ("GdmSlave: Got user authorization: %s", filename);
-        }
-
-        if (filenamep != NULL) {
-                *filenamep = g_strdup (filename);
-        }
-        g_free (filename);
-
-        return res;
-}
-
 static char *
 gdm_slave_parse_enriched_login (GdmSlave   *slave,
                                 const char *username)

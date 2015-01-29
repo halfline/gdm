@@ -1327,30 +1327,6 @@ static void
 start_user_session (GdmManager *manager,
                     StartUserSessionOperation *operation)
 {
-        GdmDisplay *display;
-
-        display = get_display_for_user_session (operation->session);
-
-        if (display != NULL) {
-                char *auth_file;
-                const char *username;
-
-                auth_file = NULL;
-                username = gdm_session_get_username (operation->session);
-                gdm_display_add_user_authorization (display,
-                                                    username,
-                                                    &auth_file,
-                                                    NULL);
-
-                g_assert (auth_file != NULL);
-
-                g_object_set (operation->session,
-                              "user-x11-authority-file", auth_file,
-                              NULL);
-
-                g_free (auth_file);
-        }
-
         gdm_session_start_session (operation->session,
                                    operation->service_name);
         destroy_start_user_session_operation (operation);

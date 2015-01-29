@@ -195,65 +195,6 @@ gdm_display_create_authority (GdmDisplay *display)
         return TRUE;
 }
 
-gboolean
-gdm_display_add_user_authorization (GdmDisplay *display,
-                                    const char *username,
-                                    char      **filename,
-                                    GError    **error)
-{
-        GdmDisplayAccessFile *access_file;
-        GError               *access_file_error;
-        gboolean              res;
-
-        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
-
-        g_debug ("GdmDisplay: Adding authorization for user:%s on display %s", username, display->priv->x11_display_name);
-
-        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
-
-        if (display->priv->user_access_file != NULL) {
-                g_set_error (error,
-                             G_DBUS_ERROR,
-                             G_DBUS_ERROR_ACCESS_DENIED,
-                             "user access already assigned");
-                return FALSE;
-        }
-
-        g_debug ("GdmDisplay: Adding user authorization for %s", username);
-
-        access_file_error = NULL;
-        access_file = _create_access_file_for_user (display,
-                                                    username,
-                                                    &access_file_error);
-
-        if (access_file == NULL) {
-                g_propagate_error (error, access_file_error);
-                return FALSE;
-        }
-
-        res = gdm_display_access_file_add_display_with_cookie (access_file,
-                                                               display,
-                                                               display->priv->x11_cookie,
-                                                               display->priv->x11_cookie_size,
-                                                               &access_file_error);
-        if (! res) {
-                g_debug ("GdmDisplay: Unable to add user authorization for %s: %s",
-                         username,
-                         access_file_error->message);
-                g_propagate_error (error, access_file_error);
-                gdm_display_access_file_close (access_file);
-                g_object_unref (access_file);
-                return FALSE;
-        }
-
-        *filename = gdm_display_access_file_get_path (access_file);
-        display->priv->user_access_file = access_file;
-
-        g_debug ("GdmDisplay: Added user authorization for %s: %s", username, *filename);
-
-        return TRUE;
-}
-
 static void
 gdm_display_real_get_timed_login_details (GdmDisplay *display,
                                           gboolean   *enabledp,
@@ -363,20 +304,6 @@ gdm_display_get_timed_login_details (GdmDisplay *display,
         if (out_delay) {
                 *out_delay = delay;
         }
-
-        return TRUE;
-}
-
-gboolean
-gdm_display_remove_user_authorization (GdmDisplay *display,
-                                       const char *username,
-                                       GError    **error)
-{
-        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
-
-        g_debug ("GdmDisplay: Removing authorization for user:%s on display %s", username, display->priv->x11_display_name);
-
-        gdm_display_access_file_close (display->priv->user_access_file);
 
         return TRUE;
 }
@@ -1030,46 +957,6 @@ handle_is_initial (GdmDBusDisplay        *skeleton,
 }
 
 static gboolean
-handle_add_user_authorization (GdmDBusDisplay        *skeleton,
-                               GDBusMethodInvocation *invocation,
-                               const char            *username,
-                               GdmDisplay            *display)
-{
-        char *filename;
-        GError *error = NULL;
-
-        if (gdm_display_add_user_authorization (display, username, &filename, &error)) {
-                gdm_dbus_display_complete_add_user_authorization (skeleton,
-                                                                  invocation,
-                                                                  filename);
-                g_free (filename);
-        } else {
-                g_dbus_method_invocation_return_gerror (invocation, error);
-                g_error_free (error);
-        }
-
-        return TRUE;
-}
-
-static gboolean
-handle_remove_user_authorization (GdmDBusDisplay        *skeleton,
-                                  GDBusMethodInvocation *invocation,
-                                  const char            *username,
-                                  GdmDisplay            *display)
-{
-        GError *error = NULL;
-
-        if (gdm_display_remove_user_authorization (display, username, &error)) {
-                gdm_dbus_display_complete_remove_user_authorization (skeleton, invocation);
-        } else {
-                g_dbus_method_invocation_return_gerror (invocation, error);
-                g_error_free (error);
-        }
-
-        return TRUE;
-}
-
-static gboolean
 register_display (GdmDisplay *display)
 {
         GError *error = NULL;
@@ -1105,10 +992,6 @@ register_display (GdmDisplay *display)
                           G_CALLBACK (handle_is_local), display);
         g_signal_connect (display->priv->display_skeleton, "handle-is-initial",
                           G_CALLBACK (handle_is_initial), display);
-        g_signal_connect (display->priv->display_skeleton, "handle-add-user-authorization",
-                          G_CALLBACK (handle_add_user_authorization), display);
-        g_signal_connect (display->priv->display_skeleton, "handle-remove-user-authorization",
-                          G_CALLBACK (handle_remove_user_authorization), display);
 
         g_dbus_object_skeleton_add_interface (display->priv->object_skeleton,
                                               G_DBUS_INTERFACE_SKELETON (display->priv->display_skeleton));
