@@ -421,7 +421,6 @@ start_launch_environment (GdmSimpleSlave *slave,
                       "display-name", &display_name,
                       "display-seat-id", &seat_id,
                       "display-hostname", &display_hostname,
-                      "display-x11-authority-file", &auth_file,
                       NULL);
 
         g_debug ("GdmSimpleSlave: Creating greeter for %s %s", display_name, display_hostname);
@@ -463,9 +462,6 @@ start_launch_environment (GdmSimpleSlave *slave,
                           "died",
                           G_CALLBACK (on_greeter_environment_session_died),
                           slave);
-        g_object_set (slave->priv->greeter_environment,
-                      "x11-authority-file", auth_file,
-                      NULL);
 
         gdm_launch_environment_start (GDM_LAUNCH_ENVIRONMENT (slave->priv->greeter_environment));
 
