@@ -44,6 +44,9 @@
 #include "gdm-simple-slave.h"
 #include "gdm-dbus-util.h"
 
+#define INITIAL_SETUP_USERNAME "gnome-initial-setup"
+#define GNOME_SESSION_SESSIONS_PATH DATADIR "/gnome-session/sessions"
+
 #define GDM_DISPLAY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GDM_TYPE_DISPLAY, GdmDisplayPrivate))
 
 struct GdmDisplayPrivate
@@ -560,7 +563,13 @@ on_accountsservice_ready (GObject        *object,
                 g_error ("Failed to contact accountsservice: %s", local_error->message);
         }
 
-        g_dbus_proxy_call (self->priv->accountsservice_proxy, "ListCachedUsers", NULL, 0, -1, NULL,
+        g_dbus_proxy_call (self->priv->accountsservice_proxy,
+                           "ListCachedUsers",
+                           NULL,
+                           0,
+                           -1,
+                           NULL,
+                           (GAsyncReadyCallback)
                            on_list_cached_users_complete, self);
 }
 
@@ -573,6 +582,7 @@ look_for_existing_users_and_start_slave (GdmDisplay *self)
                           "/org/freedesktop/Accounts",
                           "org.freedesktop.Accounts",
                           NULL,
+                          (GAsyncReadyCallback)
                           on_accountsservice_ready, self);
 }
 
@@ -1366,11 +1376,73 @@ gdm_display_get_object_skeleton (GdmDisplay *self)
         return self->priv->object_skeleton;
 }
 
+static gboolean
+can_create_environment (const char *session_id)
+{
+        char *path;
+        gboolean session_exists;
+
+        path = g_strdup_printf (GNOME_SESSION_SESSIONS_PATH "/%s.session", session_id);
+        session_exists = g_file_test (path, G_FILE_TEST_EXISTS);
+
+        g_free (path);
+
+        return session_exists;
+}
+
+static gboolean
+wants_autologin (GdmDisplay *self)
+{
+        gboolean enabled = FALSE;
+        int delay = 0;
+
+        if (g_file_test (GDM_RAN_ONCE_MARKER_FILE, G_FILE_TEST_EXISTS)) {
+                return FALSE;
+        }
+
+        gdm_display_get_timed_login_details (self, &enabled, NULL, &delay);
+        return enabled && delay == 0;
+}
+
+static gboolean
+wants_initial_setup (GdmDisplay *self)
+{
+        gboolean enabled = FALSE;
+
+        /* don't run initial-setup on remote displays
+         */
+        if (!self->priv->is_local) {
+                return FALSE;
+        }
+
+        /* don't run if the system has existing users */
+        if (self->priv->have_existing_user_accounts) {
+                return FALSE;
+        }
+
+        /* don't run if initial-setup is unavailable */
+        if (!can_create_environment ("gnome-initial-setup")) {
+                return FALSE;
+        }
+
+        if (!gdm_settings_direct_get_boolean (GDM_KEY_INITIAL_SETUP_ENABLE, &enabled)) {
+                return FALSE;
+        }
+
+        return enabled;
+}
+
 void
 gdm_display_set_up_greeter_session (GdmDisplay  *self,
                                     char       **username)
 {
-        gdm_slave_set_up_greeter_session (self->priv->slave, username);
+        if (wants_initial_setup (self)) {
+                *username = g_strdup (INITIAL_SETUP_USERNAME);
+        } else if (wants_autologin (self)) {
+                *username = g_strdup ("root");
+        } else {
+                *username = g_strdup (GDM_USERNAME);
+        }
 }
 
 void

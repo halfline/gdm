@@ -50,8 +50,6 @@ typedef struct
         gboolean (*start) (GdmSlave *slave);
         gboolean (*stop)  (GdmSlave *slave);
 
-        void     (* set_up_greeter_session) (GdmSlave  *slave,
-                                             char     **username);
         void     (* start_greeter_session)  (GdmSlave  *slave);
         void     (* stop_greeter_session)   (GdmSlave  *slave);
 
@@ -83,8 +81,6 @@ gboolean            gdm_slave_add_user_authorization (GdmSlave   *slave,
 
 gboolean            gdm_slave_connect_to_x11_display (GdmSlave   *slave);
 
-void                gdm_slave_set_up_greeter_session (GdmSlave  *slave,
-                                                      char     **username);
 void                gdm_slave_start_greeter_session  (GdmSlave  *slave);
 void                gdm_slave_stop_greeter_session   (GdmSlave  *slave);
 

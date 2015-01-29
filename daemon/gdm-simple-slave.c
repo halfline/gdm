@@ -633,21 +633,6 @@ wants_initial_setup (GdmSimpleSlave *slave)
 }
 
 static void
-gdm_simple_slave_set_up_greeter_session (GdmSlave  *slave,
-                                         char     **username)
-{
-        GdmSimpleSlave *self = GDM_SIMPLE_SLAVE (slave);
-
-        if (wants_initial_setup (self)) {
-                *username = g_strdup (INITIAL_SETUP_USERNAME);
-        } else if (wants_autologin (self)) {
-                *username = g_strdup ("root");
-        } else {
-                *username = g_strdup (GDM_USERNAME);
-        }
-}
-
-static void
 gdm_simple_slave_stop_greeter_session (GdmSlave *slave)
 {
         GdmSimpleSlave *self = GDM_SIMPLE_SLAVE (slave);
@@ -933,7 +918,6 @@ gdm_simple_slave_class_init (GdmSimpleSlaveClass *klass)
 
         slave_class->start = gdm_simple_slave_start;
         slave_class->stop = gdm_simple_slave_stop;
-        slave_class->set_up_greeter_session = gdm_simple_slave_set_up_greeter_session;
         slave_class->start_greeter_session = gdm_simple_slave_start_greeter_session;
         slave_class->stop_greeter_session = gdm_simple_slave_stop_greeter_session;
 
