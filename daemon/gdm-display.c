@@ -41,7 +41,9 @@
 #include "gdm-settings-direct.h"
 #include "gdm-settings-keys.h"
 
+#include "gdm-launch-environment.h"
 #include "gdm-simple-slave.h"
+#include "gdm-xdmcp-chooser-slave.h"
 #include "gdm-dbus-util.h"
 
 #define INITIAL_SETUP_USERNAME "gnome-initial-setup"
@@ -78,10 +80,15 @@ struct GdmDisplayPrivate
 
         GDBusProxy           *accountsservice_proxy;
 
+        /* this spawns and controls the greeter session */
+        GdmLaunchEnvironment *greeter_environment;
+
         guint                 is_local : 1;
         guint                 is_initial : 1;
         guint                 allow_timed_login : 1;
         guint                 have_existing_user_accounts : 1;
+        guint                 doing_initial_setup : 1;
+        guint                 doing_chooser : 1;
 };
 
 enum {
@@ -108,8 +115,78 @@ static void     gdm_display_finalize    (GObject         *object);
 static void     queue_finish            (GdmDisplay      *self);
 static void     _gdm_display_set_status (GdmDisplay *self,
                                          int         status);
-
 G_DEFINE_ABSTRACT_TYPE (GdmDisplay, gdm_display, G_TYPE_OBJECT)
+
+static gboolean
+chown_file (GFile   *file,
+            uid_t    uid,
+            gid_t    gid,
+            GError **error)
+{
+        if (!g_file_set_attribute_uint32 (file, G_FILE_ATTRIBUTE_UNIX_UID, uid,
+                                          G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+                                          NULL, error)) {
+                return FALSE;
+        }
+        if (!g_file_set_attribute_uint32 (file, G_FILE_ATTRIBUTE_UNIX_GID, gid,
+                                          G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+                                          NULL, error)) {
+                return FALSE;
+        }
+        return TRUE;
+}
+
+static gboolean
+chown_recursively (GFile   *dir,
+                   uid_t    uid,
+                   gid_t    gid,
+                   GError **error)
+{
+        GFile *file = NULL;
+        GFileInfo *info = NULL;
+        GFileEnumerator *enumerator = NULL;
+        gboolean retval = FALSE;
+
+        if (chown_file (dir, uid, gid, error) == FALSE) {
+                goto out;
+        }
+
+        enumerator = g_file_enumerate_children (dir,
+                                                G_FILE_ATTRIBUTE_STANDARD_TYPE","
+                                                G_FILE_ATTRIBUTE_STANDARD_NAME,
+                                                G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+                                                NULL, error);
+        if (!enumerator) {
+                goto out;
+        }
+
+        while ((info = g_file_enumerator_next_file (enumerator, NULL, error)) != NULL) {
+                file = g_file_get_child (dir, g_file_info_get_name (info));
+
+                if (g_file_info_get_file_type (info) == G_FILE_TYPE_DIRECTORY) {
+                        if (chown_recursively (file, uid, gid, error) == FALSE) {
+                                goto out;
+                        }
+                } else if (chown_file (file, uid, gid, error) == FALSE) {
+                        goto out;
+                }
+
+                g_clear_object (&file);
+                g_clear_object (&info);
+        }
+
+        if (*error) {
+                goto out;
+        }
+
+        retval = TRUE;
+out:
+        g_clear_object (&file);
+        g_clear_object (&info);
+        g_clear_object (&enumerator);
+
+        return retval;
+}
 
 GQuark
 gdm_display_error_quark (void)
@@ -1376,6 +1453,55 @@ gdm_display_get_object_skeleton (GdmDisplay *self)
         return self->priv->object_skeleton;
 }
 
+static void
+on_greeter_environment_session_opened (GdmLaunchEnvironment *greeter_environment,
+                                       GdmDisplay           *self)
+{
+        char       *session_id;
+
+        g_debug ("GdmDisplay: Greeter session opened");
+        session_id = gdm_launch_environment_get_session_id (GDM_LAUNCH_ENVIRONMENT (greeter_environment));
+
+        g_object_set (GDM_SLAVE (self), "session-id", session_id, NULL);
+        g_free (session_id);
+}
+
+static void
+on_greeter_environment_session_started (GdmLaunchEnvironment *greeter_environment,
+                                        GdmDisplay           *self)
+{
+        g_debug ("GdmDisplay: Greeter started");
+}
+
+static void
+on_greeter_environment_session_stopped (GdmLaunchEnvironment *greeter_environment,
+                                        GdmDisplay           *self)
+{
+        g_debug ("GdmDisplay: Greeter stopped");
+        gdm_slave_stop (self->priv->slave);
+
+        g_object_unref (self->priv->greeter_environment);
+        self->priv->greeter_environment = NULL;
+}
+
+static void
+on_greeter_environment_session_exited (GdmLaunchEnvironment *greeter_environment,
+                                       int                   code,
+                                       GdmDisplay           *self)
+{
+        g_debug ("GdmDisplay: Greeter exited: %d", code);
+        gdm_slave_stop (self->priv->slave);
+}
+
+static void
+on_greeter_environment_session_died (GdmLaunchEnvironment *greeter_environment,
+                                     int                   signal,
+                                     GdmDisplay           *self)
+{
+        g_debug ("GdmDisplay: Greeter died: %d", signal);
+        gdm_slave_stop (self->priv->slave);
+}
+
 static gboolean
 can_create_environment (const char *session_id)
 {
@@ -1388,6 +1514,154 @@ can_create_environment (const char *session_id)
         g_free (path);
 
         return session_exists;
+}
+
+static GdmLaunchEnvironment *
+create_environment (const char *session_id,
+                    const char *user_name,
+                    const char *display_name,
+                    const char *seat_id,
+                    const char *display_hostname,
+                    gboolean    display_is_local)
+{
+        gboolean debug = FALSE;
+        char *command;
+        GdmLaunchEnvironment *launch_environment;
+        char **argv;
+        GPtrArray *args;
+
+        gdm_settings_direct_get_boolean (GDM_KEY_DEBUG, &debug);
+
+        args = g_ptr_array_new ();
+        g_ptr_array_add (args, BINDIR "/gnome-session");
+
+        g_ptr_array_add (args, "--autostart");
+        g_ptr_array_add (args, DATADIR "/gdm/greeter/autostart");
+
+        if (debug) {
+                g_ptr_array_add (args, "--debug");
+        }
+
+        if (session_id != NULL) {
+                g_ptr_array_add (args, " --session");
+                g_ptr_array_add (args, (char *) session_id);
+        }
+
+        g_ptr_array_add (args, NULL);
+
+        argv = (char **) g_ptr_array_free (args, FALSE);
+        command = g_strjoinv (" ", argv);
+        g_free (argv);
+
+        launch_environment = g_object_new (GDM_TYPE_LAUNCH_ENVIRONMENT,
+                                           "command", command,
+                                           "user-name", user_name,
+                                           "x11-display-name", display_name,
+                                           "x11-display-seat-id", seat_id,
+                                           "x11-display-hostname", display_hostname,
+                                           "x11-display-is-local", display_is_local,
+                                           "runtime-dir", GDM_SCREENSHOT_DIR,
+                                           NULL);
+
+        g_free (command);
+        return launch_environment;
+}
+
+static GdmLaunchEnvironment *
+create_chooser_environment (const char *session_id,
+                            const char *user_name,
+                            const char *display_name,
+                            const char *seat_id,
+                            const char *display_hostname,
+                            gboolean    display_is_local)
+{
+        GdmLaunchEnvironment *launch_environment;
+
+        launch_environment = g_object_new (GDM_TYPE_LAUNCH_ENVIRONMENT,
+                                           "command", LIBEXECDIR "/gdm-simple-chooser",
+                                           "verification-mode", GDM_SESSION_VERIFICATION_MODE_CHOOSER,
+                                           "user-name", user_name,
+                                           "x11-display-name", display_name,
+                                           "x11-display-seat-id", seat_id,
+                                           "x11-display-hostname", display_hostname,
+                                           "x11-display-is-local", display_is_local,
+                                           "runtime-dir", GDM_SCREENSHOT_DIR,
+                                           NULL);
+
+        return launch_environment;
+}
+
+static void
+start_launch_environment (GdmDisplay *self,
+                          char       *username,
+                          char       *session_id)
+{
+        char          *display_name;
+        char          *seat_id;
+        char          *hostname;
+        char          *auth_file;
+
+        g_debug ("GdmDisplay: Running greeter");
+
+        display_name = NULL;
+        seat_id = NULL;
+        auth_file = NULL;
+        hostname = NULL;
+
+        g_object_get (self,
+                      "x11-display-name", &display_name,
+                      "seat-id", &seat_id,
+                      "remote-hostname", &hostname,
+                      "x11-authority-file", &auth_file,
+                      NULL);
+
+        g_debug ("GdmDisplay: Creating greeter for %s %s", display_name, hostname);
+
+        if (self->priv->doing_chooser) {
+                self->priv->greeter_environment = create_chooser_environment (session_id,
+                                                                              username,
+                                                                              display_name,
+                                                                              seat_id,
+                                                                              hostname,
+                                                                              self->priv->is_local);
+        } else {
+                self->priv->greeter_environment = create_environment (session_id,
+                                                                      username,
+                                                                      display_name,
+                                                                      seat_id,
+                                                                      hostname,
+                                                                      self->priv->is_local);
+        }
+        g_signal_connect (self->priv->greeter_environment,
+                          "opened",
+                          G_CALLBACK (on_greeter_environment_session_opened),
+                          self);
+        g_signal_connect (self->priv->greeter_environment,
+                          "started",
+                          G_CALLBACK (on_greeter_environment_session_started),
+                          self);
+        g_signal_connect (self->priv->greeter_environment,
+                          "stopped",
+                          G_CALLBACK (on_greeter_environment_session_stopped),
+                          self);
+        g_signal_connect (self->priv->greeter_environment,
+                          "exited",
+                          G_CALLBACK (on_greeter_environment_session_exited),
+                          self);
+        g_signal_connect (self->priv->greeter_environment,
+                          "died",
+                          G_CALLBACK (on_greeter_environment_session_died),
+                          self);
+        g_object_set (self->priv->greeter_environment,
+                      "x11-authority-file", auth_file,
+                      NULL);
+
+        gdm_launch_environment_start (GDM_LAUNCH_ENVIRONMENT (self->priv->greeter_environment));
+
+        g_free (display_name);
+        g_free (seat_id);
+        g_free (hostname);
+        g_free (auth_file);
 }
 
 static gboolean
@@ -1445,16 +1719,113 @@ gdm_display_set_up_greeter_session (GdmDisplay  *self,
         }
 }
 
+static void
+start_greeter (GdmDisplay *self)
+{
+        start_launch_environment (self, GDM_USERNAME, NULL);
+}
+
+static void
+start_initial_setup (GdmDisplay *self)
+{
+        self->priv->doing_initial_setup = TRUE;
+        start_launch_environment (self, INITIAL_SETUP_USERNAME, "gnome-initial-setup");
+}
+
+static void
+start_chooser (GdmDisplay *self)
+{
+        self->priv->doing_chooser = TRUE;
+        start_launch_environment (self, GDM_USERNAME, NULL);
+}
+
 void
 gdm_display_start_greeter_session (GdmDisplay *self)
 {
-        gdm_slave_start_greeter_session (self->priv->slave);
+        if (self->priv->slave_type == GDM_TYPE_SIMPLE_SLAVE) {
+                if (wants_initial_setup (self)) {
+                        start_initial_setup (self);
+                } else if (!wants_autologin (self)) {
+                        start_greeter (self);
+                }
+        } else if (self->priv->slave_type == GDM_TYPE_XDMCP_CHOOSER_SLAVE) {
+                start_chooser (self);
+        }
 }
+
+static void
+chown_initial_setup_home_dir (void)
+{
+        GFile *dir;
+        GError *error;
+        char *gis_dir_path;
+        char *gis_uid_path;
+        char *gis_uid_contents;
+        struct passwd *pwe;
+        uid_t uid;
+
+        if (!gdm_get_pwent_for_name (INITIAL_SETUP_USERNAME, &pwe)) {
+                g_warning ("Unknown user %s", INITIAL_SETUP_USERNAME);
+                return;
+        }
+
+        gis_dir_path = g_strdup (pwe->pw_dir);
+
+        gis_uid_path = g_build_filename (gis_dir_path,
+                                         "gnome-initial-setup-uid",
+                                         NULL);
+        if (!g_file_get_contents (gis_uid_path, &gis_uid_contents, NULL, NULL)) {
+                g_warning ("Unable to read %s", gis_uid_path);
+                goto out;
+        }
+
+        uid = (uid_t) atoi (gis_uid_contents);
+        pwe = getpwuid (uid);
+        if (uid == 0 || pwe == NULL) {
+                g_warning ("UID '%s' in %s is not valid", gis_uid_contents, gis_uid_path);
+                goto out;
+        }
+
+        error = NULL;
+        dir = g_file_new_for_path (gis_dir_path);
+        if (!chown_recursively (dir, pwe->pw_uid, pwe->pw_gid, &error)) {
+                g_warning ("Failed to change ownership for %s: %s", gis_dir_path, error->message);
+                g_error_free (error);
+        }
+        g_object_unref (dir);
+out:
+        g_free (gis_uid_contents);
+        g_free (gis_uid_path);
+        g_free (gis_dir_path);
+}
+
 
 void
 gdm_display_stop_greeter_session (GdmDisplay *self)
 {
-        gdm_slave_stop_greeter_session (self->priv->slave);
+        if (self->priv->greeter_environment != NULL) {
+                g_signal_handlers_disconnect_by_func (self->priv->greeter_environment,
+                                                      G_CALLBACK (on_greeter_environment_session_opened),
+                                                      self);
+                g_signal_handlers_disconnect_by_func (self->priv->greeter_environment,
+                                                      G_CALLBACK (on_greeter_environment_session_started),
+                                                      self);
+                g_signal_handlers_disconnect_by_func (self->priv->greeter_environment,
+                                                      G_CALLBACK (on_greeter_environment_session_stopped),
+                                                      self);
+                g_signal_handlers_disconnect_by_func (self->priv->greeter_environment,
+                                                      G_CALLBACK (on_greeter_environment_session_exited),
+                                                      self);
+                g_signal_handlers_disconnect_by_func (self->priv->greeter_environment,
+                                                      G_CALLBACK (on_greeter_environment_session_died),
+                                                      self);
+                gdm_launch_environment_stop (GDM_LAUNCH_ENVIRONMENT (self->priv->greeter_environment));
+                g_clear_object (&self->priv->greeter_environment);
+        }
+
+        if (self->priv->doing_initial_setup) {
+                chown_initial_setup_home_dir ();
+        }
 }
 
 GdmSlave *
