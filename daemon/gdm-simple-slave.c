@@ -80,9 +80,6 @@ struct GdmSimpleSlavePrivate
 #ifdef  HAVE_LOGINDEVPERM
         gboolean           use_logindevperm;
 #endif
-#ifdef  WITH_PLYMOUTH
-        guint              plymouth_is_running : 1;
-#endif
         guint              doing_initial_setup : 1;
 };
 
@@ -330,83 +327,9 @@ on_greeter_environment_session_died (GdmLaunchEnvironment    *greeter_environmen
         gdm_slave_stop (GDM_SLAVE (slave));
 }
 
-#ifdef  WITH_PLYMOUTH
-static gboolean
-plymouth_is_running (void)
-{
-        int      status;
-        gboolean res;
-        GError  *error;
-
-        error = NULL;
-        res = g_spawn_command_line_sync ("/bin/plymouth --ping",
-                                         NULL, NULL, &status, &error);
-        if (! res) {
-                g_debug ("Could not ping plymouth: %s", error->message);
-                g_error_free (error);
-                return FALSE;
-        }
-
-        return WIFEXITED (status) && WEXITSTATUS (status) == 0;
-}
-
-static void
-plymouth_prepare_for_transition (GdmSimpleSlave *slave)
-{
-        gboolean res;
-        GError  *error;
-
-        error = NULL;
-        res = g_spawn_command_line_sync ("/bin/plymouth deactivate",
-                                         NULL, NULL, NULL, &error);
-        if (! res) {
-                g_warning ("Could not deactivate plymouth: %s", error->message);
-                g_error_free (error);
-        }
-}
-
-static void
-plymouth_quit_with_transition (GdmSimpleSlave *slave)
-{
-        gboolean res;
-        GError  *error;
-
-        error = NULL;
-        res = g_spawn_command_line_sync ("/bin/plymouth quit --retain-splash",
-                                         NULL, NULL, NULL, &error);
-        if (! res) {
-                g_warning ("Could not quit plymouth: %s", error->message);
-                g_error_free (error);
-        }
-        slave->priv->plymouth_is_running = FALSE;
-}
-
-static void
-plymouth_quit_without_transition (GdmSimpleSlave *slave)
-{
-        gboolean res;
-        GError  *error;
-
-        error = NULL;
-        res = g_spawn_command_line_sync ("/bin/plymouth quit",
-                                         NULL, NULL, NULL, &error);
-        if (! res) {
-                g_warning ("Could not quit plymouth: %s", error->message);
-                g_error_free (error);
-        }
-        slave->priv->plymouth_is_running = FALSE;
-}
-#endif
-
 static void
 setup_server (GdmSimpleSlave *slave)
 {
-#ifdef WITH_PLYMOUTH
-        /* Plymouth is waiting for the go-ahead to exit */
-        if (slave->priv->plymouth_is_running) {
-                plymouth_quit_with_transition (slave);
-        }
-#endif
 }
 
 static gboolean
