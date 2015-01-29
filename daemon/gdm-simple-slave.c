@@ -65,11 +65,6 @@
 
 struct GdmSimpleSlavePrivate
 {
-        GPid               pid;
-        char              *username;
-
-        int                ping_interval;
-
         guint              connection_attempts;
 
         GdmServer         *server;
