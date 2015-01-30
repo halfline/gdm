@@ -49,12 +49,12 @@ enable_documentation=yes
 ])
 AM_CONDITIONAL(ENABLE_DOCUMENTATION, test x$enable_documentation = xyes)
 
-# i18n stuff
-IT_PROG_INTLTOOL([0.40.0])
-
 GETTEXT_PACKAGE=gdm
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package])
+
+AM_GNU_GETTEXT_VERSION([0.19])
+AM_GNU_GETTEXT([external])
 
 dnl ---------------------------------------------------------------------------
 dnl - Dependencies

@@ -10,7 +10,6 @@ edit = sed \
 %.desktop.in: %.desktop.in.in Makefile
 	$(edit) $< >$@
 
-@INTLTOOL_DESKTOP_RULE@
 desktopdir = $(pkgdatadir)/greeter/applications
 desktop_in_files = 							\
 	gnome-shell.desktop.in						\
