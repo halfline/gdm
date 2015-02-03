@@ -53,10 +53,10 @@
 #include <X11/Xdmcp.h>
 
 #include "gdm-common.h"
-#include "gdm-xdmcp-greeter-display.h"
-#include "gdm-xdmcp-chooser-display.h"
+#include "gdm-xdmcp-display.h"
 #include "gdm-display-factory.h"
 #include "gdm-xdmcp-display-factory.h"
+#include "gdm-xdmcp-chooser-slave.h"
 #include "gdm-display-store.h"
 #include "gdm-settings-direct.h"
 #include "gdm-settings-keys.h"
@@ -1988,9 +1988,9 @@ gdm_xdmcp_send_decline (GdmXdmcpDisplayFactory *factory,
 }
 
 static void
-on_hostname_selected (GdmSlave               *slave,
-                      const char             *hostname,
-                      GdmXdmcpChooserDisplay *display)
+on_hostname_selected (GdmSlave        *slave,
+                      const char      *hostname,
+                      GdmXdmcpDisplay *display)
 {
         struct addrinfo  hints;
         struct addrinfo *ai_list;
@@ -2003,7 +2003,7 @@ on_hostname_selected (GdmSlave               *slave,
         g_debug ("GdmXdmcpDisplayFactory: hostname selected: %s",
                 hostname ? hostname : "(null)");
 
-        address = gdm_xdmcp_display_get_remote_address (GDM_XDMCP_DISPLAY (display));
+        address = gdm_xdmcp_display_get_remote_address (display);
 
         g_assert (address != NULL);
 
@@ -2105,16 +2105,14 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
                 }
         }
 
+        display = gdm_xdmcp_display_new (hostname,
+                                         displaynum,
+                                         address,
+                                         get_next_session_serial (factory));
         if (use_chooser) {
-                display = gdm_xdmcp_chooser_display_new (hostname,
-                                                         displaynum,
-                                                         address,
-                                                         get_next_session_serial (factory));
-        } else {
-                display = gdm_xdmcp_greeter_display_new (hostname,
-                                                         displaynum,
-                                                         address,
-                                                         get_next_session_serial (factory));
+                g_object_set (G_OBJECT (display),
+                              "slave-type", GDM_TYPE_XDMCP_CHOOSER_SLAVE,
+                              NULL);
         }
 
         if (display == NULL) {
