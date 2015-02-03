@@ -75,6 +75,7 @@ struct GdmDisplayPrivate
         GDBusObjectSkeleton  *object_skeleton;
 
         gboolean              is_initial;
+        gboolean              allow_timed_login;
 };
 
 enum {
@@ -90,7 +91,8 @@ enum {
         PROP_X11_AUTHORITY_FILE,
         PROP_IS_LOCAL,
         PROP_SLAVE_TYPE,
-        PROP_IS_INITIAL
+        PROP_IS_INITIAL,
+        PROP_ALLOW_TIMED_LOGIN,
 };
 
 static void     gdm_display_class_init  (GdmDisplayClass *klass);
@@ -254,11 +256,11 @@ gdm_display_add_user_authorization (GdmDisplay *display,
         return TRUE;
 }
 
-static void
-gdm_display_real_get_timed_login_details (GdmDisplay *display,
-                                          gboolean   *enabledp,
-                                          char      **usernamep,
-                                          int        *delayp)
+void
+gdm_display_get_timed_login_details (GdmDisplay *display,
+                                     gboolean   *enabledp,
+                                     char      **usernamep,
+                                     int        *delayp)
 {
         gboolean res;
         gboolean enabled;
@@ -268,6 +270,10 @@ gdm_display_real_get_timed_login_details (GdmDisplay *display,
         enabled = FALSE;
         username = NULL;
         delay = 0;
+
+        if (!display->priv->allow_timed_login) {
+                goto out;
+        }
 
 #ifdef WITH_SYSTEMD
         /* FIXME: More careful thought needs to happen before we
@@ -327,44 +333,12 @@ gdm_display_real_get_timed_login_details (GdmDisplay *display,
         if (delayp != NULL) {
                 *delayp = delay;
         }
-}
-
-gboolean
-gdm_display_get_timed_login_details (GdmDisplay *display,
-                                     gboolean   *out_enabled,
-                                     char      **out_username,
-                                     int        *out_delay,
-                                     GError    **error)
-{
-        gboolean enabled;
-        char *username;
-        int delay;
-
-        g_return_val_if_fail (GDM_IS_DISPLAY (display), FALSE);
-
-        GDM_DISPLAY_GET_CLASS (display)->get_timed_login_details (display, &enabled, &username, &delay);
 
         g_debug ("GdmDisplay: Got timed login details for display %s: %d '%s' %d",
                  display->priv->x11_display_name,
                  enabled,
                  username,
                  delay);
-
-        if (out_enabled) {
-                *out_enabled = enabled;
-        }
-
-        if (out_username) {
-                *out_username = username;
-        } else {
-                g_free (username);
-        }
-
-        if (out_delay) {
-                *out_delay = delay;
-        }
-
-        return TRUE;
 }
 
 gboolean
@@ -746,6 +720,13 @@ _gdm_display_set_is_initial (GdmDisplay     *display,
 }
 
 static void
+_gdm_display_set_allow_timed_login (GdmDisplay     *display,
+                                    gboolean        allow_timed_login)
+{
+        display->priv->allow_timed_login = allow_timed_login;
+}
+
+static void
 gdm_display_set_property (GObject        *object,
                           guint           prop_id,
                           const GValue   *value,
@@ -782,6 +763,9 @@ gdm_display_set_property (GObject        *object,
                 break;
         case PROP_IS_LOCAL:
                 _gdm_display_set_is_local (self, g_value_get_boolean (value));
+                break;
+        case PROP_ALLOW_TIMED_LOGIN:
+                _gdm_display_set_allow_timed_login (self, g_value_get_boolean (value));
                 break;
         case PROP_SLAVE_TYPE:
                 _gdm_display_set_slave_type (self, g_value_get_gtype (value));
@@ -842,6 +826,9 @@ gdm_display_get_property (GObject        *object,
                 break;
         case PROP_IS_INITIAL:
                 g_value_set_boolean (value, self->priv->is_initial);
+                break;
+        case PROP_ALLOW_TIMED_LOGIN:
+                g_value_set_boolean (value, self->priv->allow_timed_login);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -909,7 +896,7 @@ handle_get_timed_login_details (GdmDBusDisplay        *skeleton,
         char *username;
         int delay;
 
-        gdm_display_get_timed_login_details (display, &enabled, &username, &delay, NULL);
+        gdm_display_get_timed_login_details (display, &enabled, &username, &delay);
 
         gdm_dbus_display_complete_get_timed_login_details (skeleton,
                                                            invocation,
@@ -1163,8 +1150,6 @@ gdm_display_class_init (GdmDisplayClass *klass)
         object_class->dispose = gdm_display_dispose;
         object_class->finalize = gdm_display_finalize;
 
-        klass->get_timed_login_details = gdm_display_real_get_timed_login_details;
-
         g_object_class_install_property (object_class,
                                          PROP_ID,
                                          g_param_spec_string ("id",
@@ -1215,6 +1200,13 @@ gdm_display_class_init (GdmDisplayClass *klass)
                                                                NULL,
                                                                NULL,
                                                                FALSE,
+                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+        g_object_class_install_property (object_class,
+                                         PROP_ALLOW_TIMED_LOGIN,
+                                         g_param_spec_boolean ("allow-timed-login",
+                                                               NULL,
+                                                               NULL,
+                                                               TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
         g_object_class_install_property (object_class,
                                          PROP_X11_COOKIE,

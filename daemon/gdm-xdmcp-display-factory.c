@@ -2112,6 +2112,7 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
         if (use_chooser) {
                 g_object_set (G_OBJECT (display),
                               "slave-type", GDM_TYPE_XDMCP_CHOOSER_SLAVE,
+                              "allow-timed-login", FALSE,
                               NULL);
         }
 
