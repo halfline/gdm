@@ -54,6 +54,8 @@ typedef struct
 typedef struct
 {
         GObjectClass   parent_class;
+
+        void (* start_server) (GdmDisplay *self);
 } GdmDisplayClass;
 
 typedef enum
