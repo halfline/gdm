@@ -440,6 +440,50 @@ wait_on_subprocesses (State *state)
         }
 }
 
+static gboolean
+register_display (State        *state,
+                  GCancellable *cancellable)
+{
+        GDBusConnection *bus_connection;
+        GVariant        *reply;
+        GError          *error = NULL;
+        gboolean         registered = FALSE;
+
+        bus_connection = g_bus_get_sync (G_BUS_TYPE_SYSTEM,
+                                         cancellable,
+                                         &error);
+
+        if (!bus_connection) {
+                g_debug ("could not get system bus connection: %s", error->message);
+                g_error_free (error);
+                goto out;
+        }
+
+        reply = g_dbus_connection_call_sync (bus_connection,
+                                             "org.gnome.DisplayManager",
+                                             "/org/gnome/DisplayManager/Manager",
+                                             "org.gnome.DisplayManager.Manager",
+                                             "RegisterX11Display",
+                                             g_variant_new ("(s)", state->display_name),
+                                             NULL,
+                                             G_DBUS_CALL_FLAGS_NONE,
+                                             -1,
+                                             cancellable,
+                                             &error);
+
+        if (reply == NULL) {
+                g_debug ("Could not register display: %s", error->message);
+                g_error_free (error);
+                goto out;
+        }
+
+        registered = TRUE;
+
+out:
+        g_clear_object (&bus_connection);
+        return registered;
+}
+
 static void
 init_state (State **state)
 {
@@ -537,6 +581,14 @@ main (int    argc,
 
         if (!ret) {
                 g_printerr ("Unable to run X server");
+                exit_status = EX_SOFTWARE;
+                goto out;
+        }
+
+        ret = register_display (state, state->cancellable);
+
+        if (!ret) {
+                g_printerr ("Unable to register display with display manager");
                 exit_status = EX_SOFTWARE;
                 goto out;
         }
