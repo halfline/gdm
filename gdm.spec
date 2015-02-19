@@ -15,7 +15,7 @@ Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
-URL: http://download.gnome.org/sources/gdm
+URL: https://wiki.gnome.org/Projects/GDM
 #VCS: git:git://git.gnome.org/gdm
 Source: http://download.gnome.org/sources/gdm/3.15/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
@@ -297,6 +297,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 - Update to 3.15.90.1
 - Use license macro for COPYING
 - Use pkgconfig for BuildRequires
+- Update URL
 
 * Thu Feb 19 2015 Richard Hughes <rhughes@redhat.com> - 1:3.15.90-1
 - Update to 3.15.90
