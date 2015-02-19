@@ -2,7 +2,6 @@
 %global _hardened_build 1
 
 %define libauditver 1.0.6
-%define pango_version 1.2.0
 %define gtk3_version 2.99.2
 %define pam_version 0.99.8.1-11
 %define desktop_file_utils_version 0.2.90
@@ -21,9 +20,6 @@ URL: http://download.gnome.org/sources/gdm
 Source: http://download.gnome.org/sources/gdm/3.15/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
-BuildRequires: pkgconfig(libcanberra-gtk)
-BuildRequires: pango-devel >= 0:%{pango_version}
-BuildRequires: gtk3-devel >= 0:%{gtk3_version}
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: fontconfig >= 0:%{fontconfig_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
@@ -32,24 +28,26 @@ BuildRequires: libattr-devel
 BuildRequires: gettext
 BuildRequires: libdmx-devel
 BuildRequires: audit-libs-devel >= %{libauditver}
-BuildRequires: gobject-introspection-devel
 BuildRequires: autoconf automake libtool
 BuildRequires: intltool
 %ifnarch s390 s390x ppc ppc64
 BuildRequires: xorg-x11-server-Xorg
 %endif
 BuildRequires: nss-devel >= %{nss_version}
-BuildRequires: libselinux-devel
-BuildRequires: check-devel
-BuildRequires: iso-codes-devel
-BuildRequires: libxklavier-devel >= 4.0
-BuildRequires: upower-devel >= 0.9.7
-BuildRequires: libXdmcp-devel
-BuildRequires: dbus-glib-devel
 BuildRequires: pkgconfig(accountsservice) >= 0.6.3
+BuildRequires: pkgconfig(check)
+BuildRequires: pkgconfig(gobject-introspection-1.0)
+BuildRequires: pkgconfig(gtk+-3.0) >= %{gtk3_version}
+BuildRequires: pkgconfig(iso-codes)
+BuildRequires: pkgconfig(libcanberra-gtk3)
+BuildRequires: pkgconfig(libselinux)
 BuildRequires: pkgconfig(libsystemd-login)
 BuildRequires: pkgconfig(libsystemd-daemon)
 BuildRequires: pkgconfig(ply-boot-client)
+BuildRequires: pkgconfig(systemd)
+BuildRequires: pkgconfig(x11)
+BuildRequires: pkgconfig(xau)
+BuildRequires: libXdmcp-devel
 BuildRequires: systemd
 BuildRequires: dconf
 
@@ -298,6 +296,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 * Fri Feb 20 2015 David King <amigadave@amigadave.com> - 1:3.15.90.1-1
 - Update to 3.15.90.1
 - Use license macro for COPYING
+- Use pkgconfig for BuildRequires
 
 * Thu Feb 19 2015 Richard Hughes <rhughes@redhat.com> - 1:3.15.90-1
 - Update to 3.15.90
