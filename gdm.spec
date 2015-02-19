@@ -11,8 +11,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.15.3.1
-Release: 4%{?dist}
+Version: 3.15.90
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -20,8 +20,6 @@ URL: http://download.gnome.org/sources/gdm
 #VCS: git:git://git.gnome.org/gdm
 Source: http://download.gnome.org/sources/gdm/3.15/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
-Patch0: fix-pam-ecryptfs.patch
-Patch1: fix-user-switching.patch
 
 BuildRequires: pkgconfig(libcanberra-gtk)
 BuildRequires: pango-devel >= 0:%{pango_version}
@@ -107,8 +105,6 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-pam-ecryptfs
-%patch1 -p1 -b .fix-user-switching
 
 autoreconf -i -f
 intltoolize -f
@@ -298,6 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Thu Feb 19 2015 Richard Hughes <rhughes@redhat.com> - 1:3.15.90-1
+- Update to 3.15.90
+
 * Fri Jan 23 2015 Ray Strode <rstrode@redhat.com> 3.15.3.1-4
 - Another user switching fix
   Related: #1184933
