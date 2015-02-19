@@ -240,8 +240,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f gdm.lang
-%doc AUTHORS COPYING NEWS README
-
+%doc AUTHORS NEWS README
+%license COPYING
 %dir %{_sysconfdir}/gdm
 %config(noreplace) %{_sysconfdir}/gdm/custom.conf
 %config %{_sysconfdir}/gdm/Init/*
@@ -297,6 +297,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %changelog
 * Fri Feb 20 2015 David King <amigadave@amigadave.com> - 1:3.15.90.1-1
 - Update to 3.15.90.1
+- Use license macro for COPYING
 
 * Thu Feb 19 2015 Richard Hughes <rhughes@redhat.com> - 1:3.15.90-1
 - Update to 3.15.90
