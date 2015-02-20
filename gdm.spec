@@ -11,7 +11,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.15.90.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -64,6 +64,7 @@ Requires: dconf
 # since we use it, and pam spams the log if the module is missing
 Requires: gnome-keyring-pam
 Requires: gnome-session
+Requires: gnome-session-wayland-session
 Requires: gnome-settings-daemon >= 2.21.92
 Requires: gnome-shell
 Requires: iso-codes
@@ -293,6 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Fri Feb 20 2015 Ray Strode <rstrode@redhat.com> 3.15.90.1-2
+- Require gnome-session-wayland-session since we default to wayland now
+
 * Fri Feb 20 2015 David King <amigadave@amigadave.com> - 1:3.15.90.1-1
 - Update to 3.15.90.1
 - Use license macro for COPYING
