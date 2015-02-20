@@ -10,8 +10,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.15.90.1
-Release: 2%{?dist}
+Version: 3.15.90.2
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -294,7 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
-* Fri Feb 20 2015 Ray Strode <rstrode@redhat.com> 3.15.90.1-2
+* Fri Feb 20 2015 Ray Strode <rstrode@redhat.com> - 1:3.15.90.2-1
+- Update to 3.15.90.2
+- Fixes "no user list in the middle of my login screen" bug
 - Require gnome-session-wayland-session since we default to wayland now
 
 * Fri Feb 20 2015 David King <amigadave@amigadave.com> - 1:3.15.90.1-1
