@@ -1555,6 +1555,7 @@ typedef struct
 {
         GdmManager *manager;
         GdmSession *session;
+        GdmDisplay *display_to_finish;
         char *service_name;
         guint idle_id;
 } StartUserSessionOperation;
@@ -1568,6 +1569,15 @@ destroy_start_user_session_operation (StartUserSessionOperation *operation)
         g_object_unref (operation->session);
         g_free (operation->service_name);
         g_slice_free (StartUserSessionOperation, operation);
+}
+
+static void
+on_start_user_session_operation_finished (StartUserSessionOperation *operation)
+{
+        if (operation->display_to_finish != NULL) {
+                gdm_display_finish (operation->display_to_finish);
+        }
+        destroy_start_user_session_operation (operation);
 }
 
 static void
@@ -1605,7 +1615,16 @@ start_user_session (GdmManager *manager,
 
         gdm_session_start_session (operation->session,
                                    operation->service_name);
-        destroy_start_user_session_operation (operation);
+
+        g_signal_connect_swapped (operation->session,
+                                  "session-started",
+                                  G_CALLBACK (on_start_user_session_operation_finished),
+                                  operation);
+
+        g_signal_connect_swapped (operation->session,
+                                  "session-start-failed",
+                                  G_CALLBACK (on_start_user_session_operation_finished),
+                                  operation);
 }
 
 static void
@@ -1667,12 +1686,11 @@ on_start_user_session (StartUserSessionOperation *operation)
                 const char *session_id;
                 uid_t allowed_uid;
 
-                g_object_ref (display);
                 if (doing_initial_setup) {
                         g_debug ("GdmManager: closing down initial setup display");
                         gdm_display_stop_greeter_session (display);
                         gdm_display_unmanage (display);
-                        gdm_display_finish (display);
+                        operation->display_to_finish = display;
                 } else {
                         g_debug ("GdmManager: session has its display server, reusing our server for another login screen");
                 }
@@ -1684,8 +1702,6 @@ on_start_user_session (StartUserSessionOperation *operation)
                 g_object_set_data (G_OBJECT (display), "gdm-embryonic-user-session", NULL);
                 g_object_set_data (G_OBJECT (operation->session), "gdm-display", NULL);
                 create_embryonic_user_session_for_display (operation->manager, display, allowed_uid);
-                g_object_unref (display);
-
                 /* Give the user session a new display object for bookkeeping purposes */
                 session_id = gdm_session_get_conversation_session_id (operation->session,
                                                                       operation->service_name);
