@@ -365,8 +365,6 @@ load_key_file_for_file (const char *file, char **full_path)
 
         key_file = g_key_file_new ();
 
-        g_debug ("GdmSession: looking for session file '%s'", file);
-
         error = NULL;
         res = g_key_file_load_from_dirs (key_file,
                                          file,
@@ -399,6 +397,8 @@ get_session_command_for_file (const char *file,
         if (command != NULL) {
                 *command = NULL;
         }
+
+        g_debug ("GdmSession: looking for session file '%s'", file);
 
         key_file = load_key_file_for_file (file, NULL);
         if (key_file == NULL) {
