@@ -1631,6 +1631,7 @@ on_start_user_session (StartUserSessionOperation *operation)
 {
         gboolean migrated;
         gboolean fail_if_already_switched = TRUE;
+        gboolean doing_initial_setup = FALSE;
         GdmDisplay *display;
 
         g_debug ("GdmManager: start or jump to session");
@@ -1654,6 +1655,8 @@ on_start_user_session (StartUserSessionOperation *operation)
 
         display = get_display_for_user_session (operation->session);
 
+        g_object_get (G_OBJECT (display), "doing-initial-setup", &doing_initial_setup, NULL);
+
         if (gdm_session_get_display_mode (operation->session) == GDM_SESSION_DISPLAY_MODE_REUSE_VT) {
                 /* In this case, the greeter's display is morphing into
                  * the user session display. Kill the greeter on this session
@@ -1664,7 +1667,15 @@ on_start_user_session (StartUserSessionOperation *operation)
                 const char *session_id;
                 uid_t allowed_uid;
 
-                g_debug ("GdmManager: session has its display server, reusing our server for another login screen");
+                g_object_ref (display);
+                if (doing_initial_setup) {
+                        g_debug ("GdmManager: closing down initial setup display");
+                        gdm_display_stop_greeter_session (display);
+                        gdm_display_unmanage (display);
+                        gdm_display_finish (display);
+                } else {
+                        g_debug ("GdmManager: session has its display server, reusing our server for another login screen");
+                }
 
                 /* The user session is going to follow the session worker
                  * into the new display. Untie it from this display and
@@ -1673,6 +1684,7 @@ on_start_user_session (StartUserSessionOperation *operation)
                 g_object_set_data (G_OBJECT (display), "gdm-embryonic-user-session", NULL);
                 g_object_set_data (G_OBJECT (operation->session), "gdm-display", NULL);
                 create_embryonic_user_session_for_display (operation->manager, display, allowed_uid);
+                g_object_unref (display);
 
                 /* Give the user session a new display object for bookkeeping purposes */
                 session_id = gdm_session_get_conversation_session_id (operation->session,
