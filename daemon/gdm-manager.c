@@ -1575,7 +1575,10 @@ static void
 on_start_user_session_operation_finished (StartUserSessionOperation *operation)
 {
         if (operation->display_to_finish != NULL) {
+#if 0
+                gdm_display_unmanage (operation->display_to_finish);
                 gdm_display_finish (operation->display_to_finish);
+#endif
         }
         destroy_start_user_session_operation (operation);
 }
@@ -1689,7 +1692,6 @@ on_start_user_session (StartUserSessionOperation *operation)
                 if (doing_initial_setup) {
                         g_debug ("GdmManager: closing down initial setup display");
                         gdm_display_stop_greeter_session (display);
-                        gdm_display_unmanage (display);
                         operation->display_to_finish = display;
                 } else {
                         g_debug ("GdmManager: session has its display server, reusing our server for another login screen");
