@@ -10,7 +10,7 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.15.90.3
+Version: 3.15.90.4
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -294,6 +294,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Sun Feb 22 2015 Ray Strode <rstrode@redhat.com> - 1:3.15.90.4-1
+- Update to 3.15.90.4
+- Fixes bus activated X clients
+
 * Sat Feb 21 2015 Ray Strode <rstrode@redhat.com> - 1:3.15.90.3-1
 - Update to 3.15.90.3
 - Disables gnome-initial-setup support for now, which isn't functional
