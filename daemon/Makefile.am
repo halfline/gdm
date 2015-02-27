@@ -39,6 +39,7 @@ BUILT_SOURCES =					\
 	gdm-local-display-factory-glue.h	\
 	gdm-session-glue.h			\
 	gdm-session-worker-glue.h		\
+	sd-login-glue.h				\
 	gdm-session-enum-types.h		\
 	$(NULL)
 
@@ -90,6 +91,13 @@ gdm-session-worker-glue.c gdm-session-worker-glue.h : gdm-session-worker.xml Mak
 		--generate-c-code=gdm-session-worker-glue		\
 		$(srcdir)/gdm-session-worker.xml
 
+sd-login-glue.c sd-login-glue.h : org.freedesktop.login1.xml Makefile.am
+	$(AM_V_GEN)gdbus-codegen 					\
+		--c-namespace=SdLoginDBus				\
+		--interface-prefix=org.freedesktop.login1		\
+		--generate-c-code=sd-login-glue				\
+		$(srcdir)/org.freedesktop.login1.xml
+
 noinst_PROGRAMS = 		\
 	test-session-client	\
 	$(NULL)
@@ -130,6 +138,8 @@ gdm_session_worker_SOURCES = 			\
 	gdm-session-worker-job.c		\
 	gdm-session-worker-common.c		\
 	gdm-session-worker-common.h		\
+	sd-login-glue.c				\
+	sd-login-glue.h				\
 	gdm-dbus-util.c				\
 	gdm-dbus-util.h				\
 	$(NULL)
@@ -293,6 +303,7 @@ CLEANFILES =					\
 	gdm-session-worker-glue.c		\
 	gdm-session-enum-types.c		\
 	gdm-local-display-glue.c		\
+	sd-login-glue.c				\
 	$(BUILT_SOURCES)			\
 	$(NULL)
 
@@ -305,4 +316,5 @@ EXTRA_DIST = 				\
 	gdm-local-display-factory.xml	\
 	gdm-session-enum-types.c.in	\
 	gdm-session-enum-types.h.in	\
+	org.freedesktop.login1.xml	\
 	$(NULL)
