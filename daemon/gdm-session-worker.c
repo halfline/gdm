@@ -67,6 +67,7 @@
 #include "gdm-session-worker.h"
 #include "gdm-session-glue.h"
 #include "gdm-session.h"
+#include "sd-login-glue.h"
 
 #if defined (HAVE_ADT)
 #include "gdm-session-solaris-auditor.h"
@@ -180,6 +181,7 @@ struct GdmSessionWorkerPrivate
         GdmSessionSettings *user_settings;
 
         GDBusMethodInvocation *pending_invocation;
+        SdLoginDBusSession    *login_session_proxy;
 };
 
 enum {
@@ -962,17 +964,59 @@ static void
 jump_to_vt (GdmSessionWorker  *worker,
             int                vt_number)
 {
-        int fd;
+        GError *error = NULL;
+        gboolean took_control = FALSE;
 
-        fd = open ("/dev/tty0", O_RDWR | O_NOCTTY);
-        if (ioctl (fd, VT_ACTIVATE, vt_number) < 0) {
-                g_debug ("GdmSessionWorker: couldn't initiate jump to VT %d: %m",
-                         vt_number);
-        } else if (ioctl (fd, VT_WAITACTIVE, vt_number) < 0) {
-                g_debug ("GdmSessionWorker: couldn't finalize jump to VT %d: %m",
-                         vt_number);
+        if (worker->priv->login_session_proxy == NULL) {
+                worker->priv->login_session_proxy = sd_login_dbus_session_proxy_new_for_bus_sync (G_BUS_TYPE_SYSTEM,
+                                                                                                  G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES |
+                                                                                                  G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS,
+                                                                                                  "org.freedesktop.login1",
+                                                                                                  "/org/freedesktop/login1/session/self",
+                                                                                                  NULL,
+                                                                                                  &error);
+
+                if (error != NULL) {
+                        g_debug ("GdmSessionWorker: couldn't contact logind: %s", error->message);
+                        g_clear_error (&error);
+                }
         }
-        close(fd);
+
+        if (worker->priv->login_session_proxy == NULL) {
+                return;
+        }
+
+        sd_login_dbus_session_call_take_control_sync (worker->priv->login_session_proxy,
+                                                      FALSE,
+                                                      NULL,
+                                                      &error);
+
+        if (error != NULL) {
+                g_debug ("GdmSessionWorker: couldn't take control of session: %s", error->message);
+                g_clear_error (&error);
+        } else {
+                took_control = TRUE;
+        }
+
+        sd_login_dbus_session_call_activate_sync (worker->priv->login_session_proxy,
+                                                  NULL,
+                                                  &error);
+
+        if (error != NULL) {
+                g_debug ("GdmSessionWorker: couldn't activate session: %s", error->message);
+                g_clear_error (&error);
+        }
+
+        if (took_control) {
+                sd_login_dbus_session_call_release_control_sync (worker->priv->login_session_proxy,
+                                                                 NULL,
+                                                                 &error);
+
+                if (error != NULL) {
+                        g_debug ("GdmSessionWorker: couldn't release control of session: %s", error->message);
+                        g_clear_error (&error);
+                }
+        }
 }
 #endif
 
