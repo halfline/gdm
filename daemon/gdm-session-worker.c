@@ -31,6 +31,7 @@
 #ifdef WITH_SYSTEMD
 #include <sys/ioctl.h>
 #include <sys/vt.h>
+#include <sys/kd.h>
 #endif
 #include <errno.h>
 #include <grp.h>
@@ -104,6 +105,9 @@
 
 #define MAX_FILE_SIZE     65536
 #define MAX_LOGS          5
+
+#define RELEASE_DISPLAY_SIGNAL SIGUSR1
+#define ACQUIRE_DISPLAY_SIGNAL SIGUSR2
 
 enum {
         GDM_SESSION_WORKER_STATE_NONE = 0,
@@ -959,12 +963,47 @@ gdm_session_worker_stop_auditor (GdmSessionWorker *worker)
 
 #ifdef WITH_SYSTEMD
 static void
-jump_to_vt (GdmSessionWorker  *worker,
-            int                vt_number)
+on_release_display (int signal)
 {
         int fd;
 
         fd = open ("/dev/tty0", O_RDWR | O_NOCTTY);
+        ioctl(fd, VT_RELDISP, 1);
+        close(fd);
+}
+
+static void
+on_acquire_display (int signal)
+{
+        int fd;
+
+        fd = open ("/dev/tty0", O_RDWR | O_NOCTTY);
+        ioctl(fd, VT_RELDISP, VT_ACKACQ);
+        close(fd);
+}
+
+static void
+jump_to_vt (GdmSessionWorker  *worker,
+            int                vt_number,
+            gboolean           force_graphics_mode)
+{
+        int fd;
+
+        fd = open ("/dev/tty0", O_RDWR | O_NOCTTY);
+
+        if (force_graphics_mode) {
+                struct vt_mode setmode_request = { 0 };
+                ioctl (fd, KDSETMODE, KD_GRAPHICS);
+
+                setmode_request.mode = VT_PROCESS;
+                setmode_request.relsig = RELEASE_DISPLAY_SIGNAL;
+                setmode_request.acqsig = ACQUIRE_DISPLAY_SIGNAL;
+                ioctl (fd, VT_SETMODE, &setmode_request);
+
+                signal (RELEASE_DISPLAY_SIGNAL, on_release_display);
+                signal (RELEASE_DISPLAY_SIGNAL, on_acquire_display);
+        }
+
         if (ioctl (fd, VT_ACTIVATE, vt_number) < 0) {
                 g_debug ("GdmSessionWorker: couldn't initiate jump to VT %d: %m",
                          vt_number);
@@ -1007,7 +1046,7 @@ gdm_session_worker_uninitialize_pam (GdmSessionWorker *worker,
 
 #ifdef WITH_SYSTEMD
         if (worker->priv->login_vt != worker->priv->session_vt) {
-                jump_to_vt (worker, worker->priv->login_vt);
+                jump_to_vt (worker, worker->priv->login_vt, FALSE);
         }
 #endif
 
@@ -1817,7 +1856,7 @@ gdm_session_worker_start_session (GdmSessionWorker  *worker,
          * the other two modes: in the logind case, the session will activate itself when
          * ready, and in the reuse server case, we're already on the correct VT. */
         if (worker->priv->display_mode == GDM_SESSION_DISPLAY_MODE_NEW_VT) {
-                jump_to_vt (worker, worker->priv->session_vt);
+                jump_to_vt (worker, worker->priv->session_vt, TRUE);
         }
 #endif
 
