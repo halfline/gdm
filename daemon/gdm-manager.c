@@ -1462,6 +1462,7 @@ maybe_start_pending_initial_login (GdmManager *manager,
         StartUserSessionOperation *operation;
         char *greeter_seat_id = NULL;
         char *user_session_seat_id = NULL;
+        gboolean will_autologin;
 
         /* There may be a user session waiting to be started.
          * This would happen if we couldn't start it earlier because
@@ -1497,15 +1498,12 @@ set_up_greeter_session (GdmManager *manager,
 {
         char *allowed_user;
         struct passwd *passwd_entry;
-        gboolean will_autologin;
 
         will_autologin = display_should_autologin (manager, display);
 
         if (!will_autologin) {
                  gdm_display_set_up_greeter_session (display, &allowed_user);
         } else {
-                 g_object_set (G_OBJECT (display), "session-class", "user", NULL);
-                 g_object_set (G_OBJECT (display), "session-type", NULL, NULL);
                  allowed_user = g_strdup ("root");
         }
 
@@ -1520,9 +1518,7 @@ set_up_greeter_session (GdmManager *manager,
         create_embryonic_user_session_for_display (manager, display, passwd_entry->pw_uid);
         g_free (allowed_user);
 
-        if (!will_autologin) {
-                gdm_display_start_greeter_session (display);
-        }
+        gdm_display_start_greeter_session (display);
 
         touch_ran_once_marker_file (manager);
 }
