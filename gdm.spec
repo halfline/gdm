@@ -295,7 +295,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 
 %changelog
 * Tue Mar 03 2015 Ray Strode <rstrode@redhat.com> 3.15.91.2-1
-- Update to 3.15.92.1
+- Update to 3.15.92.2
 - fixes "black screen on logout" of wayland sessions
 
 * Mon Mar 02 2015 Ray Strode <rstrode@redhat.com> 3.15.91.1-1
