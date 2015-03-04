@@ -2320,6 +2320,9 @@ gdm_manager_dispose (GObject *object)
                          (GDestroyNotify)
                          g_hash_table_unref);
 
+        g_list_foreach (manager->priv->user_sessions,
+                        (GFunc) gdm_session_close,
+                        NULL);
         g_list_free_full (manager->priv->user_sessions, (GDestroyNotify) g_object_unref);
         manager->priv->user_sessions = NULL;
 
