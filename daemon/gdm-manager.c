@@ -2188,7 +2188,6 @@ start_autologin_conversation_if_necessary (GdmManager *manager,
 {
         gboolean enabled;
         int delay = 0;
-        gboolean is_initial = FALSE;
 
         gdm_display_get_timed_login_details (display, &enabled, NULL, &delay);
 
@@ -2200,11 +2199,6 @@ start_autologin_conversation_if_necessary (GdmManager *manager,
         if (!enabled) {
                 g_debug ("GdmManager: not starting automatic login conversation because autologin is not enabled");
                 return;
-        }
-
-        if (delay == 0) {
-                g_object_get (G_OBJECT (display), "is-initial", &is_initial, NULL);
-                g_object_set (G_OBJECT (session), "display-is-initial", is_initial, NULL);
         }
 
         g_debug ("GdmManager: Starting automatic login conversation");
