@@ -1565,25 +1565,6 @@ get_automatic_login_details (GdmManager *manager,
 }
 
 static gboolean
-display_should_autologin (GdmManager *manager,
-                          GdmDisplay *display)
-{
-        gboolean enabled = FALSE;
-
-        if (manager->priv->ran_once) {
-                return FALSE;
-        }
-
-        if (!display_is_on_seat0 (display)) {
-                return FALSE;
-        }
-
-        enabled = get_automatic_login_details (manager, NULL);
-
-        return enabled;
-}
-
-static void
 maybe_start_pending_initial_login (GdmManager *manager,
                                    GdmDisplay *greeter_display)
 {
@@ -1598,7 +1579,7 @@ maybe_start_pending_initial_login (GdmManager *manager,
          */
 
         if (manager->priv->initial_login_operation == NULL) {
-                return;
+                return FALSE;
         }
 
         operation = manager->priv->initial_login_operation;
@@ -1617,6 +1598,8 @@ maybe_start_pending_initial_login (GdmManager *manager,
 
         g_free (greeter_seat_id);
         g_free (user_session_seat_id);
+
+        return TRUE;
 }
 
 static const char *
@@ -1636,22 +1619,43 @@ get_username_for_greeter_display (GdmManager *manager,
         }
 }
 
-static void
-set_up_automatic_login_session (GdmManager *manager,
-                                GdmDisplay *display)
+static gboolean
+maybe_start_automatic_login (GdmManager *self)
 {
+        GdmDisplay *display;
         GdmSession *session;
+        gboolean enabled = FALSE;
+
+        enabled = get_automatic_login_details (self, NULL);
+
+        if (!enabled) {
+                return FALSE;
+        }
+
+        display = gdm_local_display_new ();
+
+        g_object_set (G_OBJECT (display),
+                      "session-class", "user",
+                      "seat-id", "seat0",
+                      NULL);
+        gdm_display_store_add (self->priv->display_store,
+                               display);
+
+        if (!gdm_display_manage (display)) {
+                gdm_display_unmanage (display);
+        }
 
         g_object_set (G_OBJECT (display), "session-class", "user", NULL);
-        g_object_set (G_OBJECT (display), "session-type", NULL, NULL);
 
         /* 0 is root user; since the daemon talks to the session object
          * directly, itself, for automatic login
          */
-        session = create_embryonic_user_session_for_display (manager, display, 0);
+        session = create_embryonic_user_session_for_display (self, display, 0);
 
         g_debug ("GdmManager: Starting automatic login conversation");
         gdm_session_start_conversation (session, "gdm-autologin");
+
+        return TRUE;
 }
 
 static void
@@ -1683,7 +1687,9 @@ greeter_display_started (GdmManager *manager,
                 return;
         }
 
-        maybe_start_pending_initial_login (manager, display);
+        if (!maybe_start_pending_initial_login (manager, display)) {
+                maybe_start_automatic_login (manager);
+        }
 
         manager->priv->ran_once = TRUE;
 }
@@ -1719,15 +1725,7 @@ on_display_status_changed (GdmDisplay *display,
                                               "session-class", &session_class,
                                               NULL);
                                 if (g_strcmp0 (session_class, "greeter") == 0) {
-                                        gboolean will_autologin;
-
-                                        will_autologin = display_should_autologin (manager, display);
-
-                                        if (will_autologin) {
-                                                set_up_automatic_login_session (manager, display);
-                                        } else {
-                                                set_up_greeter_session (manager, display);
-                                        }
+                                        set_up_greeter_session (manager, display);
                                 }
                         }
 
@@ -1738,7 +1736,9 @@ on_display_status_changed (GdmDisplay *display,
                                         manager->priv->plymouth_is_running = FALSE;
                                 }
 #endif
-                                greeter_display_started (manager, display);
+                                if (display_is_on_seat0 (display)) {
+                                        greeter_display_started (manager, display);
+                                }
                         }
                         break;
                 case GDM_DISPLAY_FAILED:
