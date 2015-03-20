@@ -10,7 +10,7 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.15.91.2
+Version: 3.15.92
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -294,6 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Fri Mar 20 2015 Kalev Lember <kalevlember@gmail.com> - 1:3.15.92-1
+- Update to 3.15.92
+
 * Tue Mar 03 2015 Ray Strode <rstrode@redhat.com> 3.15.91.2-1
 - Update to 3.15.92.2
 - fixes "black screen on logout" of wayland sessions
