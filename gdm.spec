@@ -10,8 +10,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.16.0
-Release: 2%{?dist}
+Version: 3.16.0.1
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -79,8 +79,6 @@ Requires: system-logos
 Requires: xorg-x11-server-utils
 Requires: xorg-x11-xinit
 
-Patch0: quit-plymouth.patch
-
 Obsoletes: gdm-libs < 1:3.12.0-3
 Provides: gdm-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
@@ -106,7 +104,6 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
-%patch0 -p1 -b .quit-plymouth
 
 autoreconf -i -f
 intltoolize -f
@@ -297,6 +294,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Mar 24 2015 Kalev Lember <kalevlember@gmail.com> - 1:3.16.0.1-1
+- Update to 3.16.0.1
+
 * Tue Mar 24 2015 Ray Strode <rstrode@redhat.com> 3.16.0-2
 - actually quit plymouth at startup
 
