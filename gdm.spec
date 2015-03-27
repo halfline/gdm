@@ -11,7 +11,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.16.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -19,6 +19,7 @@ URL: https://wiki.gnome.org/Projects/GDM
 #VCS: git:git://git.gnome.org/gdm
 Source: http://download.gnome.org/sources/gdm/3.16/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
+Patch0: 0001-gdm-x-session-set-XORG_RUN_AS_USER_OK-1-environment-.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: fontconfig >= 0:%{fontconfig_version}
@@ -104,6 +105,7 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
+%patch0 -p1 -b .xorg-run-as-user-ok
 
 autoreconf -i -f
 intltoolize -f
@@ -294,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Fri Mar 27 2015 Ray Strode <rstrode@redhat.com> 3.16.0.1-2
+- set XORG_RUN_AS_USER_OK in environment
+
 * Tue Mar 24 2015 Kalev Lember <kalevlember@gmail.com> - 1:3.16.0.1-1
 - Update to 3.16.0.1
 
