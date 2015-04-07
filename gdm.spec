@@ -11,7 +11,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.16.0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -221,6 +221,10 @@ fi
 
 %systemd_post gdm.service
 
+# work around bug introduced in gdm 3.0/fedora 15 that some users
+# have been dragging along from release to release
+chown gdm.gdm -R /var/lib/gdm/.local /var/lib/gdm/.local/share || :
+
 %preun
 %systemd_preun gdm.service
 
@@ -296,6 +300,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Apr 07 2015 Ray Strode <rstrode@redhat.com> 3.16.0.1-3
+- Fix permissions on /var/lib/gdm/.local/share
+- Fixes starting Xorg without root on machines that started out
+  as Fedora 15 machines.
+
 * Fri Mar 27 2015 Ray Strode <rstrode@redhat.com> 3.16.0.1-2
 - set XORG_RUN_AS_USER_OK in environment
 
