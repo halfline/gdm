@@ -10,7 +10,7 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.16.1.1
+Version: 3.17.2
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -143,8 +143,6 @@ rm -rf $RPM_BUILD_ROOT/%{_prefix}/doc
 # create log dir
 mkdir -p $RPM_BUILD_ROOT/var/log/gdm
 
-# remove the gdm Xsession as we're using the xdm one
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gdm/Xsession
 (cd $RPM_BUILD_ROOT%{_sysconfdir}/gdm; ln -sf ../X11/xinit/Xsession .)
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.a
@@ -298,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Wed Jun 03 2015 Ray Strode <rstrode@redhat.com> 3.17.2-1
+- Update to 3.17.2
+
 * Thu Apr 16 2015 Ray Strode <rstrode@redhat.com> 3.16.1.1-1
 - Update to 3.16.1.1
 
