@@ -10,14 +10,14 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.17.3.1
+Version: 3.17.4
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
 URL: https://wiki.gnome.org/Projects/GDM
 #VCS: git:git://git.gnome.org/gdm
-Source: http://download.gnome.org/sources/gdm/3.16/gdm-%{version}.tar.xz
+Source: http://download.gnome.org/sources/gdm/3.17/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
 BuildRequires: pam-devel >= 0:%{pam_version}
@@ -296,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Jul 28 2015 Kalev Lember <klember@redhat.com> - 1:3.17.4-1
+- Update to 3.17.4
+
 * Tue Jun 23 2015 Ray Strode <rstrode@redhat.com> 3.17.3.1-1
 - Update to 3.17.3.1
 
