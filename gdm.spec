@@ -6,7 +6,6 @@
 %define pam_version 0.99.8.1-11
 %define desktop_file_utils_version 0.2.90
 %define nss_version 3.11.1
-%define fontconfig_version 2.6.0
 
 Summary: The GNOME Display Manager
 Name: gdm
@@ -21,7 +20,6 @@ Source: http://download.gnome.org/sources/gdm/3.17/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
 BuildRequires: pam-devel >= 0:%{pam_version}
-BuildRequires: fontconfig >= 0:%{fontconfig_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
 BuildRequires: libtool automake autoconf
 BuildRequires: libattr-devel
