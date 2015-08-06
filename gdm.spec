@@ -10,7 +10,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.17.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -110,6 +110,7 @@ intltoolize -f
 
 %configure --with-pam-prefix=%{_sysconfdir} \
            --with-run-dir=/run/gdm \
+           --with-default-path=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin \
            --enable-split-authentication \
            --enable-profiling      \
            --enable-console-helper \
@@ -294,6 +295,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Thu Aug 06 2015 Ray Strode <rstrode@redhat.com> 3.17.4-2
+- drop /bin and /sbin from default path
+  They don't make since given /usr merge
+  Resolves: #1251192
+
 * Tue Jul 28 2015 Kalev Lember <klember@redhat.com> - 1:3.17.4-1
 - Update to 3.17.4
 
