@@ -9,8 +9,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.18.0
-Release: 1%{?dist}
+Version: 3.19.2
+Release: 0.1.20151110gitaf5957ad9%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -295,6 +295,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Nov 10 2015 Ray Strode <rstrode@redhat.com> 3.19.2-0.1.20151110gitaf5957ad9
+- Update to git snapshot
+
 * Mon Sep 21 2015 Kalev Lember <klember@redhat.com> - 1:3.18.0-1
 - Update to 3.18.0
 
