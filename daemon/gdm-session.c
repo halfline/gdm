@@ -71,6 +71,7 @@ typedef struct
         GDBusMethodInvocation *pending_invocation;
         GdmDBusWorkerManager  *worker_manager_interface;
         GdmDBusWorker         *worker_proxy;
+        GCancellable          *worker_cancellable;
         char                  *session_id;
         guint32                is_stopping : 1;
 
@@ -354,7 +355,7 @@ on_establish_credentials_cb (GdmDBusWorker *proxy,
                         mode = gdm_session_get_display_mode (self);
                         gdm_dbus_worker_call_set_session_display_mode (conversation->worker_proxy,
                                                                        gdm_session_display_mode_to_string (mode),
-                                                                       NULL, NULL, NULL);
+                                                                       conversation->worker_cancellable, NULL, NULL);
                         gdm_session_open_session (self, service_name);
                         break;
                 default:
@@ -1176,6 +1177,8 @@ register_worker (GdmDBusWorkerManager  *worker_manager_interface,
 
         g_dbus_proxy_set_default_timeout (G_DBUS_PROXY (conversation->worker_proxy), G_MAXINT);
 
+        conversation->worker_cancellable = g_cancellable_new ();
+
         g_signal_connect (conversation->worker_proxy,
                           "username-changed",
                           G_CALLBACK (worker_on_username_changed), conversation);
@@ -1809,6 +1812,9 @@ free_conversation (GdmSessionConversation *conversation)
         g_free (conversation->session_id);
         g_clear_object (&conversation->worker_manager_interface);
 
+        g_cancellable_cancel (conversation->worker_cancellable);
+        g_clear_object (&conversation->worker_cancellable);
+
         if (conversation->worker_proxy != NULL) {
                 g_signal_handlers_disconnect_by_func (conversation->worker_proxy,
                                                       G_CALLBACK (worker_on_username_changed),
@@ -2255,7 +2261,7 @@ send_setup (GdmSession *self,
                                             display_seat_id,
                                             display_hostname,
                                             self->priv->display_is_local,
-                                            NULL,
+                                            conversation->worker_cancellable,
                                             (GAsyncReadyCallback) on_setup_complete_cb,
                                             conversation);
         }
@@ -2320,7 +2326,7 @@ send_setup_for_user (GdmSession *self,
                                                      display_seat_id,
                                                      display_hostname,
                                                      self->priv->display_is_local,
-                                                     NULL,
+                                                     conversation->worker_cancellable,
                                                      (GAsyncReadyCallback) on_setup_complete_cb,
                                                      conversation);
         }
@@ -2381,7 +2387,7 @@ send_setup_for_program (GdmSession *self,
                                                         display_hostname,
                                                         self->priv->display_is_local,
                                                         log_file,
-                                                        NULL,
+                                                        conversation->worker_cancellable,
                                                         (GAsyncReadyCallback) on_setup_complete_cb,
                                                         conversation);
         }
@@ -2437,7 +2443,7 @@ gdm_session_authenticate (GdmSession *self,
         conversation = find_conversation_by_name (self, service_name);
         if (conversation != NULL) {
                 gdm_dbus_worker_call_authenticate (conversation->worker_proxy,
-                                                   NULL,
+                                                   conversation->worker_cancellable,
                                                    (GAsyncReadyCallback) on_authenticate_cb,
                                                    conversation);
         }
@@ -2454,7 +2460,7 @@ gdm_session_authorize (GdmSession *self,
         conversation = find_conversation_by_name (self, service_name);
         if (conversation != NULL) {
                 gdm_dbus_worker_call_authorize (conversation->worker_proxy,
-                                                NULL,
+                                                conversation->worker_cancellable,
                                                 (GAsyncReadyCallback) on_authorize_cb,
                                                 conversation);
         }
@@ -2471,7 +2477,7 @@ gdm_session_accredit (GdmSession *self,
         conversation = find_conversation_by_name (self, service_name);
         if (conversation != NULL) {
                 gdm_dbus_worker_call_establish_credentials (conversation->worker_proxy,
-                                                            NULL,
+                                                            conversation->worker_cancellable,
                                                             (GAsyncReadyCallback) on_establish_credentials_cb,
                                                             conversation);
         }
@@ -2485,7 +2491,8 @@ send_environment_variable (const char             *key,
 {
         gdm_dbus_worker_call_set_environment_variable (conversation->worker_proxy,
                                                        key, value,
-                                                       NULL, NULL, NULL);
+                                                       conversation->worker_cancellable,
+                                                       NULL, NULL);
 }
 
 static void
@@ -2683,7 +2690,7 @@ gdm_session_open_session (GdmSession *self,
 
         if (conversation != NULL) {
                 gdm_dbus_worker_call_open (conversation->worker_proxy,
-                                           NULL,
+                                           conversation->worker_cancellable,
                                            (GAsyncReadyCallback) on_opened, conversation);
         }
 }
@@ -2822,7 +2829,7 @@ gdm_session_start_session (GdmSession *self,
 
         gdm_dbus_worker_call_start_program (conversation->worker_proxy,
                                             program,
-                                            NULL,
+                                            conversation->worker_cancellable,
                                             (GAsyncReadyCallback) on_start_program_cb,
                                             conversation);
         g_free (program);
@@ -2962,7 +2969,7 @@ gdm_session_start_reauthentication (GdmSession *session,
         gdm_dbus_worker_call_start_reauthentication (conversation->worker_proxy,
                                                      (int) pid_of_caller,
                                                      (int) uid_of_caller,
-                                                     NULL,
+                                                     conversation->worker_cancellable,
                                                      (GAsyncReadyCallback) on_reauthentication_started_cb,
                                                      conversation);
 }
@@ -3137,7 +3144,7 @@ gdm_session_select_session_type (GdmSession *self,
 
                 gdm_dbus_worker_call_set_session_type (conversation->worker_proxy,
                                                        text,
-                                                       NULL, NULL, NULL);
+                                                       conversation->worker_cancellable, NULL, NULL);
         }
 }
 
@@ -3164,7 +3171,8 @@ gdm_session_select_session (GdmSession *self,
 
                 gdm_dbus_worker_call_set_session_name (conversation->worker_proxy,
                                                        get_session_name (self),
-                                                       NULL, NULL, NULL);
+                                                       conversation->worker_cancellable,
+                                                       NULL, NULL);
         }
 }
 
