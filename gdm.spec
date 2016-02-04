@@ -10,7 +10,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.19.4.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -18,6 +18,7 @@ URL: https://wiki.gnome.org/Projects/GDM
 #VCS: git:git://git.gnome.org/gdm
 Source: http://download.gnome.org/sources/gdm/3.19/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
+Patch0: fix-gnome-terminal.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
@@ -102,6 +103,7 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
+%patch0 -p1 -b .fix-gnome-terminal
 
 autoreconf -i -f
 intltoolize -f
@@ -295,6 +297,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Thu Feb 04 2016 Ray Strode <rstrode@redhat.com> - 3.19.4.1-3
+- Fix gnome-terminal launched in an X session (and gedit etc)
+  Resolves: #1281675
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.19.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
