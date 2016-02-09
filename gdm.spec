@@ -10,7 +10,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.19.4.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -297,6 +297,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Feb 09 2016 Ray Strode <rstrode@redhat.com> - 3.19.4.1-4
+- More fixes need to get get gnome-terminal, gedit, etc working
+  Resolves: #1281675
+
 * Thu Feb 04 2016 Ray Strode <rstrode@redhat.com> - 3.19.4.1-3
 - Fix gnome-terminal launched in an X session (and gedit etc)
   Resolves: #1281675
