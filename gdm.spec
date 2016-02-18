@@ -9,8 +9,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.19.4.1
-Release: 4%{?dist}
+Version: 3.19.90
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -18,7 +18,6 @@ URL: https://wiki.gnome.org/Projects/GDM
 #VCS: git:git://git.gnome.org/gdm
 Source: http://download.gnome.org/sources/gdm/3.19/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
-Patch0: fix-gnome-terminal.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
@@ -103,7 +102,6 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-gnome-terminal
 
 autoreconf -i -f
 intltoolize -f
@@ -297,6 +295,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Thu Feb 18 2016 Richard Hughes <rhughes@redhat.com> - 1:3.19.90-1
+- Update to 3.19.90
+
 * Tue Feb 09 2016 Ray Strode <rstrode@redhat.com> - 3.19.4.1-4
 - More fixes need to get get gnome-terminal, gedit, etc working
   Resolves: #1281675
