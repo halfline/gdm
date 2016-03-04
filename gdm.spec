@@ -9,7 +9,7 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.19.90
+Version: 3.19.91
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -295,6 +295,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Fri Mar 04 2016 Kalev Lember <klember@redhat.com> - 1:3.19.91-1
+- Update to 3.19.91
+
 * Thu Feb 18 2016 Richard Hughes <rhughes@redhat.com> - 1:3.19.90-1
 - Update to 3.19.90
 
