@@ -1502,6 +1502,15 @@ remove_user_session (GdmManager *manager,
 }
 
 static void
+on_session_start_failed (GdmSession *session,
+			 const char *service_name,
+                         GdmManager *manager)
+{
+        g_debug ("GdmManager: session failed to start"); 
+        remove_user_session (manager, session);
+}
+
+static void
 on_user_session_exited (GdmSession *session,
                         int         code,
                         GdmManager *manager)
@@ -1919,6 +1928,10 @@ create_seed_session_for_display (GdmManager *manager,
         g_signal_connect (session,
                           "session-started",
                           G_CALLBACK (on_session_started),
+                          manager);
+        g_signal_connect (session,
+                          "session-start-failed",
+                          G_CALLBACK (on_session_start_failed),
                           manager);
         g_signal_connect (session,
                           "session-exited",
