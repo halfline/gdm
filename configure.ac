@@ -90,7 +90,7 @@ AC_SUBST(DAEMON_LIBS)
 
 GLIB_GSETTINGS
 
-PKG_CHECK_MODULES(XLIB, x11 xau xrandr, ,
+PKG_CHECK_MODULES(XLIB, x11 xau xrandr x11-xcb, ,
   [AC_PATH_XTRA
     if test "x$no_x" = xyes; then
       AC_MSG_ERROR("no (requires X development libraries)")
