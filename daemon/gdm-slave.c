@@ -438,10 +438,36 @@ gdm_slave_real_stop (GdmSlave *slave)
 {
         g_debug ("GdmSlave: Stopping slave");
 
-        g_clear_pointer (&slave->priv->xcb_connection, xcb_disconnect);
-        g_clear_object (&slave->priv->display);
+        if (slave->priv->xcb_connection) {
+               const xcb_setup_t *setup;
 
-        return TRUE;
+               /* These 3 bits are reserved/unused by the X protocol */
+               guint32 unused_bits = 0b11100000000000000000000000000000;
+               XID highest_client, client;
+               guint32 client_increment;
+
+               setup = xcb_get_setup (slave->priv->xcb_connection);
+
+               /* resource_id_mask is the bits given to each client for
+                * addressing resources */
+               highest_client = (XID) ~unused_bits & ~setup->resource_id_mask;
+               client_increment = setup->resource_id_mask + 1;
+
+               /* Kill every client but ourselves, then close our own connection
+                */
+               for (client = 0;
+                    client <= highest_client;
+                    client += client_increment) {
+
+                       if (client != setup->resource_id_base)
+                               xcb_kill_client (slave->priv->xcb_connection, client);
+               }
+               xcb_flush (slave->priv->xcb_connection);
+               g_clear_pointer (&slave->priv->xcb_connection, xcb_disconnect);
+       }
+       g_clear_object (&slave->priv->display);
+
+       return TRUE;
 }
 
 gboolean
