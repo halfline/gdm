@@ -1630,6 +1630,8 @@ session_worker_child_watch (GPid              pid,
                                              worker->priv->service,
                                              status);
 
+        killpg (pid, SIGHUP);
+
         worker->priv->child_pid = -1;
 
         run_script (worker, GDMCONFDIR "/PostSession");
