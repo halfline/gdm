@@ -42,8 +42,11 @@
 #include <X11/X.h>
 #include <X11/Xauth.h>
 
+#include "gdm-address.h"
 #include "gdm-display-access-file.h"
 #include "gdm-common.h"
+#include "gdm-settings-direct.h"
+#include "gdm-settings-keys.h"
 
 struct _GdmDisplayAccessFilePrivate
 {
@@ -744,6 +747,110 @@ write_compat_entries_for_localhost (GdmDisplayAccessFile  *file,
         return wrote_entry;
 }
 
+/*
+ * write_compat_entries_for_remote_clients:
+ *
+ * https://bugzilla.redhat.com/show_bug.cgi?id=1013351
+ * Normally when logging in to a local display, we avoid
+ * writing auth cookies that would be useful for remote clients.
+ * This is because normally, we start the X server with -nolisten tcp
+ *
+ * If the user explicitly turns that off, though, then we need to write
+ * non-local cookies for things like rsh to work (ssh is okay regardless
+ * since it does its own cookie management).
+ */
+static void
+write_compat_entries_for_remote_clients (GdmDisplayAccessFile  *file,
+                                         GdmDisplay            *display,
+                                         const char            *cookie,
+                                         gsize                  cookie_size)
+{
+        int display_number;
+        char             localhostname[1024] = "";
+        struct addrinfo *results;
+        struct addrinfo *entry;
+        struct addrinfo  hints;
+        gboolean is_local;
+        Xauth auth_entry;
+
+        gdm_display_is_local (display, &is_local, NULL);
+
+        if (!is_local) {
+                return;
+        }
+
+        if (gethostname (localhostname, 1023) != 0) {
+                return;
+        }
+
+        gdm_display_get_x11_display_number (display, &display_number, NULL);
+
+        memset (&auth_entry, 0, sizeof (Xauth));
+
+        auth_entry.number = g_strdup_printf ("%d", display_number);
+        auth_entry.number_length = strlen (auth_entry.number);
+
+        auth_entry.name = g_strdup ("MIT-MAGIC-COOKIE-1");
+        auth_entry.name_length = strlen (auth_entry.name);
+
+        auth_entry.data = (void *) cookie;
+        auth_entry.data_length = cookie_size;
+
+
+        memset (&hints, 0, sizeof (hints));
+
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_family = AF_UNSPEC;
+
+        g_debug ("GdmAddress: looking up hostname: %s", localhostname);
+        results = NULL;
+        if (getaddrinfo (localhostname, NULL, &hints, &results) != 0) {
+                g_debug ("%s: Could not get address from hostname!", "gdm_peek_local_address_list");
+
+                return;
+        }
+
+        for (entry = results; entry != NULL; entry = entry->ai_next) {
+                switch (entry->ai_family) {
+                        case AF_INET: {
+                                struct sockaddr_in *inet_address = (struct sockaddr_in *) entry->ai_addr;
+
+                                auth_entry.family = FamilyInternet;
+                                auth_entry.address_length = sizeof (inet_address->sin_addr.s_addr);
+                                auth_entry.address = g_malloc0 (auth_entry.address_length);
+                                memcpy (auth_entry.address, &inet_address->sin_addr.s_addr, auth_entry.address_length);
+
+                                break;
+                        }
+#ifdef ENABLE_IPV6
+                        case AF_INET6: {
+                                struct sockaddr_in *inet_address = (struct sockaddr_in6 *) entry->ai_addr;
+                                auth_entry.family = FamilyInternet6;
+                                auth_entry.address_length = sizeof (inet_addres->sin6_addr.s_addr);
+                                auth_entry.address = g_malloc0 (auth_entry.address_length);
+                                memcpy (auth_entry.address, &inet_address->sin6_addr.s_addr, auth_entry.address_length);
+                                break;
+                        }
+#endif
+                        default:
+                                auth_entry.address_length = 0;
+                                break;
+                }
+
+                if (auth_entry.address_length == 0) {
+                        continue;
+                }
+
+                XauWriteAuth (file->priv->fp, &auth_entry);
+                fflush (file->priv->fp);
+                g_free (auth_entry.address);
+        }
+
+        g_free (auth_entry.name);
+        g_free (auth_entry.number);
+        freeaddrinfo (results);
+}
+
 gboolean
 gdm_display_access_file_add_display_with_cookie (GdmDisplayAccessFile  *file,
                                                  GdmDisplay            *display,
@@ -753,6 +860,7 @@ gdm_display_access_file_add_display_with_cookie (GdmDisplayAccessFile  *file,
 {
         Xauth auth_entry;
         gboolean display_added;
+        gboolean disable_tcp;
 
         g_return_val_if_fail (file != NULL, FALSE);
         g_return_val_if_fail (file->priv->path != NULL, FALSE);
@@ -792,6 +900,19 @@ gdm_display_access_file_add_display_with_cookie (GdmDisplayAccessFile  *file,
         g_free (auth_entry.number);
         g_free (auth_entry.name);
 
+        disable_tcp = TRUE;
+        if (!gdm_settings_direct_get_boolean (GDM_KEY_DISALLOW_TCP,
+                                              &disable_tcp)) {
+                goto done;
+        }
+
+        if (disable_tcp) {
+                goto done;
+        }
+
+        write_compat_entries_for_remote_clients (file, display, cookie, cookie_size);
+
+done:
         return display_added;
 }
 
