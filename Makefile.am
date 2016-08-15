@@ -7,6 +7,7 @@ SUBDIRS = 			\
 	libgdm 			\
 	chooser			\
 	utils 			\
+	pam_gdm			\
 	po 			\
 	tests 			\
 	$(NULL)
