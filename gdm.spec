@@ -9,7 +9,7 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.21.4
+Version: 3.21.90
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -275,6 +275,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/gdm/locale.alias
 %{_datadir}/gdm/gdb-cmd
 %{_libdir}/girepository-1.0/Gdm-1.0.typelib
+%{_libdir}/security/pam_gdm.so
 %{_libdir}/libgdm*.so*
 %dir %{_localstatedir}/log/gdm
 %attr(1770, gdm, gdm) %dir %{_localstatedir}/lib/gdm
@@ -294,6 +295,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Aug 23 2016 Kalev Lember <klember@redhat.com> - 1:3.21.90-1
+- Update to 3.21.90
+
 * Tue Jul 26 2016 Kalev Lember <klember@redhat.com> - 1:3.21.4-1
 - Update to 3.21.4
 
