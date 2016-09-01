@@ -9,8 +9,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.21.90
-Release: 2%{?dist}
+Version: 3.21.91
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -86,8 +86,6 @@ Provides: gdm-plugin-smartcard = %{epoch}:%{version}-%{release}
 Obsoletes: gdm-plugin-fingerprint < 1:3.2.1
 Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 
-Patch0: fix-autologin.patch
-
 %description
 GDM provides the graphical login screen, shown shortly after boot up,
 log out, and when user-switching.
@@ -103,7 +101,6 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-autologin
 
 autoreconf -i -f
 intltoolize -f
@@ -298,6 +295,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Aug 30 2016 Ray Strode <rstrode@redhat.com> - 1:3.21.91-1
+- Update to 3.21.91
+
 * Tue Aug 30 2016 Ray Strode <rstrode@redhat.com> - 1:3.21.90-2
 - Fix autologin
 
