@@ -10,7 +10,7 @@
 Summary: The GNOME Display Manager
 Name: gdm
 Version: 3.21.91
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -46,6 +46,7 @@ BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(xau)
 BuildRequires: libXdmcp-devel
 BuildRequires: systemd
+BuildRequires: keyutils-libs-devel
 BuildRequires: dconf
 
 Requires(pre):    /usr/sbin/useradd
@@ -295,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Thu Sep 01 2016 Ray Strode <rstrode@redhat.com> - 1:3.21.91-2
+- Add buildrequire on kernel keyring development headers
+
 * Tue Aug 30 2016 Ray Strode <rstrode@redhat.com> - 1:3.21.91-1
 - Update to 3.21.91
 
