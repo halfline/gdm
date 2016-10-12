@@ -7,15 +7,15 @@
 %define desktop_file_utils_version 0.2.90
 %define nss_version 3.11.1
 
-Summary: The GNOME Display Manager
 Name: gdm
+Epoch: 1
 Version: 3.22.1
 Release: 1%{?dist}
-Epoch: 1
+Summary: The GNOME Display Manager
+
 License: GPLv2+
 URL: https://wiki.gnome.org/Projects/GDM
-#VCS: git:git://git.gnome.org/gdm
-Source: http://download.gnome.org/sources/gdm/3.22/gdm-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/gdm/3.22/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
 BuildRequires: pam-devel >= 0:%{pam_version}
