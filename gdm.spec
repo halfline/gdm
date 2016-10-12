@@ -9,8 +9,8 @@
 
 Summary: The GNOME Display Manager
 Name: gdm
-Version: 3.22.0
-Release: 2%{?dist}
+Version: 3.22.1
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -87,8 +87,6 @@ Provides: gdm-plugin-smartcard = %{epoch}:%{version}-%{release}
 Obsoletes: gdm-plugin-fingerprint < 1:3.2.1
 Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 
-Patch0: 0001-wayland-session-don-t-start-new-session-with-stale-s.patch
-
 %description
 GDM provides the graphical login screen, shown shortly after boot up,
 log out, and when user-switching.
@@ -104,7 +102,6 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-login-after-logout
 
 autoreconf -i -f
 intltoolize -f
@@ -299,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Wed Oct 12 2016 Kalev Lember <klember@redhat.com> - 1:3.22.1-1
+- Update to 3.22.1
+
 * Wed Sep 21 2016 Ray Strode <rstrode@redhat.com> - 3.22.0-2
 - Fix log in after log out
   Resolves: #1373169
