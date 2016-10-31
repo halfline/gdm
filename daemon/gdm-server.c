@@ -50,6 +50,8 @@
 
 #include "gdm-common.h"
 #include "gdm-signal-handler.h"
+#include "gdm-settings-direct.h"
+#include "gdm-settings-keys.h"
 
 #include "gdm-server.h"
 
@@ -736,10 +738,20 @@ gboolean
 gdm_server_start_on_active_vt (GdmServer *server)
 {
         gboolean res;
+        gboolean debug = FALSE;
+        const char *logverbose;
         char *vt;
 
+        gdm_settings_direct_get_boolean (GDM_KEY_DEBUG, &debug);
+
+        if (debug) {
+                logverbose = " -logverbose 7";
+        } else {
+                logverbose = "";
+        }
+
         g_free (server->priv->command);
-        server->priv->command = g_strdup (X_SERVER " -nr -verbose");
+        server->priv->command = g_strdup_printf (X_SERVER " -nr -verbose -audit 4 %s", logverbose);
         vt = get_active_vt_as_string ();
         res = gdm_server_spawn (server, vt);
         g_free (vt);
@@ -993,11 +1005,22 @@ gdm_server_class_init (GdmServerClass *klass)
 static void
 gdm_server_init (GdmServer *server)
 {
+        gboolean debug = FALSE;
+        const char *logverbose;
+        char *vt;
 
         server->priv = GDM_SERVER_GET_PRIVATE (server);
 
+        gdm_settings_direct_get_boolean (GDM_KEY_DEBUG, &debug);
+
+        if (debug) {
+                logverbose = " -logverbose 7";
+        } else {
+                logverbose = "";
+        }
+
         server->priv->pid = -1;
-        server->priv->command = g_strdup (X_SERVER " -br -verbose");
+        server->priv->command = g_strdup_printf (X_SERVER " -br -verbose -audit 4 %s", logverbose);
         server->priv->log_dir = g_strdup (LOGDIR);
 
         add_ready_handler (server);
