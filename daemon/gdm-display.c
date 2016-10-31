@@ -639,6 +639,8 @@ gdm_display_real_manage (GdmDisplay *display)
 
         gdm_slave_proxy_start (display->priv->slave_proxy);
 
+        _gdm_display_set_status (display, GDM_DISPLAY_MANAGED);
+
         return TRUE;
 }
 
