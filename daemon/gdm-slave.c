@@ -438,6 +438,7 @@ gdm_slave_real_stop (GdmSlave *slave)
 {
         g_debug ("GdmSlave: Stopping slave");
 
+        g_clear_pointer (&slave->priv->xcb_connection, xcb_disconnect);
         g_clear_object (&slave->priv->display);
 
         return TRUE;
