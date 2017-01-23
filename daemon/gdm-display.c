@@ -1573,6 +1573,31 @@ initial_setup_disabled_by_anaconda (void)
 }
 
 static gboolean
+initial_setup_disabled_by_anaconda (void)
+{
+        GKeyFile *key_file;
+        const gchar *file_name = SYSCONFDIR "/sysconfig/anaconda";
+        gboolean disabled = FALSE;
+        GError *error = NULL;
+
+        key_file = g_key_file_new ();
+        if (!g_key_file_load_from_file (key_file, file_name, G_KEY_FILE_NONE, &error)) {
+                if (!g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT) &&
+                    !g_error_matches (error, G_KEY_FILE_ERROR, G_KEY_FILE_ERROR_NOT_FOUND)) {
+                        g_warning ("Could not read %s: %s", file_name, error->message);
+                }
+                g_error_free (error);
+                goto out;
+        }
+
+        disabled = g_key_file_get_boolean (key_file, "General",
+                                           "post_install_tools_disabled", NULL);
+ out:
+        g_key_file_unref (key_file);
+        return disabled;
+}
+
+static gboolean
 wants_initial_setup (GdmDisplay *self)
 {
         gboolean enabled = FALSE;
