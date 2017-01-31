@@ -1,0 +1,82 @@
+From fa5733788ae5f8e8caeb07e956be370e96f9b6b1 Mon Sep 17 00:00:00 2001
+From: Rui Matos <tiagomatos@gmail.com>
+Date: Mon, 23 Jan 2017 20:19:51 +0100
+Subject: [PATCH] Honor initial setup being disabled by distro installer
+
+Sysadmins might want to disable any kind of initial setup for their
+users, perhaps because they pre-configure their environments. We
+already provide a configuration file option for this but distro
+installers might have their own way of requesting this.
+
+At least the anaconda installer provides an option to skip any kind
+post-install setup tools so, for now we're only adding support for
+that but more might be added in the future.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=777708
+---
+ daemon/Makefile.am   |  1 +
+ daemon/gdm-display.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index ab5dda0..786e0c5 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -14,6 +14,7 @@ AM_CPPFLAGS = \
+ 	-DLOCALSTATEDIR=\"$(localstatedir)\"		\
+ 	-DLOGDIR=\"$(logdir)\"				\
+ 	-DSBINDIR=\"$(sbindir)\"			\
++	-DSYSCONFDIR=\"$(sysconfdir)\"			\
+ 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+ 	-DGDM_RUN_DIR=\"$(GDM_RUN_DIR)\"		\
+ 	-DGDM_XAUTH_DIR=\"$(GDM_XAUTH_DIR)\"		\
+diff --git a/daemon/gdm-display.c b/daemon/gdm-display.c
+index 0057e2c..2af8e13 100644
+--- a/daemon/gdm-display.c
++++ b/daemon/gdm-display.c
+@@ -1456,6 +1456,31 @@ can_create_environment (const char *session_id)
+ }
+ 
+ static gboolean
++initial_setup_disabled_by_anaconda (void)
++{
++        GKeyFile *key_file;
++        const gchar *file_name = SYSCONFDIR "/sysconfig/anaconda";
++        gboolean disabled = FALSE;
++        GError *error = NULL;
++
++        key_file = g_key_file_new ();
++        if (!g_key_file_load_from_file (key_file, file_name, G_KEY_FILE_NONE, &error)) {
++                if (!g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT) &&
++                    !g_error_matches (error, G_KEY_FILE_ERROR, G_KEY_FILE_ERROR_NOT_FOUND)) {
++                        g_warning ("Could not read %s: %s", file_name, error->message);
++                }
++                g_error_free (error);
++                goto out;
++        }
++
++        disabled = g_key_file_get_boolean (key_file, "General",
++                                           "post_install_tools_disabled", NULL);
++ out:
++        g_key_file_unref (key_file);
++        return disabled;
++}
++
++static gboolean
+ wants_initial_setup (GdmDisplay *self)
+ {
+         gboolean enabled = FALSE;
+@@ -1480,6 +1505,10 @@ wants_initial_setup (GdmDisplay *self)
+                 return FALSE;
+         }
+ 
++        if (initial_setup_disabled_by_anaconda ()) {
++                return FALSE;
++        }
++
+         return enabled;
+ }
+ 
+-- 
+2.9.3
+

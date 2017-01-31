@@ -10,13 +10,14 @@
 Name: gdm
 Epoch: 1
 Version: 3.22.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
 URL: https://wiki.gnome.org/Projects/GDM
 Source0: http://download.gnome.org/sources/gdm/3.22/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
+Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
@@ -100,6 +101,7 @@ files needed to build custom greeters.
 
 %prep
 %setup -q
+%patch0 -p1
 
 autoreconf -i -f
 intltoolize -f
@@ -294,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Jan 31 2017 Rui Matos <rmatos@redhat.com> - 1:3.22.1-2
+- Honor anaconda's firstboot being disabled
+
 * Wed Oct 12 2016 Kalev Lember <klember@redhat.com> - 1:3.22.1-1
 - Update to 3.22.1
 - Don't set group tags
