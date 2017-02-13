@@ -9,13 +9,13 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.22.1
-Release: 3%{?dist}
+Version: 3.23.4
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
 URL: https://wiki.gnome.org/Projects/GDM
-Source0: http://download.gnome.org/sources/gdm/3.22/gdm-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/gdm/3.23/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 
@@ -296,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Mon Feb 13 2017 Richard Hughes <rhughes@redhat.com> - 1:3.23.4-1
+- Update to 3.23.4
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.22.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
