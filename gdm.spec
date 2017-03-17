@@ -9,7 +9,7 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.23.91.1
+Version: 3.23.92
 Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
@@ -296,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Fri Mar 17 2017 Kalev Lember <klember@redhat.com> - 1:3.23.92-1
+- Update to 3.23.92
+
 * Mon Mar 06 2017 Kalev Lember <klember@redhat.com> - 1:3.23.91.1-1
 - Update to 3.23.91.1
 
