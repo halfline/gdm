@@ -1382,8 +1382,6 @@ greeter_display_started (GdmManager *manager,
         }
 
         maybe_start_pending_initial_login (manager, display);
-
-        manager->priv->ran_once = TRUE;
 }
 
 static void
@@ -1393,6 +1391,7 @@ on_display_status_changed (GdmDisplay *display,
 {
         int         status;
         int         display_number = -1;
+        char       *session_type = NULL;
 #ifdef WITH_PLYMOUTH
         gboolean    display_is_local = FALSE;
         gboolean    quit_plymouth = FALSE;
@@ -1403,7 +1402,10 @@ on_display_status_changed (GdmDisplay *display,
         quit_plymouth = display_is_local && manager->priv->plymouth_is_running;
 #endif
 
-        g_object_get (display, "x11-display-number", &display_number, NULL);
+        g_object_get (display,
+                      "x11-display-number", &display_number,
+                      "session-type", &session_type,
+                      NULL);
 
         status = gdm_display_get_status (display);
 
@@ -1433,6 +1435,17 @@ on_display_status_changed (GdmDisplay *display,
 
                         if (status == GDM_DISPLAY_MANAGED) {
                                 greeter_display_started (manager, display);
+
+                                /* If it's a wayland session we don't count it
+                                 * as run until it finishes, so autologin will
+                                 * happen again when falling back to X11.  If
+                                 * it's an X11 session, we count it run as soon
+                                 * as it starts, because we don't want it
+                                 * trying to autologin in a loop because of an
+                                 * user session crash */
+                                if (g_strcmp0 (session_type, "x11") == 0) {
+                                        manager->priv->ran_once = TRUE;
+                                }
                         }
                         break;
                 case GDM_DISPLAY_FAILED:
@@ -1442,6 +1455,12 @@ on_display_status_changed (GdmDisplay *display,
                         if (quit_plymouth) {
                                 plymouth_quit_without_transition ();
                                 manager->priv->plymouth_is_running = FALSE;
+                        }
+#endif
+
+#ifdef ENABLE_WAYLAND_SUPPORT
+                        if (g_strcmp0 (session_type, "wayland") == 0) {
+                                manager->priv->ran_once = TRUE;
                         }
 #endif
 
