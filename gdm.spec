@@ -9,8 +9,8 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.24.0
-Release: 2%{?dist}
+Version: 3.24.1
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -18,8 +18,6 @@ URL: https://wiki.gnome.org/Projects/GDM
 Source0: http://download.gnome.org/sources/gdm/3.24/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
-Patch1: 0001-manager-if-falling-back-to-X11-retry-autologin.patch
-Patch2: 0002-session-update-session-search-dirs-when-ignore-wayla.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
@@ -104,8 +102,6 @@ files needed to build custom greeters.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 autoreconf -i -f
 intltoolize -f
@@ -300,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Wed Apr 12 2017 Kalev Lember <klember@redhat.com> - 1:3.24.1-1
+- Update to 3.24.1
+
 * Sat Mar 25 2017 Ray Strode <rstrode@redhat.com> - 1:3.24.0-2
 - Fix fallback to X logic
   Resolves: #1435010
