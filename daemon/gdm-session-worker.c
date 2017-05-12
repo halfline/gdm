@@ -161,7 +161,6 @@ struct GdmSessionWorkerPrivate
         guint32           is_program_session : 1;
         guint32           is_reauth_session : 1;
         guint32           display_is_local : 1;
-        guint32           display_is_initial : 1;
         guint             state_change_idle_id;
         GdmSessionDisplayMode display_mode;
 
@@ -2084,13 +2083,9 @@ set_up_for_new_vt (GdmSessionWorker *worker)
                 return FALSE;
         }
 
-        if (worker->priv->display_is_initial) {
-                session_vt = atoi (GDM_INITIAL_VT);
-        } else {
-                if (ioctl(fd, VT_OPENQRY, &session_vt) < 0) {
-                        g_debug ("GdmSessionWorker: couldn't open new VT: %m");
-                        goto fail;
-                }
+        if (ioctl(fd, VT_OPENQRY, &session_vt) < 0) {
+                g_debug ("GdmSessionWorker: couldn't open new VT: %m");
+                goto fail;
         }
 
         worker->priv->session_vt = session_vt;
@@ -2822,8 +2817,7 @@ gdm_session_worker_handle_setup (GdmDBusWorker         *object,
                                  const char            *console,
                                  const char            *seat_id,
                                  const char            *hostname,
-                                 gboolean               display_is_local,
-                                 gboolean               display_is_initial)
+                                 gboolean               display_is_local)
 {
         GdmSessionWorker *worker = GDM_SESSION_WORKER (object);
         validate_and_queue_state_change (worker, invocation, GDM_SESSION_WORKER_STATE_SETUP_COMPLETE);
@@ -2835,7 +2829,6 @@ gdm_session_worker_handle_setup (GdmDBusWorker         *object,
         worker->priv->display_seat_id = g_strdup (seat_id);
         worker->priv->hostname = g_strdup (hostname);
         worker->priv->display_is_local = display_is_local;
-        worker->priv->display_is_initial = display_is_initial;
         worker->priv->username = NULL;
 
         g_signal_connect_swapped (worker->priv->user_settings,
@@ -2860,8 +2853,7 @@ gdm_session_worker_handle_setup_for_user (GdmDBusWorker         *object,
                                           const char            *console,
                                           const char            *seat_id,
                                           const char            *hostname,
-                                          gboolean               display_is_local,
-                                          gboolean               display_is_initial)
+                                          gboolean               display_is_local)
 {
         GdmSessionWorker *worker = GDM_SESSION_WORKER (object);
 
@@ -2875,7 +2867,6 @@ gdm_session_worker_handle_setup_for_user (GdmDBusWorker         *object,
         worker->priv->display_seat_id = g_strdup (seat_id);
         worker->priv->hostname = g_strdup (hostname);
         worker->priv->display_is_local = display_is_local;
-        worker->priv->display_is_initial = display_is_initial;
         worker->priv->username = g_strdup (username);
 
         g_signal_connect_swapped (worker->priv->user_settings,
@@ -2914,7 +2905,6 @@ gdm_session_worker_handle_setup_for_program (GdmDBusWorker         *object,
                                              const char            *seat_id,
                                              const char            *hostname,
                                              gboolean               display_is_local,
-                                             gboolean               display_is_initial,
                                              const char            *log_file)
 {
         GdmSessionWorker *worker = GDM_SESSION_WORKER (object);
@@ -2927,7 +2917,6 @@ gdm_session_worker_handle_setup_for_program (GdmDBusWorker         *object,
         worker->priv->display_seat_id = g_strdup (seat_id);
         worker->priv->hostname = g_strdup (hostname);
         worker->priv->display_is_local = display_is_local;
-        worker->priv->display_is_initial = display_is_initial;
         worker->priv->username = g_strdup (username);
         worker->priv->log_file = g_strdup (log_file);
         worker->priv->is_program_session = TRUE;
