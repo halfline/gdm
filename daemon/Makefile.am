@@ -133,6 +133,12 @@ gdm_session_worker_SOURCES = 			\
 	gdm-dbus-util.h				\
 	$(NULL)
 
+if SUPPORTS_PAM_EXTENSIONS
+gdm_session_worker_SOURCES += gdm-pam-extensions.h
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gdm-pam-extensions.pc
+endif
+
 nodist_gdm_session_worker_SOURCES =		\
 	gdm-session-glue.h			\
 	gdm-session-glue.c			\
@@ -189,6 +195,11 @@ gdm_session_worker_LDADD = 			\
 	$(XLIB_LIBS)				\
 	$(PAM_LIBS)				\
 	$(NULL)
+
+if SUPPORTS_PAM_EXTENSIONS
+pam_extensions_includedir = $(includedir)/gdm
+pam_extensions_include_HEADERS = gdm-pam-extensions.h
+endif
 
 sbin_PROGRAMS = 			\
 	gdm				\
@@ -295,4 +306,5 @@ EXTRA_DIST = 				\
 	gdm-local-display-factory.xml	\
 	gdm-session-enum-types.c.in	\
 	gdm-session-enum-types.h.in	\
+	gdm-pam-extensions.pc           \
 	$(NULL)

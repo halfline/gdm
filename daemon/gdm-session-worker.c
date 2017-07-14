@@ -61,6 +61,11 @@
 
 #include "gdm-common.h"
 #include "gdm-log.h"
+
+#ifdef SUPPORTS_PAM_EXTENSIONS
+#include "gdm-pam-extensions.h"
+#endif
+
 #include "gdm-session-worker.h"
 #include "gdm-session-glue.h"
 #include "gdm-session.h"
@@ -176,6 +181,13 @@ struct GdmSessionWorkerPrivate
 
         GDBusMethodInvocation *pending_invocation;
 };
+
+#ifdef SUPPORTS_PAM_EXTENSIONS
+static char *
+gdm_supported_pam_extensions[] = {
+        NULL
+};
+#endif
 
 enum {
         PROP_0,
@@ -519,6 +531,38 @@ gdm_session_worker_report_problem (GdmSessionWorker *worker,
                                                           NULL);
 }
 
+void
+gdm_advertise_supported_pam_extensions (void)
+{
+#ifdef SUPPORTS_PAM_EXTENSIONS
+        GDM_PAM_EXTENSION_ADVERTISE_SUPPORTED_EXTENSIONS (gdm_supported_pam_extensions);
+#endif
+}
+
+#ifdef SUPPORTS_PAM_EXTENSIONS
+static gboolean
+gdm_session_worker_process_extended_pam_message (GdmSessionWorker          *worker,
+                                                 const struct pam_message  *query,
+                                                 char                     **response)
+{
+        GdmPamExtensionMessage *extended_message;
+
+        extended_message = GDM_PAM_EXTENSION_MESSAGE_FROM_PAM_MESSAGE (query);
+
+        if (GDM_PAM_EXTENSION_MESSAGE_TRUNCATED (extended_message)) {
+                g_warning ("PAM service requested binary response for truncated query");
+                return FALSE;
+        }
+
+        if (GDM_PAM_EXTENSION_MESSAGE_INVALID_TYPE (extended_message)) {
+                g_warning ("PAM service requested binary response for unadvertised query type");
+                return FALSE;
+        }
+
+        return FALSE;
+}
+#endif
+
 static char *
 convert_to_utf8 (const char *str)
 {
@@ -562,6 +606,11 @@ gdm_session_worker_process_pam_message (GdmSessionWorker          *worker,
         }
 
         gdm_session_worker_update_username (worker);
+
+#ifdef SUPPORTS_PAM_EXTENSIONS
+        if (query->msg_style == PAM_BINARY_PROMPT)
+                return gdm_session_worker_process_extended_pam_message (worker, query, response);
+#endif
 
         g_debug ("GdmSessionWorker: received pam message of type %u with payload '%s'",
                  query->msg_style, query->msg);

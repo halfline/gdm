@@ -539,6 +539,15 @@ if test "x$have_pam" = "xyes"; then
                         )],
        [AC_MSG_RESULT(["not found - assume const, Linux-type PAM"])]
        )
+   AC_CHECK_DECL(PAM_BINARY_PROMPT,
+                 [supports_pam_extensions=yes],
+                 [supports_pam_extensions=no],
+                 #include <security/pam_appl.h>
+                )
+fi
+if test "x$supports_pam_extensions" = "xyes" ; then
+	AM_CONDITIONAL(SUPPORTS_PAM_EXTENSIONS, true)
+	AC_DEFINE(SUPPORTS_PAM_EXTENSIONS, 1, [Define if PAM supports GDMs custom extensions])
 fi
 
 AC_CHECK_LIB(keyutils, keyctl_read, [
@@ -1549,6 +1558,7 @@ AC_DEFINE_UNQUOTED(X_XNEST_UNSCALED_FONTPATH,"$X_XNEST_UNSCALED_FONTPATH",[])
 AC_CONFIG_FILES([
 Makefile
 daemon/Makefile
+daemon/gdm-pam-extensions.pc
 docs/Makefile
 chooser/Makefile
 libgdm/Makefile

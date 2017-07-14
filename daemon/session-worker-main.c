@@ -85,6 +85,8 @@ main (int    argc,
 
         signal (SIGTERM, on_sigterm_cb);
 
+        gdm_advertise_supported_pam_extensions ();
+
         bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
         textdomain (GETTEXT_PACKAGE);
         setlocale (LC_ALL, "");
