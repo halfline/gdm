@@ -185,6 +185,7 @@ struct GdmSessionWorkerPrivate
 #ifdef SUPPORTS_PAM_EXTENSIONS
 static char *
 gdm_supported_pam_extensions[] = {
+        GDM_PAM_EXTENSION_CHOICE_LIST,
         NULL
 };
 #endif
@@ -541,11 +542,50 @@ gdm_advertise_supported_pam_extensions (void)
 
 #ifdef SUPPORTS_PAM_EXTENSIONS
 static gboolean
+gdm_session_worker_ask_list_of_choices (GdmSessionWorker *worker,
+                                        GdmChoiceList    *list,
+                                        char            **answerp)
+{
+        GVariantBuilder builder;
+        GVariant *choices_as_variant;
+        size_t i;
+
+        g_variant_builder_init (&builder, G_VARIANT_TYPE ("a{ss}"));
+
+        for (i = 0; i < list->number_of_items; i++) {
+                if (list->items[i].key == NULL) {
+                        g_warning ("choice list contains item with NULL key");
+                        g_variant_builder_clear (&builder);
+                        return FALSE;
+                }
+                g_variant_builder_add (&builder, "{ss}", list->items[i].key, list->items[i].text);
+        }
+
+        choices_as_variant = g_variant_builder_end (&builder);
+
+        return gdm_dbus_worker_manager_call_choice_list_query_sync (worker->priv->manager,
+                                                                    worker->priv->service,
+                                                                    choices_as_variant,
+                                                                    answerp,
+                                                                    NULL,
+                                                                    NULL);
+}
+
+static gboolean
+gdm_session_worker_process_choice_list_request (GdmSessionWorker                   *worker,
+                                                GdmPamExtensionChoiceListRequest  *request,
+                                                GdmPamExtensionChoiceListResponse *response)
+{
+        return gdm_session_worker_ask_list_of_choices (worker, &request->list, &response->key);
+}
+
+static gboolean
 gdm_session_worker_process_extended_pam_message (GdmSessionWorker          *worker,
                                                  const struct pam_message  *query,
                                                  char                     **response)
 {
         GdmPamExtensionMessage *extended_message;
+        gboolean res;
 
         extended_message = GDM_PAM_EXTENSION_MESSAGE_FROM_PAM_MESSAGE (query);
 
@@ -559,7 +599,24 @@ gdm_session_worker_process_extended_pam_message (GdmSessionWorker          *work
                 return FALSE;
         }
 
-        return FALSE;
+        if (GDM_PAM_EXTENSION_MESSAGE_MATCH (extended_message, gdm_supported_pam_extensions, GDM_PAM_EXTENSION_CHOICE_LIST)) {
+                GdmPamExtensionChoiceListRequest *list_request = (GdmPamExtensionChoiceListRequest *) extended_message;
+                GdmPamExtensionChoiceListResponse *list_response = malloc (GDM_PAM_EXTENSION_CHOICE_LIST_RESPONSE_SIZE);
+
+                GDM_PAM_EXTENSION_CHOICE_LIST_RESPONSE_INIT (list_response);
+
+                res = gdm_session_worker_process_choice_list_request (worker, list_request, list_response);
+
+                if (! res) {
+                        g_free (list_response);
+                        return FALSE;
+                }
+
+                *response = GDM_PAM_EXTENSION_MESSAGE_TO_PAM_REPLY (list_response);
+                return TRUE;
+        }
+
+        return TRUE;
 }
 #endif
 
@@ -3376,3 +3433,4 @@ gdm_session_worker_new (const char *address,
 
         return GDM_SESSION_WORKER (object);
 }
+
