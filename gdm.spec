@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.25.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -296,6 +296,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.25.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Sun Jun 25 2017 Kalev Lember <klember@redhat.com> - 1:3.25.3-1
 - Update to 3.25.3
 
