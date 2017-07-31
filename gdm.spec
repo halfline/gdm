@@ -9,8 +9,8 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.25.3
-Release: 2%{?dist}
+Version: 3.25.4.1
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -275,6 +275,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/gdm/greeter-dconf-defaults
 %{_datadir}/gdm/locale.alias
 %{_datadir}/gdm/gdb-cmd
+%{_datadir}/gnome-session/sessions/gnome-login.session
 %{_libdir}/girepository-1.0/Gdm-1.0.typelib
 %{_libdir}/security/pam_gdm.so
 %{_libdir}/libgdm*.so*
@@ -296,6 +297,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Mon Jul 31 2017 Kalev Lember <klember@redhat.com> - 1:3.25.4.1-1
+- Update to 3.25.4.1
+
 * Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.25.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
