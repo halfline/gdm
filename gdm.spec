@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.25.4.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -269,8 +269,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_sbindir}/gdm
 %{_bindir}/gdmflexiserver
 %{_bindir}/gdm-screenshot
+%dir %{_datadir}/dconf
+%dir %{_datadir}/dconf/profile
 %{_datadir}/dconf/profile/gdm
+%dir %{_datadir}/gdm/greeter
+%dir %{_datadir}/gdm/greeter/applications
 %{_datadir}/gdm/greeter/applications/*
+%dir %{_datadir}/gdm/greeter/autostart
 %{_datadir}/gdm/greeter/autostart/*
 %{_datadir}/gdm/greeter-dconf-defaults
 %{_datadir}/gdm/locale.alias
@@ -293,10 +298,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %files devel
 %dir %{_includedir}/gdm
 %{_includedir}/gdm/*.h
+%dir %{_datadir}/gir-1.0
 %{_datadir}/gir-1.0/Gdm-1.0.gir
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Mon Aug 14 2017 Ville Skyttä <ville.skytta@iki.fi> - 1:3.25.4.1-2
+- Own %%{_datadir}/{dconf,gdm/greeter,gir-1.0} dirs
+
 * Mon Jul 31 2017 Kalev Lember <klember@redhat.com> - 1:3.25.4.1-1
 - Update to 3.25.4.1
 
