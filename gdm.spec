@@ -9,8 +9,8 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.25.4.1
-Release: 2%{?dist}
+Version: 3.25.90.1
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -303,6 +303,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Tue Aug 15 2017 Kalev Lember <klember@redhat.com> - 1:3.25.90.1-1
+- Update to 3.25.90.1
+
 * Mon Aug 14 2017 Ville Skyttä <ville.skytta@iki.fi> - 1:3.25.4.1-2
 - Own %%{_datadir}/{dconf,gdm/greeter,gir-1.0} dirs
 
