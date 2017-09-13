@@ -9,13 +9,13 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.25.92
+Version: 3.26.0
 Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
 URL: https://wiki.gnome.org/Projects/GDM
-Source0: http://download.gnome.org/sources/gdm/3.25/gdm-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/gdm/3.26/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 
@@ -303,6 +303,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Thu Sep 14 2017 Kalev Lember <klember@redhat.com> - 1:3.26.0-1
+- Update to 3.26.0
+
 * Fri Sep 08 2017 Kalev Lember <klember@redhat.com> - 1:3.25.92-1
 - Update to 3.25.92
 
