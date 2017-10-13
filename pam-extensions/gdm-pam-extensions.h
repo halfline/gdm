@@ -80,7 +80,7 @@ typedef struct {
         _p = stpncpy (_p, "GDM_SUPPORTED_PAM_EXTENSIONS", sizeof(environment_block)); \
         *_p = '\0'; \
         _size += strlen (_p); \
-        for (_t = 0; supported_extensions[_t] != NULL && _t <= UCHAR_MAX; _t++) {\
+        for (_t = 0; supported_extensions[_t] != NULL && _t < UCHAR_MAX; _t++) {\
                 size_t _next_chunk = strlen (supported_extensions[_t]) + strlen (" "); \
                 if (_size + _next_chunk >= sizeof (environment_block)) \
                         break; \
