@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.26.1
-Release: 1%{?dist}
+Release: 1%{?dist}.initialsetupfix
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -18,7 +18,9 @@ URL: https://wiki.gnome.org/Projects/GDM
 Source0: http://download.gnome.org/sources/gdm/3.26/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
+Patch1: 0001-display-don-t-mark-initial-setup-ran-until-it-ran.patch
 
+BuildRequires: git
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
 BuildRequires: libtool automake autoconf
@@ -100,8 +102,7 @@ The gdm-devel package contains headers and other
 files needed to build custom greeters.
 
 %prep
-%setup -q
-%patch0 -p1
+%autosetup -S git
 
 autoreconf -i -f
 intltoolize -f
@@ -303,6 +304,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
+* Mon Oct 23 2017 Ray Strode <rstrode@redhat.com> - 1:3.26.1-1.initialsetupfix
+- make sure initial-setup starts when wayland fails
+  Resolves: #1502827
+
 * Sun Oct 08 2017 Kalev Lember <klember@redhat.com> - 1:3.26.1-1
 - Update to 3.26.1
 
