@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.26.1
-Release: 1%{?dist}.initialsetupfix
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -304,7 +304,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm.pc
 
 %changelog
-* Mon Oct 23 2017 Ray Strode <rstrode@redhat.com> - 1:3.26.1-1.initialsetupfix
+* Tue Oct 24 2017 Ray Strode <rstrode@redhat.com> - 3.26.1-2
 - make sure initial-setup starts when wayland fails
   Resolves: #1502827
 
