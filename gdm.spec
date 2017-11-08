@@ -88,8 +88,14 @@ Obsoletes: gdm-plugin-fingerprint < 1:3.2.1
 Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 
 %description
-GDM provides the graphical login screen, shown shortly after boot up,
-log out, and when user-switching.
+GDM, the GNOME Display Manager, handles authentication-related backend
+functionality for logging in a user and unlocking the user's session after
+it's been locked. GDM also provides functionality for initiating user-switching,
+so more than one user can be logged in at the same time. It handles
+graphical session registration with the system for both local and remote
+sessions (in the latter case, via the XDMCP protocol).  In cases where the
+session doesn't provide it's own display server, GDM can start the display
+server on behalf of the session.
 
 %package devel
 Summary: Development files for gdm
