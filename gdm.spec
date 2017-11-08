@@ -133,7 +133,7 @@ make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_sysconfdir}/pam.d/gdm
 
 # add logo to shell greeter
-cp %{SOURCE1} %{buildroot}%{_datadir}/glib-2.0/schemas
+cp -a %{SOURCE1} %{buildroot}%{_datadir}/glib-2.0/schemas
 
 # docs go elsewhere
 rm -rf %{buildroot}/%{_prefix}/doc
