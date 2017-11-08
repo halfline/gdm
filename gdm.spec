@@ -124,34 +124,34 @@ make %{?_smp_mflags}
 
 
 %install
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gdm/Init
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gdm/PreSession
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gdm/PostSession
+mkdir -p %{buildroot}%{_sysconfdir}/gdm/Init
+mkdir -p %{buildroot}%{_sysconfdir}/gdm/PreSession
+mkdir -p %{buildroot}%{_sysconfdir}/gdm/PostSession
 
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/gdm
+rm -f %{buildroot}%{_sysconfdir}/pam.d/gdm
 
 # add logo to shell greeter
-cp %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas
+cp %{SOURCE1} %{buildroot}%{_datadir}/glib-2.0/schemas
 
 # docs go elsewhere
-rm -rf $RPM_BUILD_ROOT/%{_prefix}/doc
+rm -rf %{buildroot}/%{_prefix}/doc
 
 # create log dir
-mkdir -p $RPM_BUILD_ROOT/var/log/gdm
+mkdir -p %{buildroot}/var/log/gdm
 
-(cd $RPM_BUILD_ROOT%{_sysconfdir}/gdm; ln -sf ../X11/xinit/Xsession .)
+(cd %{buildroot}%{_sysconfdir}/gdm; ln -sf ../X11/xinit/Xsession .)
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.la
+rm -f %{buildroot}%{_libdir}/gtk-2.0/modules/*.a
+rm -f %{buildroot}%{_libdir}/gtk-2.0/modules/*.la
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/gdm/autostart/LoginWindow
+mkdir -p %{buildroot}%{_datadir}/gdm/autostart/LoginWindow
 
-mkdir -p $RPM_BUILD_ROOT/run/gdm
+mkdir -p %{buildroot}/run/gdm
 
-find $RPM_BUILD_ROOT -name '*.a' -delete
-find $RPM_BUILD_ROOT -name '*.la' -delete
+find %{buildroot} -name '*.a' -delete
+find %{buildroot} -name '*.la' -delete
 
 %find_lang gdm --with-gnome
 
