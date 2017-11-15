@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.26.2.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -100,10 +100,21 @@ server on behalf of the session.
 %package devel
 Summary: Development files for gdm
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: gdm-pam-extensions-devel = %{epoch}:%{version}-%{release}
 
 %description devel
 The gdm-devel package contains headers and other
 files needed to build custom greeters.
+
+%package pam-extensions-devel
+Summary: Macros for developing GDM extensions to PAM
+Group: Development/Libraries
+Requires: pam-devel
+
+%description pam-extensions-devel
+The gdm-pam-extensions-devel package contains headers and other
+files that are helpful to PAM modules wishing to support
+GDM specific authentication features.
 
 %prep
 %autosetup -p1
@@ -303,12 +314,20 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %files devel
 %dir %{_includedir}/gdm
 %{_includedir}/gdm/*.h
+%exclude %{_includedir}/gdm/gdm-pam-extensions.h
 %dir %{_datadir}/gir-1.0
 %{_datadir}/gir-1.0/Gdm-1.0.gir
-%{_libdir}/pkgconfig/gdm-pam-extensions.pc
 %{_libdir}/pkgconfig/gdm.pc
 
+%files pam-extensions-devel
+%{_includedir}/gdm/gdm-pam-extensions.h
+%{_libdir}/pkgconfig/gdm-pam-extensions.pc
+
 %changelog
+* Wed Nov 15 2017 Ray Strode <rstrode@redhat.com> - 1:3.26.2.1-2
+- Split PAM macros off into a new subpackage
+  Resolves: #1512212
+
 * Wed Nov 01 2017 Kalev Lember <klember@redhat.com> - 1:3.26.2.1-1
 - Update to 3.26.2.1
 
