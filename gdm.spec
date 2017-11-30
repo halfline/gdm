@@ -233,10 +233,6 @@ fi
 
 %systemd_post gdm.service
 
-# work around bug introduced in gdm 3.0/fedora 15 that some users
-# have been dragging along from release to release
-chown gdm:gdm -R /var/lib/gdm/.local /var/lib/gdm/.local/share || :
-
 %preun
 %systemd_preun gdm.service
 
