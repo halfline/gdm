@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.26.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -44,6 +44,7 @@ BuildRequires: pkgconfig(ply-boot-client)
 BuildRequires: pkgconfig(systemd)
 BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(xau)
+BuildRequires: pkgconfig(xorg-server)
 BuildRequires: libXdmcp-devel
 BuildRequires: systemd
 BuildRequires: keyutils-libs-devel
@@ -324,6 +325,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Thu Nov 30 2017 Ray Strode <rstrode@redhat.com> - 1:3.26.2.1-3
+- Add buildrequires for X server so it knows which -listen
+  variant to use.
+  https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/K2ZPZ43355YKAU66A5TDI3OSFU3U4T3M/
+
 * Wed Nov 15 2017 Ray Strode <rstrode@redhat.com> - 1:3.26.2.1-2
 - Split PAM macros off into a new subpackage
   Resolves: #1512212
