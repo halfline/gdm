@@ -23,6 +23,8 @@ AM_CPPFLAGS = \
 	$(DISABLE_DEPRECATED_CFLAGS)			\
 	$(GTK_CFLAGS)					\
 	$(SIMPLE_GREETER_CFLAGS)			\
+	$(LIBGNOMEKBDUI_CFLAGS)		\
+	$(LIBXKLAVIER_CFLAGS)             \
 	$(NULL)
 
 @INTLTOOL_SCHEMAS_RULE@
@@ -59,7 +61,6 @@ noinst_PROGRAMS = 			\
 	test-greeter-login-window	\
 	test-greeter-panel		\
 	test-language-chooser		\
-	test-layout-chooser		\
 	test-languages			\
 	test-sessions			\
 	test-remote-login-window	\
@@ -93,6 +94,7 @@ test_greeter_login_window_LDADD =	\
 	$(COMMON_LIBS)			\
 	$(SIMPLE_GREETER_LIBS)		\
 	$(RBAC_LIBS)			\
+	$(LIBXKLAVIER_LIBS)		\
 	$(NULL)
 
 test_greeter_panel_SOURCES = 	\
@@ -122,14 +124,6 @@ test_greeter_panel_SOURCES = 	\
 	gdm-language-chooser-dialog.c	\
 	gdm-language-option-widget.h	\
 	gdm-language-option-widget.c	\
-	gdm-layout-chooser-widget.h	\
-	gdm-layout-chooser-widget.c	\
-	gdm-layout-chooser-dialog.h	\
-	gdm-layout-chooser-dialog.c	\
-	gdm-layout-option-widget.h	\
-	gdm-layout-option-widget.c	\
-	gdm-layouts.h			\
-	gdm-layouts.c			\
 	gdm-sessions.h			\
 	gdm-sessions.c			\
 	gdm-session-option-widget.h	\
@@ -142,7 +136,7 @@ test_greeter_panel_LDADD =	\
 	$(SIMPLE_GREETER_LIBS)		\
 	$(GTK_LIBS)			\
 	$(GCONF_LIBS)			\
-	$(LIBXKLAVIER_LIBS)		\
+	$(LIBGNOMEKBDUI_LIBS)		\
 	$(DEVKIT_POWER_LIBS)		\
 	$(NULL)
 
@@ -187,30 +181,6 @@ test_language_chooser_SOURCES = 	\
 test_language_chooser_LDADD =	\
 	$(GTK_LIBS)		\
 	$(GCONF_LIBS)		\
-	$(NULL)
-
-test_layout_chooser_SOURCES = 	\
-	test-layout-chooser.c		\
-	gdm-cell-renderer-timer.h	\
-	gdm-cell-renderer-timer.c	\
-	gdm-timer.h			\
-	gdm-timer.c			\
-	gdm-scrollable-widget.h		\
-	gdm-scrollable-widget.c		\
-	gdm-chooser-widget.h		\
-	gdm-chooser-widget.c		\
-	gdm-layouts.h			\
-	gdm-layouts.c			\
-	gdm-layout-chooser-widget.h	\
-	gdm-layout-chooser-widget.c	\
-	gdm-layout-chooser-dialog.h	\
-	gdm-layout-chooser-dialog.c	\
-	$(NULL)
-
-test_layout_chooser_LDADD =		\
-	$(GTK_LIBS)			\
-	$(GCONF_LIBS)			\
-	$(LIBXKLAVIER_LIBS)		\
 	$(NULL)
 
 test_languages_SOURCES = 		\
@@ -301,14 +271,6 @@ gdm_simple_greeter_SOURCES =  		\
 	gdm-languages.c			\
 	gdm-language-chooser-widget.h	\
 	gdm-language-chooser-widget.c	\
-	gdm-layout-chooser-widget.h	\
-	gdm-layout-chooser-widget.c	\
-	gdm-layout-chooser-dialog.h	\
-	gdm-layout-chooser-dialog.c	\
-	gdm-layout-option-widget.h	\
-	gdm-layout-option-widget.c	\
-	gdm-layouts.h			\
-	gdm-layouts.c			\
 	locarchive.h			\
 	gdm-language-chooser-dialog.h	\
 	gdm-language-chooser-dialog.c	\
@@ -330,7 +292,7 @@ gdm_simple_greeter_LDADD = 		\
 	$(EXTRA_GREETER_LIBS)   	\
 	$(SIMPLE_GREETER_LIBS)		\
 	$(RBAC_LIBS)			\
-	$(LIBXKLAVIER_LIBS)		\
+	$(LIBGNOMEKBDUI_LIBS)		\
 	$(DEVKIT_POWER_LIBS)		\
 	$(NULL)
 

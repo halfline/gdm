@@ -44,12 +44,13 @@
 #include <devkit-power-gobject/devicekit-power.h>
 #endif
 
+#include <libgnomekbd/gkbd-indicator.h>
+#include <libxklavier/xkl_engine.h>
+
 #include "gdm-languages.h"
-#include "gdm-layouts.h"
 #include "gdm-greeter-panel.h"
 #include "gdm-clock-widget.h"
 #include "gdm-language-option-widget.h"
-#include "gdm-layout-option-widget.h"
 #include "gdm-session-option-widget.h"
 #include "gdm-timer.h"
 #include "gdm-profile.h"
@@ -81,7 +82,7 @@ struct GdmGreeterPanelPrivate
         GtkWidget              *shutdown_button;
         GtkWidget              *shutdown_menu;
         GtkWidget              *language_option_widget;
-        GtkWidget              *layout_option_widget;
+        GtkWidget              *keyboard_indicator_widget;
         GtkWidget              *session_option_widget;
 
         GdmTimer               *animation_timer;
@@ -452,26 +453,6 @@ on_language_activated (GdmLanguageOptionWidget *widget,
 }
 
 static void
-on_layout_activated (GdmLayoutOptionWidget *widget,
-                     GdmGreeterPanel       *panel)
-{
-
-        char *layout;
-
-        layout = gdm_layout_option_widget_get_current_layout_name (GDM_LAYOUT_OPTION_WIDGET (panel->priv->layout_option_widget));
-
-        if (layout == NULL) {
-                return;
-        }
-
-        g_debug ("GdmGreeterPanel: activating selected layout %s", layout);
-        gdm_layout_activate (layout);
-
-        g_signal_emit (panel, signals[LAYOUT_SELECTED], 0, layout);
-
-        g_free (layout);
-}
-static void
 on_session_activated (GdmSessionOptionWidget *widget,
                       GdmGreeterPanel        *panel)
 {
@@ -720,11 +701,98 @@ on_shutdown_menu_deactivate (GdmGreeterPanel *panel)
 }
 
 static void
+show_or_hide_keyboard_indicator (GdmGreeterPanel *panel)
+{
+        XklEngine *engine;
+        guint num_groups;
+
+        engine = gkbd_indicator_get_xkl_engine ();
+
+        num_groups = xkl_engine_get_num_groups (engine);
+        if (num_groups > 1) {
+                gtk_widget_show (panel->priv->keyboard_indicator_widget);
+        } else {
+                gtk_widget_hide (panel->priv->keyboard_indicator_widget);
+        }
+}
+
+static void
+on_num_groups_changed (XklEngine       *engine,
+                       GParamSpec      *pspec,
+                       GdmGreeterPanel *panel)
+{
+    show_or_hide_keyboard_indicator (panel);
+}
+
+static void
+on_x_config_changed (XklEngine       *engine,
+                     GdmGreeterPanel *panel)
+{
+    show_or_hide_keyboard_indicator (panel);
+}
+
+static void
+on_x_state_changed (XklEngine            *engine,
+                    XklEngineStateChange  type,
+                    int                   num,
+                    gboolean              predicate,
+                    GdmGreeterPanel      *panel)
+{
+    show_or_hide_keyboard_indicator (panel);
+}
+
+static void
+activate_keyboard_layout (GdmGreeterPanel *panel)
+{
+        XklEngine    *engine;
+        XklConfigRec *config;
+
+        engine = gkbd_indicator_get_xkl_engine ();
+        config = xkl_config_rec_new ();
+
+        if (xkl_config_rec_get_from_server (config, engine)) {
+                int i;
+
+                for (i = 1; config->layouts[i] != NULL; i++) {
+                        /* put us at the front of the list, since usernames and
+                         * passwords are usually ascii
+                         */
+                        if (strcmp (config->layouts[i], "us") == 0) {
+                                char *temp_layout;
+                                char *temp_variant = NULL;
+                                char *temp_options = NULL;
+
+                                temp_layout = config->layouts[0];
+                                config->layouts[0] = config->layouts[i];
+                                config->layouts[i] = temp_layout;
+
+                                if (config->variants != NULL) {
+                                        temp_variant = config->variants[0];
+                                        config->variants[0] = config->variants[i];
+                                        config->variants[i] = temp_variant;
+                                }
+
+                                if (config->options != NULL) {
+                                        temp_options = config->options[0];
+                                        config->options[0] = config->options[i];
+                                        config->options[i] = temp_options;
+                                }
+                                break;
+                        }
+                }
+                xkl_config_rec_activate (config, engine);
+        }
+
+}
+
+static void
 setup_panel (GdmGreeterPanel *panel)
 {
         NaTray    *tray;
         GtkWidget *spacer;
         int        padding;
+
+        XklEngine    *engine;
 
         gdm_profile_start (NULL);
 
@@ -768,12 +836,6 @@ setup_panel (GdmGreeterPanel *panel)
                           G_CALLBACK (on_language_activated), panel);
         gtk_box_pack_start (GTK_BOX (panel->priv->option_hbox), panel->priv->language_option_widget, FALSE, FALSE, 6);
         gdm_profile_end ("creating option widget");
-
-        panel->priv->layout_option_widget = gdm_layout_option_widget_new ();
-        g_signal_connect (G_OBJECT (panel->priv->layout_option_widget),
-                          "layout-activated",
-                          G_CALLBACK (on_layout_activated), panel);
-        gtk_box_pack_start (GTK_BOX (panel->priv->option_hbox), panel->priv->layout_option_widget, FALSE, FALSE, 6);
 
         panel->priv->session_option_widget = gdm_session_option_widget_new ();
         g_signal_connect (G_OBJECT (panel->priv->session_option_widget),
@@ -845,6 +907,27 @@ setup_panel (GdmGreeterPanel *panel)
         gtk_box_pack_end (GTK_BOX (panel->priv->hbox),
                             GTK_WIDGET (panel->priv->clock), FALSE, FALSE, 6);
         gtk_widget_show (panel->priv->clock);
+
+        panel->priv->keyboard_indicator_widget = gkbd_indicator_new ();
+
+        gtk_box_pack_end (GTK_BOX (panel->priv->hbox),
+                          GTK_WIDGET (panel->priv->keyboard_indicator_widget), FALSE, FALSE, 6);
+
+        activate_keyboard_layout (panel);
+        show_or_hide_keyboard_indicator (panel);
+
+        engine = gkbd_indicator_get_xkl_engine ();
+        g_signal_connect (engine, "notify::num-groups",
+                          G_CALLBACK (on_num_groups_changed),
+                          panel);
+
+        g_signal_connect (engine, "X-config-changed",
+                          G_CALLBACK (on_x_config_changed),
+                          panel);
+
+        g_signal_connect (engine, "X-state-changed",
+                          G_CALLBACK (on_x_state_changed),
+                          panel);
 
         tray = na_tray_new_for_screen (gtk_window_get_screen (GTK_WINDOW (panel)),
                                        GTK_ORIENTATION_HORIZONTAL);
@@ -943,17 +1026,6 @@ gdm_greeter_panel_class_init (GdmGreeterPanelClass *klass)
                               G_TYPE_NONE,
                               1, G_TYPE_STRING);
 
-        signals[LAYOUT_SELECTED] =
-                g_signal_new ("layout-selected",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdmGreeterPanelClass, layout_selected),
-                              NULL,
-                              NULL,
-                              g_cclosure_marshal_VOID__STRING,
-                              G_TYPE_NONE,
-                              1, G_TYPE_STRING);
-
         signals[SESSION_SELECTED] =
                 g_signal_new ("session-selected",
                               G_TYPE_FROM_CLASS (object_class),
@@ -1006,7 +1078,6 @@ gdm_greeter_panel_show_user_options (GdmGreeterPanel *panel)
 {
         gtk_widget_show (panel->priv->session_option_widget);
         gtk_widget_show (panel->priv->language_option_widget);
-        gtk_widget_show (panel->priv->layout_option_widget);
 }
 
 void
@@ -1014,16 +1085,11 @@ gdm_greeter_panel_hide_user_options (GdmGreeterPanel *panel)
 {
         gtk_widget_hide (panel->priv->session_option_widget);
         gtk_widget_hide (panel->priv->language_option_widget);
-        gtk_widget_hide (panel->priv->layout_option_widget);
-
-        g_debug ("GdmGreeterPanel: activating default layout");
-        gdm_layout_activate (NULL);
 }
 
 void
 gdm_greeter_panel_reset (GdmGreeterPanel *panel)
 {
-        gdm_greeter_panel_set_keyboard_layout (panel, NULL);
         gdm_greeter_panel_set_default_language_name (panel, NULL);
         gdm_greeter_panel_set_default_session_name (panel, NULL);
         gdm_greeter_panel_hide_user_options (panel);
@@ -1054,44 +1120,6 @@ gdm_greeter_panel_set_default_language_name (GdmGreeterPanel *panel,
                                             normalized_language_name);
 
         g_free (normalized_language_name);
-}
-
-void
-gdm_greeter_panel_set_keyboard_layout (GdmGreeterPanel *panel,
-                                       const char      *layout_name)
-{
-#ifdef HAVE_LIBXKLAVIER
-        g_return_if_fail (GDM_IS_GREETER_PANEL (panel));
-
-        if (layout_name != NULL &&
-            !gdm_layout_is_valid (layout_name)) {
-                const char *default_layout;
-
-                default_layout = gdm_layout_get_default_layout ();
-
-                g_debug ("GdmGreeterPanel: default layout %s is invalid, resetting to: %s",
-                         layout_name, default_layout ? default_layout : "null");
-
-                g_signal_emit (panel, signals[LAYOUT_SELECTED], 0, default_layout);
-
-                layout_name = default_layout;
-        }
-
-        if (layout_name != NULL &&
-            !gdm_option_widget_lookup_item (GDM_OPTION_WIDGET (panel->priv->layout_option_widget),
-                                            layout_name, NULL, NULL, NULL)) {
-                gdm_recent_option_widget_add_item (GDM_RECENT_OPTION_WIDGET (panel->priv->layout_option_widget),
-                                                   layout_name);
-        }
-
-        gdm_option_widget_set_active_item (GDM_OPTION_WIDGET (panel->priv->layout_option_widget),
-                                           layout_name);
-        gdm_option_widget_set_default_item (GDM_OPTION_WIDGET (panel->priv->layout_option_widget),
-                                            layout_name);
-
-        g_debug ("GdmGreeterPanel: activating layout: %s", layout_name);
-        gdm_layout_activate (layout_name);
-#endif
 }
 
 void
