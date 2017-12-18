@@ -1272,6 +1272,23 @@ AC_SUBST(GDM_SCREENSHOT_DIR)
 
 
 dnl ---------------------------------------------------------------------------
+dnl - Directory to spool events from other processes
+dnl ---------------------------------------------------------------------------
+
+AC_ARG_WITH(spool-dir,
+            AS_HELP_STRING([--with-spool-dir=<dir>],
+                           [spool directory]))
+
+if ! test -z "$with_spool_dir"; then
+   GDM_SPOOL_DIR=$with_spool_dir
+else
+   GDM_SPOOL_DIR=${localstatedir}/spool/gdm
+fi
+
+AC_SUBST(GDM_SPOOL_DIR)
+
+
+dnl ---------------------------------------------------------------------------
 dnl - Finish
 dnl ---------------------------------------------------------------------------
 

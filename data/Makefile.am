@@ -13,6 +13,7 @@ predir = $(gdmconfdir)/PreSession
 postlogindir = $(gdmconfdir)/PostLogin
 workingdir = $(GDM_WORKING_DIR)
 xauthdir = $(GDM_XAUTH_DIR)
+spooldir = $(GDM_SPOOL_DIR)
 screenshotdir = $(GDM_SCREENSHOT_DIR)
 cachedir = $(localstatedir)/cache/gdm
 
@@ -129,6 +130,7 @@ uninstall-hook:
 	$(DESTDIR)$(workingdir)/.gconf.mandatory \
 	$(DESTDIR)$(screenshotdir) \
 	$(DESTDIR)$(xauthdir)
+	$(DESTDIR)$(spooldir)
 
 install-data-hook: gdm.conf-custom Xsession Init PostSession PreSession gconf.path
 	if test '!' -d $(DESTDIR)$(gdmconfdir); then \
@@ -226,6 +228,12 @@ install-data-hook: gdm.conf-custom Xsession Init PostSession PreSession gconf.pa
 		$(mkinstalldirs) $(DESTDIR)$(cachedir); \
 		chmod 1755 $(DESTDIR)$(cachedir); \
 		chown root:gdm $(DESTDIR)$(cachedir) || : ; \
+	fi
+
+	if test '!' -d $(DESTDIR)$(spooldir); then \
+		$(mkinstalldirs) $(DESTDIR)$(spooldir); \
+		chmod 775 $(DESTDIR)$(spooldir); \
+		chown root:gdm $(DESTDIR)$(spooldir) || : ; \
 	fi
 
 	$(INSTALL_DATA) $(srcdir)/gconf.path $(DESTDIR)$(workingdir)/.gconf.path

@@ -74,6 +74,7 @@ gboolean            gdm_slave_switch_to_user_session (GdmSlave   *slave,
 
 gboolean            gdm_slave_connect_to_x11_display (GdmSlave   *slave);
 void                gdm_slave_set_busy_cursor        (GdmSlave   *slave);
+void                gdm_slave_save_root_windows      (GdmSlave   *slave);
 gboolean            gdm_slave_run_script             (GdmSlave   *slave,
                                                       const char *dir,
                                                       const char *username);

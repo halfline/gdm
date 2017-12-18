@@ -43,6 +43,7 @@
 #include <dbus/dbus-glib-lowlevel.h>
 
 #include <X11/Xlib.h> /* for Display */
+#include <X11/Xatom.h> /* for XA_PIXMAP */
 #include <X11/cursorfont.h> /* for watch cursor */
 #include <X11/Xatom.h>
 
@@ -86,6 +87,7 @@ struct GdmSlavePrivate
         char            *display_hostname;
         gboolean         display_is_local;
         gboolean         display_is_parented;
+        gboolean         force_active_vt;
         char            *display_seat_id;
         char            *display_x11_authority_file;
         char            *parent_display_name;
@@ -105,6 +107,7 @@ enum {
         PROP_DISPLAY_NUMBER,
         PROP_DISPLAY_HOSTNAME,
         PROP_DISPLAY_IS_LOCAL,
+        PROP_FORCE_ACTIVE_VT,
         PROP_DISPLAY_SEAT_ID,
         PROP_DISPLAY_X11_AUTHORITY_FILE
 };
@@ -352,6 +355,77 @@ gdm_slave_run_script (GdmSlave   *slave,
         g_free (script);
 
         return ret;
+}
+
+static void
+gdm_slave_save_root_window_of_screen (GdmSlave *slave,
+                                      Atom      id_atom,
+                                      int       screen_number)
+{
+        Window root_window;
+        GC gc;
+        XGCValues values;
+        Pixmap pixmap;
+        int width, height, depth;
+
+        root_window = RootWindow (slave->priv->server_display,
+                                  screen_number);
+
+        width = DisplayWidth (slave->priv->server_display, screen_number);
+        height = DisplayHeight (slave->priv->server_display, screen_number);
+        depth = DefaultDepth (slave->priv->server_display, screen_number);
+        pixmap = XCreatePixmap (slave->priv->server_display,
+                                root_window,
+                                width, height, depth);
+
+        values.function = GXcopy;
+        values.plane_mask = AllPlanes;
+        values.fill_style = FillSolid;
+        values.subwindow_mode = IncludeInferiors;
+
+        gc = XCreateGC (slave->priv->server_display,
+                        root_window,
+                        GCFunction | GCPlaneMask | GCFillStyle | GCSubwindowMode,
+                        &values);
+
+        if (XCopyArea (slave->priv->server_display,
+                       root_window, pixmap, gc, 0, 0,
+                       width, height, 0, 0)) {
+
+                long pixmap_as_long;
+
+                pixmap_as_long = (long) pixmap;
+
+                XChangeProperty (slave->priv->server_display,
+                                 root_window, id_atom, XA_PIXMAP,
+                                 32, PropModeReplace, (guchar *) &pixmap_as_long,
+                                 1);
+
+        }
+
+        XFreeGC (slave->priv->server_display, gc);
+}
+
+void
+gdm_slave_save_root_windows (GdmSlave *slave)
+{
+        int i, number_of_screens;
+        Atom atom;
+
+        number_of_screens = ScreenCount (slave->priv->server_display);
+
+        atom = XInternAtom (slave->priv->server_display,
+                            "_XROOTPMAP_ID", False);
+
+        if (atom == 0) {
+                return;
+        }
+
+        for (i = 0; i < number_of_screens; i++) {
+                gdm_slave_save_root_window_of_screen (slave, atom, i);
+        }
+
+        XSync (slave->priv->server_display, False);
 }
 
 void
@@ -1451,6 +1525,13 @@ _gdm_slave_set_display_is_local (GdmSlave   *slave,
 }
 
 static void
+_gdm_slave_set_force_active_vt (GdmSlave   *slave,
+                                gboolean    force_active_vt)
+{
+        slave->priv->force_active_vt = force_active_vt;
+}
+
+static void
 gdm_slave_set_property (GObject      *object,
                         guint         prop_id,
                         const GValue *value,
@@ -1481,6 +1562,9 @@ gdm_slave_set_property (GObject      *object,
                 break;
         case PROP_DISPLAY_IS_LOCAL:
                 _gdm_slave_set_display_is_local (self, g_value_get_boolean (value));
+                break;
+        case PROP_FORCE_ACTIVE_VT:
+                _gdm_slave_set_force_active_vt (self, g_value_get_boolean (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1519,6 +1603,9 @@ gdm_slave_get_property (GObject    *object,
                 break;
         case PROP_DISPLAY_IS_LOCAL:
                 g_value_set_boolean (value, self->priv->display_is_local);
+                break;
+        case PROP_FORCE_ACTIVE_VT:
+                g_value_set_boolean (value, self->priv->force_active_vt);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1642,6 +1729,14 @@ gdm_slave_class_init (GdmSlaveClass *klass)
                                          g_param_spec_boolean ("display-is-local",
                                                                "display is local",
                                                                "display is local",
+                                                               TRUE,
+                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+        g_object_class_install_property (object_class,
+                                         PROP_FORCE_ACTIVE_VT,
+                                         g_param_spec_boolean ("force-active-vt",
+                                                               "Force Active VT",
+                                                               "Force display to active VT",
                                                                TRUE,
                                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
