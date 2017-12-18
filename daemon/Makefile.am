@@ -4,6 +4,7 @@ AM_CPPFLAGS = \
 	-I.						\
 	-I..						\
 	-I$(top_srcdir)/common				\
+	-I$(top_srcdir)/gui/simple-greeter		\
 	-DAUTHDIR=\"$(authdir)\"			\
 	-DBINDIR=\"$(bindir)\"				\
 	-DDATADIR=\"$(datadir)\"			\
@@ -13,6 +14,7 @@ AM_CPPFLAGS = \
 	-DLIBEXECDIR=\"$(libexecdir)\"			\
 	-DLOGDIR=\"$(logdir)\"				\
 	-DSBINDIR=\"$(sbindir)\"			\
+	-DLIBLOCALEDIR=\""$(prefix)/lib/locale"\"	\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DGDM_SPOOL_DIR=\"$(GDM_SPOOL_DIR)\"  \
 	-DGDM_XAUTH_DIR=\"$(GDM_XAUTH_DIR)\"		\
@@ -85,6 +87,8 @@ test_session_SOURCES = 		\
 	gdm-session.c		\
 	gdm-session.h		\
 	gdm-session-private.h	\
+	$(top_srcdir)/gui/simple-greeter/gdm-languages.h \
+	$(top_srcdir)/gui/simple-greeter/gdm-languages.c \
 	gdm-session-direct.c	\
 	gdm-session-direct.h	\
 	gdm-session-record.c	\
@@ -129,6 +133,8 @@ gdm_simple_slave_SOURCES = 		\
 	gdm-session.c			\
 	gdm-session.h			\
 	gdm-session-private.h		\
+	$(top_srcdir)/gui/simple-greeter/gdm-languages.h \
+	$(top_srcdir)/gui/simple-greeter/gdm-languages.c \
 	gdm-session-direct.c		\
 	gdm-session-direct.h		\
 	gdm-session-record.c		\
@@ -197,6 +203,8 @@ gdm_product_slave_SOURCES = 		\
 	gdm-session.c			\
 	gdm-session.h			\
 	gdm-session-private.h		\
+	$(top_srcdir)/gui/simple-greeter/gdm-languages.h \
+	$(top_srcdir)/gui/simple-greeter/gdm-languages.c \
 	gdm-session-direct.c		\
 	gdm-session-direct.h		\
 	gdm-session-record.c		\
