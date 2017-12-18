@@ -63,7 +63,9 @@ enum {
         PROBLEM,
         INFO_QUERY,
         SECRET_INFO_QUERY,
+        SERVICE_UNAVAILABLE,
         READY,
+        CONVERSATION_STOPPED,
         RESET,
         SELECTED_USER_CHANGED,
         DEFAULT_LANGUAGE_NAME_CHANGED,
@@ -134,6 +136,37 @@ emit_string_and_int_signal_for_message (GdmGreeterClient *client,
 }
 
 static void
+emit_string_and_string_signal_for_message (GdmGreeterClient *client,
+                                           const char       *name,
+                                           DBusMessage      *message,
+                                           int               signal)
+{
+        DBusError   error;
+        char *text1;
+        char *text2;
+        dbus_bool_t res;
+
+        dbus_error_init (&error);
+        res = dbus_message_get_args (message,
+                                     &error,
+                                     DBUS_TYPE_STRING, &text1,
+                                     DBUS_TYPE_STRING, &text2,
+                                     DBUS_TYPE_INVALID);
+        if (res) {
+
+                g_debug ("GdmGreeterClient: Received %s (%s, %s)", name, text1, text2);
+
+                g_signal_emit (client,
+                               gdm_greeter_client_signals[signal],
+                               0, text1, text2);
+        } else {
+                g_warning ("Unable to get arguments: %s", error.message);
+                dbus_error_free (&error);
+        }
+        dbus_error_free (&error);
+}
+
+static void
 emit_string_signal_for_message (GdmGreeterClient *client,
                                 const char       *name,
                                 DBusMessage      *message,
@@ -200,48 +233,56 @@ static void
 on_user_authorized (GdmGreeterClient *client,
                     DBusMessage      *message)
 {
-        g_signal_emit (client,
-                       gdm_greeter_client_signals[USER_AUTHORIZED],
-                       0);
+        emit_string_signal_for_message (client, "UserAuthorized", message, USER_AUTHORIZED);
 }
 
 static void
 on_info_query (GdmGreeterClient *client,
                DBusMessage      *message)
 {
-        emit_string_signal_for_message (client, "InfoQuery", message, INFO_QUERY);
+        emit_string_and_string_signal_for_message (client, "InfoQuery", message, INFO_QUERY);
 }
 
 static void
 on_secret_info_query (GdmGreeterClient *client,
                       DBusMessage      *message)
 {
-        emit_string_signal_for_message (client, "SecretInfoQuery", message, SECRET_INFO_QUERY);
+        emit_string_and_string_signal_for_message (client, "SecretInfoQuery", message, SECRET_INFO_QUERY);
 }
 
 static void
 on_info (GdmGreeterClient *client,
          DBusMessage      *message)
 {
-        emit_string_signal_for_message (client, "Info", message, INFO);
+        emit_string_and_string_signal_for_message (client, "Info", message, INFO);
 }
 
 static void
 on_problem (GdmGreeterClient *client,
             DBusMessage      *message)
 {
-        emit_string_signal_for_message (client, "Problem", message, PROBLEM);
+        emit_string_and_string_signal_for_message (client, "Problem", message, PROBLEM);
+}
+
+static void
+on_service_unavailable (GdmGreeterClient *client,
+                        DBusMessage      *message)
+{
+        emit_string_signal_for_message (client, "ServiceUnavailable", message, SERVICE_UNAVAILABLE);
 }
 
 static void
 on_ready (GdmGreeterClient *client,
           DBusMessage      *message)
 {
-        g_debug ("GdmGreeterClient: Ready");
+        emit_string_signal_for_message (client, "Ready", message, READY);
+}
 
-        g_signal_emit (client,
-                       gdm_greeter_client_signals[READY],
-                       0);
+static void
+on_conversation_stopped (GdmGreeterClient *client,
+                         DBusMessage      *message)
+{
+        emit_string_signal_for_message (client, "ConversationStopped", message, CONVERSATION_STOPPED);
 }
 
 static void
@@ -311,14 +352,22 @@ send_dbus_string_method (DBusConnection *connection,
 }
 
 static gboolean
-send_dbus_bool_method (DBusConnection *connection,
-                       const char     *method,
-                       gboolean        payload)
+send_dbus_string_and_bool_method (DBusConnection *connection,
+                                  const char     *method,
+                                  const char     *string_payload,
+                                  gboolean        bool_payload)
 {
         DBusError       error;
         DBusMessage    *message;
         DBusMessage    *reply;
         DBusMessageIter iter;
+        const char     *str;
+
+        if (string_payload != NULL) {
+                str = string_payload;
+        } else {
+                str = "";
+        }
 
         g_debug ("GdmGreeterClient: Calling %s", method);
         message = dbus_message_new_method_call (NULL,
@@ -332,8 +381,77 @@ send_dbus_bool_method (DBusConnection *connection,
 
         dbus_message_iter_init_append (message, &iter);
         dbus_message_iter_append_basic (&iter,
+                                        DBUS_TYPE_STRING,
+                                        &str);
+
+        dbus_message_iter_append_basic (&iter,
                                         DBUS_TYPE_BOOLEAN,
-                                        &payload);
+                                        &bool_payload);
+
+        dbus_error_init (&error);
+        reply = dbus_connection_send_with_reply_and_block (connection,
+                                                           message,
+                                                           -1,
+                                                           &error);
+
+        dbus_message_unref (message);
+
+        if (dbus_error_is_set (&error)) {
+                g_warning ("%s %s raised: %s\n",
+                           method,
+                           error.name,
+                           error.message);
+                return FALSE;
+        }
+        if (reply != NULL) {
+                dbus_message_unref (reply);
+        }
+        dbus_connection_flush (connection);
+
+        return TRUE;
+}
+
+static gboolean
+send_dbus_string_and_string_method (DBusConnection *connection,
+                                    const char     *method,
+                                    const char     *payload1,
+                                    const char     *payload2)
+{
+        DBusError       error;
+        DBusMessage    *message;
+        DBusMessage    *reply;
+        DBusMessageIter iter;
+        const char     *str;
+
+        g_debug ("GdmGreeterClient: Calling %s", method);
+        message = dbus_message_new_method_call (NULL,
+                                                GREETER_SERVER_DBUS_PATH,
+                                                GREETER_SERVER_DBUS_INTERFACE,
+                                                method);
+        if (message == NULL) {
+                g_warning ("Couldn't allocate the D-Bus message");
+                return FALSE;
+        }
+
+        dbus_message_iter_init_append (message, &iter);
+
+        if (payload1 != NULL) {
+                str = payload1;
+        } else {
+                str = "";
+        }
+        dbus_message_iter_append_basic (&iter,
+                                        DBUS_TYPE_STRING,
+                                        &str);
+
+        if (payload2 != NULL) {
+                str = payload2;
+        } else {
+                str = "";
+        }
+        dbus_message_iter_append_basic (&iter,
+                                        DBUS_TYPE_STRING,
+                                        &str);
 
         dbus_error_init (&error);
         reply = dbus_connection_send_with_reply_and_block (connection,
@@ -400,6 +518,14 @@ send_dbus_void_method (DBusConnection *connection,
 }
 
 void
+gdm_greeter_client_call_start_conversation (GdmGreeterClient *client,
+                                            const char       *service_name)
+{
+        send_dbus_string_method (client->priv->connection,
+                                 "StartConversation", service_name);
+}
+
+void
 gdm_greeter_client_call_begin_auto_login (GdmGreeterClient *client,
                                           const char       *username)
 {
@@ -408,37 +534,44 @@ gdm_greeter_client_call_begin_auto_login (GdmGreeterClient *client,
 }
 
 void
-gdm_greeter_client_call_begin_verification (GdmGreeterClient *client)
+gdm_greeter_client_call_begin_verification (GdmGreeterClient *client,
+                                            const char       *service_name)
 {
-        send_dbus_void_method (client->priv->connection,
-                               "BeginVerification");
+        send_dbus_string_method (client->priv->connection,
+                                 "BeginVerification", service_name);
 }
 
 void
 gdm_greeter_client_call_begin_verification_for_user (GdmGreeterClient *client,
+                                                     const char       *service_name,
                                                      const char       *username)
 {
-        send_dbus_string_method (client->priv->connection,
-                                 "BeginVerificationForUser",
-                                 username);
+        send_dbus_string_and_string_method (client->priv->connection,
+                                            "BeginVerificationForUser",
+                                            service_name,
+                                            username);
 }
 
 void
 gdm_greeter_client_call_answer_query (GdmGreeterClient *client,
+                                      const char       *service_name,
                                       const char       *text)
 {
-        send_dbus_string_method (client->priv->connection,
-                                 "AnswerQuery",
-                                 text);
+        send_dbus_string_and_string_method (client->priv->connection,
+                                            "AnswerQuery",
+                                            service_name,
+                                            text);
 }
 
 void
 gdm_greeter_client_call_start_session_when_ready  (GdmGreeterClient *client,
+                                                   const char       *service_name,
                                                    gboolean          should_start_session)
 {
-        send_dbus_bool_method (client->priv->connection,
-                               "StartSessionWhenReady",
-                               should_start_session);
+        send_dbus_string_and_bool_method (client->priv->connection,
+                                          "StartSessionWhenReady",
+                                          service_name,
+                                          should_start_session);
 }
 
 void
@@ -641,8 +774,12 @@ client_dbus_handle_message (DBusConnection *connection,
                 on_info (client, message);
         } else if (dbus_message_is_signal (message, GREETER_SERVER_DBUS_INTERFACE, "Problem")) {
                 on_problem (client, message);
+        } else if (dbus_message_is_signal (message, GREETER_SERVER_DBUS_INTERFACE, "ServiceUnavailable")) {
+                on_service_unavailable (client, message);
         } else if (dbus_message_is_signal (message, GREETER_SERVER_DBUS_INTERFACE, "Ready")) {
                 on_ready (client, message);
+        } else if (dbus_message_is_signal (message, GREETER_SERVER_DBUS_INTERFACE, "ConversationStopped")) {
+                on_conversation_stopped (client, message);
         } else if (dbus_message_is_signal (message, GREETER_SERVER_DBUS_INTERFACE, "Reset")) {
                 on_reset (client, message);
         } else if (dbus_message_is_signal (message, GREETER_SERVER_DBUS_INTERFACE, "SelectedUserChanged")) {
@@ -831,10 +968,10 @@ gdm_greeter_client_class_init (GdmGreeterClientClass *klass)
                               G_STRUCT_OFFSET (GdmGreeterClientClass, info_query),
                               NULL,
                               NULL,
-                              g_cclosure_marshal_VOID__STRING,
+                              gdm_marshal_VOID__STRING_STRING,
                               G_TYPE_NONE,
-                              1,
-                              G_TYPE_STRING);
+                              2,
+                              G_TYPE_STRING, G_TYPE_STRING);
 
         gdm_greeter_client_signals[SECRET_INFO_QUERY] =
                 g_signal_new ("secret-info-query",
@@ -843,10 +980,10 @@ gdm_greeter_client_class_init (GdmGreeterClientClass *klass)
                               G_STRUCT_OFFSET (GdmGreeterClientClass, secret_info_query),
                               NULL,
                               NULL,
-                              g_cclosure_marshal_VOID__STRING,
+                              gdm_marshal_VOID__STRING_STRING,
                               G_TYPE_NONE,
-                              1,
-                              G_TYPE_STRING);
+                              2,
+                              G_TYPE_STRING, G_TYPE_STRING);
 
         gdm_greeter_client_signals[INFO] =
                 g_signal_new ("info",
@@ -855,10 +992,10 @@ gdm_greeter_client_class_init (GdmGreeterClientClass *klass)
                               G_STRUCT_OFFSET (GdmGreeterClientClass, info),
                               NULL,
                               NULL,
-                              g_cclosure_marshal_VOID__STRING,
+                              gdm_marshal_VOID__STRING_STRING,
                               G_TYPE_NONE,
-                              1,
-                              G_TYPE_STRING);
+                              2,
+                              G_TYPE_STRING, G_TYPE_STRING);
 
         gdm_greeter_client_signals[PROBLEM] =
                 g_signal_new ("problem",
@@ -867,10 +1004,20 @@ gdm_greeter_client_class_init (GdmGreeterClientClass *klass)
                               G_STRUCT_OFFSET (GdmGreeterClientClass, problem),
                               NULL,
                               NULL,
-                              g_cclosure_marshal_VOID__STRING,
+                              gdm_marshal_VOID__STRING_STRING,
                               G_TYPE_NONE,
-                              1,
-                              G_TYPE_STRING);
+                              2,
+                              G_TYPE_STRING, G_TYPE_STRING);
+
+        gdm_greeter_client_signals[SERVICE_UNAVAILABLE] =
+                g_signal_new ("service-unavailable",
+                              G_OBJECT_CLASS_TYPE (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdmGreeterClientClass, service_unavailable),
+                              NULL,
+                              NULL,
+                              g_cclosure_marshal_VOID__STRING,
+                              G_TYPE_NONE, 1, G_TYPE_STRING);
 
         gdm_greeter_client_signals[READY] =
                 g_signal_new ("ready",
@@ -879,9 +1026,20 @@ gdm_greeter_client_class_init (GdmGreeterClientClass *klass)
                               G_STRUCT_OFFSET (GdmGreeterClientClass, ready),
                               NULL,
                               NULL,
-                              g_cclosure_marshal_VOID__VOID,
+                              g_cclosure_marshal_VOID__STRING,
                               G_TYPE_NONE,
-                              0);
+                              1, G_TYPE_STRING);
+
+        gdm_greeter_client_signals[CONVERSATION_STOPPED] =
+                g_signal_new ("conversation-stopped",
+                              G_OBJECT_CLASS_TYPE (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdmGreeterClientClass, conversation_stopped),
+                              NULL,
+                              NULL,
+                              g_cclosure_marshal_VOID__STRING,
+                              G_TYPE_NONE,
+                              1, G_TYPE_STRING);
 
         gdm_greeter_client_signals[RESET] =
                 g_signal_new ("reset",
@@ -952,8 +1110,9 @@ gdm_greeter_client_class_init (GdmGreeterClientClass *klass)
                               G_STRUCT_OFFSET (GdmGreeterClientClass, user_authorized),
                               NULL,
                               NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
+                              g_cclosure_marshal_VOID__STRING,
+                              G_TYPE_NONE,
+                              1, G_TYPE_STRING);
 }
 
 static void

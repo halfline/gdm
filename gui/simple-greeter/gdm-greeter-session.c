@@ -39,6 +39,8 @@
 #include "gdm-greeter-login-window.h"
 #include "gdm-user-chooser-widget.h"
 
+#include "gdm-plugin-manager.h"
+
 #include "gdm-profile.h"
 
 #define GDM_GREETER_SESSION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GDM_TYPE_GREETER_SESSION, GdmGreeterSessionPrivate))
@@ -46,9 +48,11 @@
 struct GdmGreeterSessionPrivate
 {
         GdmGreeterClient      *client;
+        GdmPluginManager      *plugin_manager;
 
         GtkWidget             *login_window;
         GtkWidget             *panel;
+
 };
 
 enum {
@@ -65,31 +69,56 @@ static gpointer session_object = NULL;
 
 static void
 on_info (GdmGreeterClient  *client,
+         const char        *service_name,
          const char        *text,
          GdmGreeterSession *session)
 {
         g_debug ("GdmGreeterSession: Info: %s", text);
 
-        gdm_greeter_login_window_info (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), text);
+        gdm_greeter_login_window_info (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), service_name, text);
 }
 
 static void
 on_problem (GdmGreeterClient  *client,
+            const char        *service_name,
             const char        *text,
             GdmGreeterSession *session)
 {
         g_debug ("GdmGreeterSession: Problem: %s", text);
 
-        gdm_greeter_login_window_problem (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), text);
+        gdm_greeter_login_window_problem (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), service_name, text);
+}
+
+static void
+on_service_unavailable (GdmGreeterClient  *client,
+                        const char        *service_name,
+                        GdmGreeterSession *session)
+{
+        g_debug ("GdmGreeterSession: Service Unavailable: %s", service_name);
+
+        gdm_greeter_login_window_service_unavailable (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), service_name);
 }
 
 static void
 on_ready (GdmGreeterClient  *client,
+          const char        *service_name,
           GdmGreeterSession *session)
 {
         g_debug ("GdmGreeterSession: Ready");
 
-        gdm_greeter_login_window_ready (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window));
+        gdm_greeter_login_window_ready (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window),
+                                        service_name);
+}
+
+static void
+on_conversation_stopped (GdmGreeterClient  *client,
+                         const char        *service_name,
+                         GdmGreeterSession *session)
+{
+        g_debug ("GdmGreeterSession: Conversation '%s' stopped", service_name);
+
+        gdm_greeter_login_window_conversation_stopped (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window),
+                                                       service_name);
 }
 
 static void
@@ -154,32 +183,43 @@ on_timed_login_requested (GdmGreeterClient  *client,
 
 static void
 on_user_authorized (GdmGreeterClient  *client,
+                    const char        *service_name,
                     GdmGreeterSession *session)
 {
         g_debug ("GdmGreeterSession: user authorized");
-        gdm_greeter_login_window_user_authorized (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window));
+        gdm_greeter_login_window_user_authorized (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), service_name);
 }
 
 static void
 on_info_query (GdmGreeterClient  *client,
+               const char        *service_name,
                const char        *text,
                GdmGreeterSession *session)
 {
         g_debug ("GdmGreeterSession: Info query: %s", text);
 
-        gdm_greeter_login_window_info_query (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), text);
+        gdm_greeter_login_window_info_query (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), service_name, text);
 }
 
 static void
 on_secret_info_query (GdmGreeterClient  *client,
+                      const char        *service_name,
                       const char        *text,
                       GdmGreeterSession *session)
 {
         g_debug ("GdmGreeterSession: Secret info query: %s", text);
 
-        gdm_greeter_login_window_secret_info_query (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), text);
+        gdm_greeter_login_window_secret_info_query (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), service_name, text);
 }
 
+static void
+on_start_conversation (GdmGreeterLoginWindow *login_window,
+                       const char            *service_name,
+                       GdmGreeterSession     *session)
+{
+        gdm_greeter_client_call_start_conversation (session->priv->client,
+                                                    service_name);
+}
 static void
 on_begin_auto_login (GdmGreeterLoginWindow *login_window,
                      const char            *username,
@@ -191,26 +231,32 @@ on_begin_auto_login (GdmGreeterLoginWindow *login_window,
 
 static void
 on_begin_verification (GdmGreeterLoginWindow *login_window,
+                       const char            *service_name,
                        GdmGreeterSession     *session)
 {
-        gdm_greeter_client_call_begin_verification (session->priv->client);
+        gdm_greeter_client_call_begin_verification (session->priv->client,
+                                                    service_name);
 }
 
 static void
 on_begin_verification_for_user (GdmGreeterLoginWindow *login_window,
+                                const char            *service_name,
                                 const char            *username,
                                 GdmGreeterSession     *session)
 {
         gdm_greeter_client_call_begin_verification_for_user (session->priv->client,
+                                                             service_name,
                                                              username);
 }
 
 static void
 on_query_answer (GdmGreeterLoginWindow *login_window,
+                 const char            *service_name,
                  const char            *text,
                  GdmGreeterSession     *session)
 {
         gdm_greeter_client_call_answer_query (session->priv->client,
+                                              service_name,
                                               text);
 }
 
@@ -257,9 +303,10 @@ on_disconnected (GdmGreeterLoginWindow *login_window,
 
 static void
 on_start_session (GdmGreeterLoginWindow *login_window,
+                  const char            *service_name,
                   GdmGreeterSession     *session)
 {
-        gdm_greeter_client_call_start_session_when_ready (session->priv->client, TRUE);
+        gdm_greeter_client_call_start_session_when_ready (session->priv->client, service_name, TRUE);
 }
 
 static int
@@ -349,7 +396,10 @@ toggle_login_window (GdmGreeterSession *session,
                 is_local = gdm_greeter_client_get_display_is_local (session->priv->client);
                 g_debug ("GdmGreeterSession: Starting a login window local:%d", is_local);
                 session->priv->login_window = gdm_greeter_login_window_new (is_local);
-
+                g_signal_connect (session->priv->login_window,
+                                  "start-conversation",
+                                  G_CALLBACK (on_start_conversation),
+                                  session);
                 g_signal_connect (session->priv->login_window,
                                   "begin-auto-login",
                                   G_CALLBACK (on_begin_auto_login),
@@ -514,6 +564,64 @@ gdm_greeter_session_event_handler (GdkEvent          *event,
 }
 
 static void
+on_plugins_loaded (GdmGreeterSession *session)
+{
+        g_debug ("GdmGreeterSession: done loading plugins");
+}
+
+static void
+on_plugin_removed (GdmGreeterSession *session,
+                   GdmGreeterPlugin  *plugin)
+{
+        GdmGreeterExtension *extension;
+
+        extension = gdm_greeter_plugin_get_extension (plugin);
+
+        if (GDM_IS_GREETER_LOGIN_WINDOW_EXTENSION (extension)) {
+                gdm_greeter_login_window_remove_extension (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), extension);
+        }
+        g_object_unref (extension);
+}
+
+static void
+on_plugin_added (GdmGreeterSession *session,
+                 GdmGreeterPlugin  *plugin)
+{
+        GdmGreeterExtension *extension;
+
+        extension = gdm_greeter_plugin_get_extension (plugin);
+
+        if (GDM_IS_GREETER_LOGIN_WINDOW_EXTENSION (extension)) {
+                gdm_greeter_login_window_add_extension (GDM_GREETER_LOGIN_WINDOW (session->priv->login_window), extension);
+        }
+        g_object_unref (extension);
+}
+
+static void
+load_plugins (GdmGreeterSession *session)
+{
+        g_debug ("GdmGreeterSession: loading plugins");
+
+        session->priv->plugin_manager = gdm_plugin_manager_ref_default ();
+
+        g_signal_connect_swapped (session->priv->plugin_manager,
+                                  "plugins-loaded",
+                                  G_CALLBACK (on_plugins_loaded),
+                                  session);
+
+        g_signal_connect_swapped (session->priv->plugin_manager,
+                                  "plugin-added",
+                                  G_CALLBACK (on_plugin_added),
+                                  session);
+
+        g_signal_connect_swapped (session->priv->plugin_manager,
+                                  "plugin-removed",
+                                  G_CALLBACK (on_plugin_removed),
+                                  session);
+
+}
+
+static void
 gdm_greeter_session_init (GdmGreeterSession *session)
 {
         gdm_profile_start (NULL);
@@ -538,8 +646,16 @@ gdm_greeter_session_init (GdmGreeterSession *session)
                           G_CALLBACK (on_problem),
                           session);
         g_signal_connect (session->priv->client,
+                          "service-unavailable",
+                          G_CALLBACK (on_service_unavailable),
+                          session);
+        g_signal_connect (session->priv->client,
                           "ready",
                           G_CALLBACK (on_ready),
+                          session);
+        g_signal_connect (session->priv->client,
+                          "conversation-stopped",
+                          G_CALLBACK (on_conversation_stopped),
                           session);
         g_signal_connect (session->priv->client,
                           "reset",
@@ -572,6 +688,8 @@ gdm_greeter_session_init (GdmGreeterSession *session)
         gdk_event_handler_set ((GdkEventFunc) gdm_greeter_session_event_handler,
                                session, NULL);
 
+
+        load_plugins (session);
         gdm_profile_end (NULL);
 }
 

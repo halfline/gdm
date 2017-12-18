@@ -1311,7 +1311,7 @@ gdm_session_worker_initialize_pam (GdmSessionWorker *worker,
                  */
                 g_set_error (error,
                              GDM_SESSION_WORKER_ERROR,
-                             GDM_SESSION_WORKER_ERROR_AUTHENTICATING,
+                             GDM_SESSION_WORKER_ERROR_SERVICE_UNAVAILABLE,
                              _("error initiating conversation with authentication system - %s"),
                              error_code == PAM_ABORT? _("general failure") :
                              error_code == PAM_BUF_ERR? _("out of memory") :
@@ -1423,7 +1423,15 @@ gdm_session_worker_authenticate_user (GdmSessionWorker *worker,
         /* blocking call, does the actual conversation */
         error_code = pam_authenticate (worker->priv->pam_handle, authentication_flags);
 
-        if (error_code != PAM_SUCCESS) {
+        if (error_code == PAM_AUTHINFO_UNAVAIL) {
+                g_debug ("GdmSessionWorker: authentication service unavailable");
+
+                g_set_error (error,
+                             GDM_SESSION_WORKER_ERROR,
+                             GDM_SESSION_WORKER_ERROR_SERVICE_UNAVAILABLE,
+                             "%s", pam_strerror (worker->priv->pam_handle, error_code));
+                goto out;
+        } else if (error_code != PAM_SUCCESS) {
                 g_debug ("GdmSessionWorker: authentication returned %d: %s", error_code, pam_strerror (worker->priv->pam_handle, error_code));
 
                 /*
@@ -2339,8 +2347,6 @@ do_setup (GdmSessionWorker *worker)
         GError  *error;
         gboolean res;
 
-        worker->priv->user_settings = gdm_session_settings_new ();
-
         g_signal_connect_swapped (worker->priv->user_settings,
                                   "notify::language-name",
                                   G_CALLBACK (on_saved_language_name_read),
@@ -2381,9 +2387,16 @@ do_setup (GdmSessionWorker *worker)
                                                  worker->priv->display_device,
                                                  &error);
         if (! res) {
-                send_dbus_string_method (worker->priv->connection,
-                                         "SetupFailed",
-                                         error->message);
+                if (g_error_matches (error,
+                                     GDM_SESSION_WORKER_ERROR,
+                                     GDM_SESSION_WORKER_ERROR_SERVICE_UNAVAILABLE)) {
+                        send_dbus_void_method (worker->priv->connection,
+                                               "ServiceUnavailable");
+                } else {
+                        send_dbus_string_method (worker->priv->connection,
+                                                 "SetupFailed",
+                                                 error->message);
+                }
                 g_error_free (error);
                 return;
         }
@@ -2404,10 +2417,18 @@ do_authenticate (GdmSessionWorker *worker)
                                                     worker->priv->password_is_required,
                                                     &error);
         if (! res) {
-                g_debug ("GdmSessionWorker: Unable to verify user");
-                send_dbus_string_method (worker->priv->connection,
-                                         "AuthenticationFailed",
-                                         error->message);
+                if (g_error_matches (error,
+                                     GDM_SESSION_WORKER_ERROR,
+                                     GDM_SESSION_WORKER_ERROR_SERVICE_UNAVAILABLE)) {
+                        g_debug ("GdmSessionWorker: Unable to use authentication service");
+                        send_dbus_void_method (worker->priv->connection,
+                                               "ServiceUnavailable");
+                } else {
+                        g_debug ("GdmSessionWorker: Unable to verify user");
+                        send_dbus_string_method (worker->priv->connection,
+                                                 "AuthenticationFailed",
+                                                 error->message);
+                }
                 g_error_free (error);
                 return;
         }
@@ -2899,6 +2920,28 @@ worker_dbus_filter_function (DBusConnection *connection,
         return DBUS_HANDLER_RESULT_HANDLED;
 }
 
+static void
+send_hello (GdmSessionWorker *worker)
+{
+        DBusMessage *message, *reply;
+        DBusError error;
+
+        message = dbus_message_new_method_call (NULL,
+                                                GDM_SESSION_DBUS_PATH,
+                                                GDM_SESSION_DBUS_INTERFACE,
+                                                "Hello");
+
+        dbus_error_init (&error);
+        reply = dbus_connection_send_with_reply_and_block (worker->priv->connection,
+                                                           message, -1, &error);
+        dbus_message_unref (message);
+        dbus_error_free (&error);
+
+        if (reply != NULL) {
+                dbus_message_unref (reply);
+        }
+}
+
 static GObject *
 gdm_session_worker_constructor (GType                  type,
                                 guint                  n_construct_properties,
@@ -2924,6 +2967,11 @@ gdm_session_worker_constructor (GType                  type,
                 }
                 exit (1);
         }
+
+        /* Send an initial Hello message so that the session can associate
+         * the conversation we manage with our pid.
+         */
+        send_hello (worker);
 
         dbus_connection_setup_with_g_main (worker->priv->connection, NULL);
         dbus_connection_set_exit_on_disconnect (worker->priv->connection, TRUE);
@@ -2966,6 +3014,7 @@ gdm_session_worker_init (GdmSessionWorker *worker)
                                                            g_str_equal,
                                                            (GDestroyNotify) g_free,
                                                            (GDestroyNotify) g_free);
+        worker->priv->user_settings = gdm_session_settings_new ();
 }
 
 static void

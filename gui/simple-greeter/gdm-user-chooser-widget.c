@@ -150,13 +150,7 @@ update_other_user_visibility (GdmUserChooserWidget *widget)
                 goto out;
         }
 
-        number_of_users = gdm_chooser_widget_get_number_of_items (GDM_CHOOSER_WIDGET (widget));
-
-        /* we hide the Other user if it's the last one, and we show it
-         * if there's another user */
-        if (number_of_users == 1 && widget->priv->has_user_other) {
-                remove_user_other (widget);
-        } if (number_of_users >= 1 && !widget->priv->has_user_other) {
+        if (!widget->priv->has_user_other) {
                 add_user_other (widget);
         }
 
@@ -359,9 +353,30 @@ gdm_user_chooser_widget_set_show_user_auto (GdmUserChooserWidget *widget,
 char *
 gdm_user_chooser_widget_get_chosen_user_name (GdmUserChooserWidget *widget)
 {
+        char *active_item_id;
+        gboolean isnt_user;
+
         g_return_val_if_fail (GDM_IS_USER_CHOOSER_WIDGET (widget), NULL);
 
-        return gdm_chooser_widget_get_active_item (GDM_CHOOSER_WIDGET (widget));
+        active_item_id = gdm_chooser_widget_get_active_item (GDM_CHOOSER_WIDGET (widget));
+        if (active_item_id == NULL) {
+                g_debug ("GdmUserChooserWidget: no active item in list");
+                return NULL;
+        }
+
+        gdm_chooser_widget_lookup_item (GDM_CHOOSER_WIDGET (widget), active_item_id,
+                                        NULL, NULL, NULL, NULL, NULL,
+                                        &isnt_user);
+
+        if (isnt_user) {
+                g_debug ("GdmUserChooserWidget: active item '%s' isn't a user", active_item_id);
+                g_free (active_item_id);
+                return NULL;
+        }
+
+        g_debug ("GdmUserChooserWidget: active item '%s' is a user", active_item_id);
+
+        return active_item_id;
 }
 
 void

@@ -34,19 +34,21 @@ static GMainLoop *loop;
 
 static void
 on_conversation_started (GdmSession *session,
+                         const char *service_name,
                          const char *username)
 {
         g_debug ("Got conversation started: calling setup...");
 
-        gdm_session_setup (session, "gdm");
+        gdm_session_setup (session, service_name);
 }
 
 static void
 on_session_setup_complete (GdmSession *session,
+                           const char *service_name,
                            gpointer    data)
 {
         g_debug ("Session setup complete");
-        gdm_session_authenticate (session);
+        gdm_session_authenticate (session, service_name);
 }
 
 static void
@@ -78,10 +80,11 @@ on_session_reset_failed (GdmSession *session,
 
 static void
 on_session_authenticated (GdmSession *session,
+                          const char *service_name,
                           gpointer    data)
 {
         g_debug ("Session authenticated");
-        gdm_session_authorize (session);
+        gdm_session_authorize (session, service_name);
 }
 
 static void
@@ -96,14 +99,16 @@ on_session_authentication_failed (GdmSession *session,
 
 static void
 on_session_authorized (GdmSession *session,
+                       const char *service_name,
                        gpointer    data)
 {
         g_debug ("Session authorized");
-        gdm_session_accredit (session, GDM_SESSION_CRED_ESTABLISH);
+        gdm_session_accredit (session, service_name, GDM_SESSION_CRED_ESTABLISH);
 }
 
 static void
 on_session_authorization_failed (GdmSession *session,
+                                 const char *service_name,
                                  const char *message,
                                  gpointer    data)
 {
@@ -114,6 +119,7 @@ on_session_authorization_failed (GdmSession *session,
 
 static void
 on_session_accredited (GdmSession *session,
+                       const char *service_name,
                        gpointer    data)
 {
         char *username;
@@ -124,12 +130,13 @@ on_session_accredited (GdmSession *session,
                  username ? username : "", username ? " " : "");
         g_free (username);
 
-        gdm_session_start_session (session);
+        gdm_session_start_session (session, service_name);
 
 }
 
 static void
 on_session_accreditation_failed (GdmSession *session,
+                                 const char *service_name,
                                  const char *message,
                                  gpointer    data)
 {
@@ -164,6 +171,7 @@ on_session_died (GdmSession *session,
 
 static void
 on_info_query (GdmSession *session,
+               const char *service_name,
                const char *query_text)
 {
         char  answer[1024];
@@ -183,12 +191,13 @@ on_info_query (GdmSession *session,
                 gdm_session_close (session);
                 g_main_loop_quit (loop);
         } else {
-                gdm_session_answer_query (session, answer);
+                gdm_session_answer_query (session, service_name, answer);
         }
 }
 
 static void
 on_info (GdmSession *session,
+         const char *service_name,
          const char *info)
 {
         g_print ("\n** NOTE: %s\n", info);
@@ -196,6 +205,7 @@ on_info (GdmSession *session,
 
 static void
 on_problem (GdmSession *session,
+            const char *service_name,
             const char *problem)
 {
         g_print ("\n** WARNING: %s\n", problem);
@@ -203,6 +213,7 @@ on_problem (GdmSession *session,
 
 static void
 on_secret_info_query (GdmSession *session,
+                      const char *service_name,
                       const char *query_text)
 {
         char           answer[1024];
@@ -232,7 +243,7 @@ on_secret_info_query (GdmSession *session,
 
         g_print ("\n");
 
-        gdm_session_answer_query (session, answer);
+        gdm_session_answer_query (session, service_name, answer);
 }
 
 static void
@@ -267,7 +278,7 @@ main (int   argc,
                         username = argv[1];
                 }
 
-                gdm_session_start_conversation (GDM_SESSION (session));
+                gdm_session_start_conversation (GDM_SESSION (session), "gdm");
 
                 g_signal_connect (session,
                                   "conversation-started",

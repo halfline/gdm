@@ -98,6 +98,7 @@ struct GdmChooserWidgetPrivate
 
         guint32                  should_hide_inactive_items : 1;
         guint32                  emit_activated_after_resize_animation : 1;
+        guint32                  is_loaded : 1;
 
         GdmChooserWidgetPosition separator_position;
         GdmChooserWidgetState    state;
@@ -698,7 +699,7 @@ update_chooser_visibility (GdmChooserWidget *widget)
 
         if (gdm_chooser_widget_get_number_of_items (widget) > 0) {
                 gtk_widget_show (widget->priv->frame);
-                set_chooser_list_visible (widget, TRUE);
+                set_chooser_list_visible (widget, GTK_WIDGET_VISIBLE (widget));
         } else {
                 gtk_widget_hide (widget->priv->frame);
                 set_chooser_list_visible (widget, FALSE);
@@ -2732,9 +2733,16 @@ gdm_chooser_widget_propagate_pending_key_events (GdmChooserWidget *widget)
         gdm_scrollable_widget_replay_queued_key_events (GDM_SCROLLABLE_WIDGET (widget->priv->scrollable_widget));
 }
 
+gboolean
+gdm_chooser_widget_is_loaded (GdmChooserWidget *widget)
+{
+        return widget->priv->is_loaded;
+}
+
 void
 gdm_chooser_widget_loaded (GdmChooserWidget *widget)
 {
+        widget->priv->is_loaded = TRUE;
         g_signal_emit (widget, signals[LOADED], 0);
         update_chooser_visibility (widget);
         queue_move_cursor_to_top (widget);
