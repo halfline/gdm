@@ -25,9 +25,14 @@
 
 #include <errno.h>
 #include <pwd.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include "gdm-settings.h"
+#include "gdm-settings-direct.h"
+#include "gdm-settings-keys.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -274,6 +279,7 @@ gdm_session_settings_load (GdmSessionSettings  *settings,
         GKeyFile *key_file;
         GError   *load_error;
         gboolean  is_loaded;
+        gboolean  read_dmrc = FALSE;
         char     *session_name;
         char     *language_name;
         char     *layout_name;
@@ -285,13 +291,17 @@ gdm_session_settings_load (GdmSessionSettings  *settings,
         g_return_val_if_fail (username != NULL, FALSE);
         g_return_val_if_fail (!gdm_session_settings_is_loaded (settings), FALSE);
 
-        gdm_get_pwent_for_name (username, &pwent);
-        if (pwent != NULL && pwent->pw_dir != NULL) {
-                filename = g_build_filename (pwent->pw_dir,  ".dmrc", NULL);
+        gdm_settings_direct_get_boolean (GDM_KEY_READ_DMRC_FROM_HOME_DIR, &read_dmrc);
 
-                if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-                        g_free (filename);
-                        filename = NULL;
+        if (read_dmrc) {
+                gdm_get_pwent_for_name (username, &pwent);
+                if (pwent != NULL && pwent->pw_dir != NULL) {
+                        filename = g_build_filename (pwent->pw_dir,  ".dmrc", NULL);
+
+                        if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+                                g_free (filename);
+                                filename = NULL;
+                        }
                 }
         }
 
