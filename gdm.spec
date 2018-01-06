@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.26.2.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -238,19 +238,7 @@ fi
 
 %postun
 /sbin/ldconfig
-if [ $1 -eq 0 ]; then
-  touch --no-create %{_datadir}/icons/hicolor >&/dev/null || :
-  gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
-fi
-
-if [ $1 -eq 0 ] ; then
-    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-fi
 %systemd_postun
-
-%posttrans
-gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
-/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f gdm.lang
 %doc AUTHORS NEWS README
@@ -321,6 +309,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Sat Jan 06 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1:3.26.2.1-4
+- Remove obsolete scriptlets
+
 * Thu Nov 30 2017 Ray Strode <rstrode@redhat.com> - 1:3.26.2.1-3
 - Add buildrequires for X server so it knows which -listen
   variant to use.
