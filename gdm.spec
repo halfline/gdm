@@ -9,13 +9,13 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.26.2.1
-Release: 4%{?dist}
+Version: 3.27.4
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
 URL: https://wiki.gnome.org/Projects/GDM
-Source0: http://download.gnome.org/sources/gdm/3.26/gdm-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/gdm/3.27/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 
@@ -309,6 +309,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Tue Jan 09 2018 Ray Strode <rstrode@redhat.com> - 3.27.4-1
+- Update to 3.27.4
+
 * Sat Jan 06 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1:3.26.2.1-4
 - Remove obsolete scriptlets
 
