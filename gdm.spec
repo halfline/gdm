@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.27.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -18,6 +18,9 @@ URL: https://wiki.gnome.org/Projects/GDM
 Source0: http://download.gnome.org/sources/gdm/3.27/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
+
+# https://bugzilla.gnome.org/show_bug.cgi?id=792932
+Patch1: 0001-gnome-login-Adjust-to-g-s-d-s-plugin-removals.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
@@ -64,7 +67,7 @@ Requires: dconf
 Requires: gnome-keyring-pam
 Requires: gnome-session
 Requires: gnome-session-wayland-session
-Requires: gnome-settings-daemon >= 2.21.92
+Requires: gnome-settings-daemon >= 3.27.90
 Requires: gnome-shell
 Requires: iso-codes
 # We need 1.0.4-5 since it lets us use "localhost" in auth cookies
@@ -309,6 +312,10 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Fri Feb 09 2018 Bastien Nocera <bnocera@redhat.com> - 3.27.4-3
++ gdm-3.27.4-4
+- Update for gnome-settings-daemon changes
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.27.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
