@@ -2395,6 +2395,7 @@ gdm_session_setup (GdmSession *self,
         update_session_type (self);
 
         initialize (self, service_name, NULL, NULL);
+        gdm_session_defaults_changed (self);
 }
 
 
@@ -2413,6 +2414,7 @@ gdm_session_setup_for_user (GdmSession *self,
 
         self->priv->is_program_session = FALSE;
         initialize (self, service_name, self->priv->selected_user, NULL);
+        gdm_session_defaults_changed (self);
 }
 
 void
