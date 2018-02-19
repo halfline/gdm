@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.27.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -22,11 +22,14 @@ Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=792932
 Patch1: 0001-gnome-login-Adjust-to-g-s-d-s-plugin-removals.patch
 
+Patch99: system-dconf.patch
+
 BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
 BuildRequires: libtool automake autoconf
 BuildRequires: libattr-devel
 BuildRequires: gettext
+BuildRequires: git
 BuildRequires: libdmx-devel
 BuildRequires: audit-libs-devel >= %{libauditver}
 BuildRequires: autoconf automake libtool
@@ -121,7 +124,7 @@ files that are helpful to PAM modules wishing to support
 GDM specific authentication features.
 
 %prep
-%autosetup -p1
+%autosetup -S git
 
 autoreconf -i -f
 intltoolize -f
@@ -312,6 +315,10 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Mon Feb 19 2018 Ray Strode <rstrode@redhat.com>> - 1:3.27.4-4
+- Make sure GDM checks systemd dconf databases
+  Related: #1546644
+
 * Fri Feb 09 2018 Bastien Nocera <bnocera@redhat.com> - 3.27.4-3
 + gdm-3.27.4-4
 - Update for gnome-settings-daemon changes
