@@ -9,8 +9,8 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.27.4
-Release: 4%{?dist}
+Version: 3.27.91
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -18,9 +18,6 @@ URL: https://wiki.gnome.org/Projects/GDM
 Source0: http://download.gnome.org/sources/gdm/3.27/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
-
-# https://bugzilla.gnome.org/show_bug.cgi?id=792932
-Patch1: 0001-gnome-login-Adjust-to-g-s-d-s-plugin-removals.patch
 
 Patch99: system-dconf.patch
 
@@ -300,6 +297,7 @@ fi
 %config %{_sysconfdir}/pam.d/gdm-smartcard
 %config %{_sysconfdir}/pam.d/gdm-fingerprint
 %{_sysconfdir}/pam.d/gdm-launch-environment
+%{_udevrulesdir}/61-gdm.rules
 %{_unitdir}/gdm.service
 
 %files devel
@@ -315,6 +313,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Fri Mar 02 2018 Kalev Lember <klember@redhat.com> - 1:3.27.91-1
+- Update to 3.27.91
+
 * Mon Feb 19 2018 Ray Strode <rstrode@redhat.com>> - 1:3.27.4-4
 - Make sure GDM checks systemd dconf databases
   Related: #1546644
