@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.28.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -319,6 +319,11 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Tue Mar 20 2018 Ray Strode <rstrode@redhat.com> - 1:3.28.0-3
+- Drop /etc/dconf/db/gdm.d from list of dconf sources, that's
+  not longer used.
+  Related: #1546644
+
 * Tue Mar 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 1:3.28.0-2
 - move pulseaudio-gdm-hooks content here
 - use %%ldconfig %%make_build %%make_install %%systemd_requires

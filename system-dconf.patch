@@ -14,7 +14,6 @@ index 4d8bf174..9694078f 100644
 +++ b/data/dconf/gdm.in
 @@ -1,2 +1,6 @@
  user-db:user
-+system-db:gdm
 +system-db:local
 +system-db:site
 +system-db:distro
