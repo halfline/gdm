@@ -12,7 +12,7 @@ diff --git a/data/dconf/gdm.in b/data/dconf/gdm.in
 index 4d8bf174..9694078f 100644
 --- a/data/dconf/gdm.in
 +++ b/data/dconf/gdm.in
-@@ -1,2 +1,6 @@
+@@ -1,2 +1,5 @@
  user-db:user
 +system-db:local
 +system-db:site
