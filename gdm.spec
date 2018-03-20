@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.28.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -54,9 +54,7 @@ BuildRequires: keyutils-libs-devel
 BuildRequires: dconf
 
 Requires(pre):    /usr/sbin/useradd
-Requires(post):   systemd
-Requires(preun):  systemd
-Requires(postun): systemd
+%{?systemd_requires}
 
 Provides: service(graphical-login) = %{name}
 
@@ -73,7 +71,6 @@ Requires: iso-codes
 # We need 1.0.4-5 since it lets us use "localhost" in auth cookies
 Requires: libXau >= 1.0.4-4
 Requires: pam >= 0:%{pam_version}
-Requires: pulseaudio-gdm-hooks
 Requires: /sbin/nologin
 Requires: setxkbmap
 Requires: systemd >= 186
@@ -90,6 +87,11 @@ Provides: gdm-plugin-smartcard = %{epoch}:%{version}-%{release}
 
 Obsoletes: gdm-plugin-fingerprint < 1:3.2.1
 Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
+
+# moved here from pulseaudio-gdm-hooks-11.1-16
+Source5:   default.pa-for-gdm
+Obsoletes: pulseaudio-gdm-hooks < 1:11.1-17
+Provides:  pulseaudio-gdm-hooks = 1:%{version}-%{release}
 
 %description
 GDM, the GNOME Display Manager, handles authentication-related backend
@@ -141,7 +143,7 @@ intltoolize -f
 # libtool doesn't make this easy, so we do it the hard way
 sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' -e 's/    if test "$export_dynamic" = yes && test -n "$export_dynamic_flag_spec"; then/      func_append compile_command " -Wl,-O1,--as-needed"\n      func_append finalize_command " -Wl,-O1,--as-needed"\n\0/' libtool
 
-make %{?_smp_mflags}
+%make_build
 
 
 %install
@@ -149,7 +151,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/gdm/Init
 mkdir -p %{buildroot}%{_sysconfdir}/gdm/PreSession
 mkdir -p %{buildroot}%{_sysconfdir}/gdm/PostSession
 
-make install DESTDIR=%{buildroot}
+%make_install
+
+install -p -m644 -D %{SOURCE5} %{buildroot}%{_localstatedir}/lib/gdm/.config/pulse/default.pa
 
 rm -f %{buildroot}%{_sysconfdir}/pam.d/gdm
 
@@ -184,8 +188,7 @@ find %{buildroot} -name '*.la' -delete
 exit 0
 
 %post
-/sbin/ldconfig
-touch --no-create /usr/share/icons/hicolor >&/dev/null || :
+%ldconfig
 
 # if the user already has a config file, then migrate it to the new
 # location; rpm will ensure that old file will be renamed
@@ -240,8 +243,8 @@ fi
 %systemd_preun gdm.service
 
 %postun
-/sbin/ldconfig
-%systemd_postun
+%ldconfig
+%systemd_postun gdm.service
 
 %files -f gdm.lang
 %doc AUTHORS NEWS README
@@ -290,6 +293,9 @@ fi
 %{_libdir}/libgdm*.so*
 %dir %{_localstatedir}/log/gdm
 %attr(1770, gdm, gdm) %dir %{_localstatedir}/lib/gdm
+%attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.config
+%attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.config/pulse
+%attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.config/pulse/default.pa
 %attr(0711, root, gdm) %dir /run/gdm
 %attr(1755, root, gdm) %dir %{_localstatedir}/cache/gdm
 %{_datadir}/icons/hicolor/*/*/*.png
@@ -313,6 +319,10 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Tue Mar 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 1:3.28.0-2
+- move pulseaudio-gdm-hooks content here
+- use %%ldconfig %%make_build %%make_install %%systemd_requires
+
 * Tue Mar 13 2018 Kalev Lember <klember@redhat.com> - 1:3.28.0-1
 - Update to 3.28.0
 
