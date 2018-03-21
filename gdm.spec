@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.28.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -188,7 +188,7 @@ find %{buildroot} -name '*.la' -delete
 exit 0
 
 %post
-%ldconfig_post
+%{?ldconfig}
 
 # if the user already has a config file, then migrate it to the new
 # location; rpm will ensure that old file will be renamed
@@ -243,7 +243,7 @@ fi
 %systemd_preun gdm.service
 
 %postun
-%ldconfig_postun
+%%{?ldconfig}
 %systemd_postun gdm.service
 
 %files -f gdm.lang
@@ -319,6 +319,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Wed Mar 21 2018 Kevin Fenzi <kevin@scrye.com> - 3.28.0-5
+- Fix my ldconfig fix to be actually correct.
+
 * Wed Mar 21 2018 Kevin Fenzi <kevin@scrye.com> - 3.28.0-4
 - Fix post/postun calls to ldconfig scriptlet.
 
