@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.28.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -243,7 +243,7 @@ fi
 %systemd_preun gdm.service
 
 %postun
-%%{?ldconfig}
+%{?ldconfig}
 %systemd_postun gdm.service
 
 %files -f gdm.lang
@@ -319,6 +319,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Thu Mar 22 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.28.0-6
+- Fixup ldconfig in postun
+
 * Wed Mar 21 2018 Kevin Fenzi <kevin@scrye.com> - 3.28.0-5
 - Fix my ldconfig fix to be actually correct.
 
