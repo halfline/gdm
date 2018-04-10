@@ -9,8 +9,8 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.28.0
-Release: 6%{?dist}
+Version: 3.28.1
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -319,6 +319,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Tue Apr 10 2018 Kalev Lember <klember@redhat.com> - 1:3.28.1-1
+- Update to 3.28.1
+
 * Thu Mar 22 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.28.0-6
 - Fixup ldconfig in postun
 
