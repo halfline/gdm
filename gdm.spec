@@ -168,9 +168,6 @@ mkdir -p %{buildroot}/var/log/gdm
 
 (cd %{buildroot}%{_sysconfdir}/gdm; ln -sf ../X11/xinit/Xsession .)
 
-rm -f %{buildroot}%{_libdir}/gtk-2.0/modules/*.a
-rm -f %{buildroot}%{_libdir}/gtk-2.0/modules/*.la
-
 mkdir -p %{buildroot}%{_datadir}/gdm/autostart/LoginWindow
 
 mkdir -p %{buildroot}/run/gdm
