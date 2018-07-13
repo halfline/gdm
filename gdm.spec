@@ -10,7 +10,7 @@
 Name: gdm
 Epoch: 1
 Version: 3.28.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
@@ -316,6 +316,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.28.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Thu May 17 2018 Kalev Lember <klember@redhat.com> - 1:3.28.2-1
 - Update to 3.28.2
 
