@@ -1632,6 +1632,35 @@ create_display_for_user_session (GdmManager *self,
                                 clean_user_session);
 }
 
+static void
+stop_greeter_display (GdmDisplay *display)
+{
+        gdm_display_stop_greeter_session (display);
+        gdm_display_unmanage (display);
+        gdm_display_finish (display);
+}
+
+#if defined(ENABLE_WAYLAND_SUPPORT) && defined(ENABLE_USER_DISPLAY_SERVER)
+static void
+maybe_stop_greeter_display (GdmDisplay *display)
+{
+        g_autofree char *display_session_type = NULL;
+
+        if (gdm_display_get_status (display) != GDM_DISPLAY_MANAGED)
+                return;
+
+        g_object_get (G_OBJECT (display),
+                      "session-type", &display_session_type,
+                      NULL);
+
+        /* we can only stop greeter for wayland sessions, since
+         * X server would jump back on exit */
+        if (g_strcmp0 (display_session_type, "wayland") == 0) {
+                stop_greeter_display (display);
+        }
+}
+#endif
+
 static gboolean
 on_start_user_session (StartUserSessionOperation *operation)
 {
@@ -1643,6 +1672,8 @@ on_start_user_session (StartUserSessionOperation *operation)
         GdmDisplay *display;
         const char *session_id;
 
+        display = get_display_for_user_session (operation->session);
+
         g_debug ("GdmManager: start or jump to session");
 
         /* If there's already a session running, jump to it.
@@ -1653,16 +1684,14 @@ on_start_user_session (StartUserSessionOperation *operation)
 
         g_debug ("GdmManager: migrated: %d", migrated);
         if (migrated) {
-                /* We don't stop the manager here because
-                   when Xorg exits it switches to the VT it was
-                   started from.  That interferes with fast
-                   user switching. */
+#if defined(ENABLE_WAYLAND_SUPPORT) && defined(ENABLE_USER_DISPLAY_SERVER)
+                maybe_stop_greeter_display (display);
+#endif
                 gdm_session_reset (operation->session);
                 destroy_start_user_session_operation (operation);
+
                 goto out;
         }
-
-        display = get_display_for_user_session (operation->session);
 
         g_object_get (G_OBJECT (display), "doing-initial-setup", &doing_initial_setup, NULL);
 
@@ -1712,6 +1741,8 @@ on_start_user_session (StartUserSessionOperation *operation)
                          * to have a greeter */
                         gdm_display_store_remove (self->priv->display_store, display);
                         g_object_unref (display);
+                } else {
+                        g_object_set_data (G_OBJECT (operation->session), "gdm-stale-greeter-display", display);
                 }
 
                 /* Give the user session a new display object for bookkeeping purposes */
@@ -1822,6 +1853,19 @@ on_user_session_started (GdmSession      *session,
                 }
         }
 #endif
+
+#if defined(ENABLE_WAYLAND_SUPPORT) && defined(ENABLE_USER_DISPLAY_SERVER)
+        if (g_strcmp0 (service_name, "gdm-autologin") != 0) {
+                GdmDisplay *display;
+
+                display = g_object_get_data (G_OBJECT (session), "gdm-stale-greeter-display");
+
+                if (display != NULL) {
+                        maybe_stop_greeter_display (display);
+                        g_object_set_data (G_OBJECT (session), "gdm-stale-greeter-display", NULL);
+                }
+        }
+#endif
 }
 
 static void
@@ -1897,13 +1941,13 @@ on_session_reauthenticated (GdmSession *session,
                             GdmManager *manager)
 {
         gboolean fail_if_already_switched = FALSE;
+        GdmDisplay *display = NULL;
+
+        display = get_greeter_display_from_session (manager, session);
 
         if (gdm_session_get_display_mode (session) == GDM_SESSION_DISPLAY_MODE_REUSE_VT) {
-                GdmDisplay *display = get_greeter_display_from_session (manager, session);
-                if (display) {
-                        gdm_display_stop_greeter_session (display);
-                        gdm_display_unmanage (display);
-                        gdm_display_finish (display);
+                if (display != NULL) {
+                        stop_greeter_display (display);
                 }
         }
 
@@ -1913,6 +1957,14 @@ on_session_reauthenticated (GdmSession *session,
          * then silently succeed and unlock the session.
          */
         switch_to_compatible_user_session (manager, session, fail_if_already_switched);
+
+#if defined(ENABLE_WAYLAND_SUPPORT) && defined(ENABLE_USER_DISPLAY_SERVER)
+        if (gdm_session_get_display_mode (session) != GDM_SESSION_DISPLAY_MODE_REUSE_VT) {
+                if (display != NULL) {
+                        stop_greeter_display (display);
+                }
+        }
+#endif
 }
 
 static void
