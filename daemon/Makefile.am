@@ -215,6 +215,8 @@ gdm_SOURCES = 			\
 	gdm-legacy-display.h		\
 	gdm-local-display.c		\
 	gdm-local-display.h		\
+	gdm-local-seat-monitor.c	\
+	gdm-local-seat-monitor.h	\
 	gdm-launch-environment.c	\
 	gdm-launch-environment.h	\
 	gdm-manager.c			\
