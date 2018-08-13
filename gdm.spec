@@ -25,7 +25,7 @@ BuildRequires: pam-devel >= 0:%{pam_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
 BuildRequires: libtool automake autoconf
 BuildRequires: libattr-devel
-BuildRequires: gettext
+BuildRequires: gettext-devel
 BuildRequires: git
 BuildRequires: libdmx-devel
 BuildRequires: audit-libs-devel >= %{libauditver}
