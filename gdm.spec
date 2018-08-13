@@ -9,13 +9,13 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.28.2
-Release: 2%{?dist}
+Version: 3.29.90
+Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
 License: GPLv2+
 URL: https://wiki.gnome.org/Projects/GDM
-Source0: http://download.gnome.org/sources/gdm/3.28/gdm-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/gdm/3.29/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 
@@ -30,7 +30,6 @@ BuildRequires: git
 BuildRequires: libdmx-devel
 BuildRequires: audit-libs-devel >= %{libauditver}
 BuildRequires: autoconf automake libtool
-BuildRequires: intltool
 %ifnarch s390 s390x ppc ppc64
 BuildRequires: xorg-x11-server-Xorg
 %endif
@@ -126,7 +125,6 @@ GDM specific authentication features.
 %autosetup -S git
 
 autoreconf -i -f
-intltoolize -f
 
 %build
 
@@ -244,7 +242,7 @@ fi
 %systemd_postun gdm.service
 
 %files -f gdm.lang
-%doc AUTHORS NEWS README
+%doc AUTHORS NEWS README.md
 %license COPYING
 %dir %{_sysconfdir}/gdm
 %config(noreplace) %{_sysconfdir}/gdm/custom.conf
@@ -265,6 +263,7 @@ fi
 %{_datadir}/pixmaps/*.png
 %{_datadir}/glib-2.0/schemas/org.gnome.login-screen.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.login-screen.gschema.override
+%{_libexecdir}/gdm-disable-wayland
 %{_libexecdir}/gdm-host-chooser
 %{_libexecdir}/gdm-session-worker
 %{_libexecdir}/gdm-simple-chooser
@@ -316,6 +315,9 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Mon Aug 13 2018 Kalev Lember <klember@redhat.com> - 1:3.29.90-1
+- Update to 3.29.90
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.28.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
