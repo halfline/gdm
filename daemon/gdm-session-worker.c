@@ -2571,6 +2571,20 @@ on_saved_session_name_read (GdmSessionWorker *worker)
 }
 
 static void
+on_saved_session_type_read (GdmSessionWorker *worker)
+{
+        char *session_type;
+
+        session_type = gdm_session_settings_get_session_type (worker->priv->user_settings);
+
+        g_debug ("GdmSessionWorker: Saved session type is %s", session_type);
+        gdm_dbus_worker_emit_saved_session_type_read (GDM_DBUS_WORKER (worker),
+                                                      session_type);
+        g_free (session_type);
+}
+
+
+static void
 do_setup (GdmSessionWorker *worker)
 {
         GError  *error;
@@ -2668,10 +2682,18 @@ do_accredit (GdmSessionWorker *worker)
 static void
 save_account_details_now (GdmSessionWorker *worker)
 {
+        const char *session_type;
+
         g_assert (worker->priv->state == GDM_SESSION_WORKER_STATE_ACCREDITED);
 
         g_debug ("GdmSessionWorker: saving account details for user %s", worker->priv->username);
         worker->priv->state = GDM_SESSION_WORKER_STATE_ACCOUNT_DETAILS_SAVED;
+
+        /* unconditionally write session type into user settings
+         */
+        session_type = gdm_session_worker_get_environment_variable (worker, "XDG_SESSION_TYPE");
+        gdm_session_settings_set_session_type (worker->priv->user_settings, session_type);
+
         if (!gdm_session_settings_save (worker->priv->user_settings,
                                         worker->priv->username)) {
                 g_warning ("could not save session and language settings");
@@ -3028,6 +3050,11 @@ gdm_session_worker_handle_initialize (GdmDBusWorker         *object,
                                           G_CALLBACK (on_saved_session_name_read),
                                           worker);
 
+                g_signal_connect_swapped (worker->priv->user_settings,
+                                          "notify::session-type",
+                                          G_CALLBACK (on_saved_session_type_read),
+                                          worker);
+
                 if (worker->priv->username) {
                         wait_for_settings = !gdm_session_settings_load (worker->priv->user_settings,
                                                                         worker->priv->username);
@@ -3082,6 +3109,11 @@ gdm_session_worker_handle_setup (GdmDBusWorker         *object,
                                   "notify::session-name",
                                   G_CALLBACK (on_saved_session_name_read),
                                   worker);
+        g_signal_connect_swapped (worker->priv->user_settings,
+                                  "notify::session-type",
+                                  G_CALLBACK (on_saved_session_type_read),
+                                  worker);
+
         return TRUE;
 }
 
@@ -3121,6 +3153,10 @@ gdm_session_worker_handle_setup_for_user (GdmDBusWorker         *object,
         g_signal_connect_swapped (worker->priv->user_settings,
                                   "notify::session-name",
                                   G_CALLBACK (on_saved_session_name_read),
+                                  worker);
+        g_signal_connect_swapped (worker->priv->user_settings,
+                                  "notify::session-type",
+                                  G_CALLBACK (on_saved_session_type_read),
                                   worker);
 
         /* Load settings from accounts daemon before continuing
