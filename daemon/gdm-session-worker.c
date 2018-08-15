@@ -436,6 +436,12 @@ static void
 attempt_to_load_user_settings (GdmSessionWorker *worker,
                                const char       *username)
 {
+        if (worker->priv->user_settings == NULL)
+                return;
+
+        if (gdm_session_settings_is_loaded (worker->priv->user_settings))
+                return;
+
         g_debug ("GdmSessionWorker: attempting to load user settings");
         gdm_session_settings_load (worker->priv->user_settings,
                                    username);
@@ -477,8 +483,7 @@ gdm_session_worker_update_username (GdmSessionWorker *worker)
                  * to keep trying to read settings)
                  */
                 if (worker->priv->username != NULL &&
-                    worker->priv->username[0] != '\0' &&
-                    !gdm_session_settings_is_loaded (worker->priv->user_settings)) {
+                    worker->priv->username[0] != '\0') {
                         attempt_to_load_user_settings (worker, worker->priv->username);
                 }
         }
@@ -2502,8 +2507,9 @@ gdm_session_worker_handle_set_session_name (GdmDBusWorker         *object,
 {
         GdmSessionWorker *worker = GDM_SESSION_WORKER (object);
         g_debug ("GdmSessionWorker: session name set to %s", session_name);
-        gdm_session_settings_set_session_name (worker->priv->user_settings,
-                                               session_name);
+        if (worker->priv->user_settings != NULL)
+                gdm_session_settings_set_session_name (worker->priv->user_settings,
+                                                       session_name);
         gdm_dbus_worker_complete_set_session_name (object, invocation);
         return TRUE;
 }
@@ -2527,8 +2533,9 @@ gdm_session_worker_handle_set_language_name (GdmDBusWorker         *object,
 {
         GdmSessionWorker *worker = GDM_SESSION_WORKER (object);
         g_debug ("GdmSessionWorker: language name set to %s", language_name);
-        gdm_session_settings_set_language_name (worker->priv->user_settings,
-                                                language_name);
+        if (worker->priv->user_settings != NULL)
+                gdm_session_settings_set_language_name (worker->priv->user_settings,
+                                                        language_name);
         gdm_dbus_worker_complete_set_language_name (object, invocation);
         return TRUE;
 }
@@ -2661,9 +2668,11 @@ save_account_details_now (GdmSessionWorker *worker)
 
         g_debug ("GdmSessionWorker: saving account details for user %s", worker->priv->username);
         worker->priv->state = GDM_SESSION_WORKER_STATE_ACCOUNT_DETAILS_SAVED;
-        if (!gdm_session_settings_save (worker->priv->user_settings,
-                                        worker->priv->username)) {
-                g_warning ("could not save session and language settings");
+        if (worker->priv->user_settings != NULL) {
+                if (!gdm_session_settings_save (worker->priv->user_settings,
+                                                worker->priv->username)) {
+                        g_warning ("could not save session and language settings");
+                }
         }
         queue_state_change (worker);
 }
@@ -2709,7 +2718,7 @@ do_save_account_details_when_ready (GdmSessionWorker *worker)
 {
         g_assert (worker->priv->state == GDM_SESSION_WORKER_STATE_ACCREDITED);
 
-        if (!gdm_session_settings_is_loaded (worker->priv->user_settings)) {
+        if (worker->priv->user_settings != NULL && !gdm_session_settings_is_loaded (worker->priv->user_settings)) {
                 g_signal_connect (G_OBJECT (worker->priv->user_settings),
                                   "notify::is-loaded",
                                   G_CALLBACK (on_settings_is_loaded_changed),
@@ -3007,6 +3016,8 @@ gdm_session_worker_handle_initialize (GdmDBusWorker         *object,
         worker->priv->pending_invocation = invocation;
 
         if (!worker->priv->is_program_session) {
+                worker->priv->user_settings = gdm_session_settings_new ();
+
                 g_signal_connect_swapped (worker->priv->user_settings,
                                           "notify::language-name",
                                           G_CALLBACK (on_saved_language_name_read),
@@ -3062,6 +3073,8 @@ gdm_session_worker_handle_setup (GdmDBusWorker         *object,
         worker->priv->display_is_initial = display_is_initial;
         worker->priv->username = NULL;
 
+        worker->priv->user_settings = gdm_session_settings_new ();
+
         g_signal_connect_swapped (worker->priv->user_settings,
                                   "notify::language-name",
                                   G_CALLBACK (on_saved_language_name_read),
@@ -3101,6 +3114,8 @@ gdm_session_worker_handle_setup_for_user (GdmDBusWorker         *object,
         worker->priv->display_is_local = display_is_local;
         worker->priv->display_is_initial = display_is_initial;
         worker->priv->username = g_strdup (username);
+
+        worker->priv->user_settings = gdm_session_settings_new ();
 
         g_signal_connect_swapped (worker->priv->user_settings,
                                   "notify::language-name",
@@ -3486,7 +3501,6 @@ gdm_session_worker_init (GdmSessionWorker *worker)
 {
         worker->priv = GDM_SESSION_WORKER_GET_PRIVATE (worker);
 
-        worker->priv->user_settings = gdm_session_settings_new ();
         worker->priv->reauthentication_requests = g_hash_table_new_full (NULL,
                                                                          NULL,
                                                                          NULL,
@@ -3524,7 +3538,7 @@ gdm_session_worker_finalize (GObject *object)
                 gdm_wait_on_pid (worker->priv->child_pid);
         }
 
-        g_object_unref (worker->priv->user_settings);
+        g_clear_object (&worker->priv->user_settings);
         g_free (worker->priv->service);
         g_free (worker->priv->x11_display_name);
         g_free (worker->priv->x11_authority_file);
