@@ -297,6 +297,7 @@ gdm_session_settings_is_loaded (GdmSessionSettings  *settings)
 static void
 load_settings_from_user (GdmSessionSettings *settings)
 {
+        const char *system_id = NULL, *system_version_id = NULL;
         const char *object_path;
         const char *session_name;
         const char *session_type;
@@ -320,6 +321,9 @@ load_settings_from_user (GdmSessionSettings *settings)
                 if (error != NULL) {
                         g_debug ("GdmSessionSettings: couldn't retrieve user system proxy from accountsservice: %s",
                                  error->message);
+                } else {
+                        system_id = gdm_accounts_service_user_system_get_id (settings->priv->user_system_proxy);
+                        system_version_id = gdm_accounts_service_user_system_get_version_id (settings->priv->user_system_proxy);
                 }
         }
 
@@ -331,6 +335,21 @@ load_settings_from_user (GdmSessionSettings *settings)
         session_name = act_user_get_session (settings->priv->user);
 
         g_debug ("GdmSessionSettings: saved session is %s (type %s)", session_name, session_type);
+
+        if (system_id == NULL || (g_strcmp0 (system_id, "rhel") == 0 && g_str_has_prefix (system_version_id, "7.") == 0)) {
+                /* if there's also no session name in the file and we're coming from RHEL 7,
+                 * then we should assume classic session
+                 */
+                if (session_name == NULL || session_name[0] == '\0')
+                        session_name = "gnome-classic";
+
+                /* only presume wayland if the user specifically picked it in RHEL 7
+                 */
+                if (g_strcmp0 (session_name, "gnome-wayland") == 0)
+                        session_type = "wayland";
+                else
+                        session_type = "x11";
+        }
 
         if (session_type != NULL && session_type[0] != '\0') {
                 gdm_session_settings_set_session_type (settings, session_type);
