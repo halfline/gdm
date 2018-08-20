@@ -1,0 +1,10 @@
+<node>
+  <interface name="com.redhat.AccountsServiceUser.System">
+
+    <annotation name="org.freedesktop.Accounts.VendorExtension" value="true"/>
+
+    <property name="id" type="s" access="readwrite"/>
+    <property name="version-id" type="s" access="readwrite"/>
+
+  </interface>
+</node>

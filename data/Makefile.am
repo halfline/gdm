@@ -35,6 +35,11 @@ dbusconfdir = $(DBUS_SYS_DIR)
 dbusconf_in_files = gdm.conf.in
 dbusconf_DATA = $(dbusconf_in_files:.conf.in=.conf)
 
+dbusifdir   = $(datadir)/dbus-1/interfaces
+dbusif_DATA = com.redhat.AccountsServiceUser.System.xml
+accountsserviceifdir = $(datadir)/accountsservice/interfaces
+EXTRA_DIST += com.redhat.AccountsServiceUser.System.xml
+
 @INTLTOOL_SCHEMAS_RULE@
 @INTLTOOL_XML_NOMERGE_RULE@
 
@@ -250,7 +255,14 @@ uninstall-hook:
 	$(DESTDIR)$(xauthdir) \
 	$(DESTDIR)$(PAM_PREFIX)/pam.d
 
-install-data-hook: gdm.conf-custom $(Xsession_files) Init PostSession PreSession
+install-data-hook: gdm.conf-custom com.redhat.AccountsServiceUser.System.xml $(Xsession_files) Init PostSession PreSession
+	if test '!' -d $(DESTDIR)$(accountsserviceifdir); then \
+		$(mkinstalldirs) $(DESTDIR)$(accountsserviceifdir); \
+		chmod 755 $(DESTDIR)$(accountsserviceifdir); \
+	fi
+	if test '!' -L $(DESTDIR)$(accountsserviceifdir)/com.redhat.AccountsServiceUser.System.xml; then \
+		(cd $(DESTDIR)$(accountsserviceifdir); $(LN_S) ../../dbus-1/interfaces/com.redhat.AccountsServiceUser.System.xml) \
+	fi
 	if test '!' -d $(DESTDIR)$(gdmconfdir); then \
 		$(mkinstalldirs) $(DESTDIR)$(gdmconfdir); \
 		chmod 755 $(DESTDIR)$(gdmconfdir); \
