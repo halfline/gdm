@@ -21,6 +21,9 @@
  */
 #include "config.h"
 #include "gdm-session-settings.h"
+#include "gdm-common.h"
+
+#include "com.redhat.AccountsServiceUser.System.h"
 
 #include <errno.h>
 #include <pwd.h>
@@ -38,6 +41,10 @@ struct _GdmSessionSettingsPrivate
 {
         ActUserManager *user_manager;
         ActUser *user;
+
+        /* used for retrieving the last OS user logged in with */
+        GdmAccountsServiceUserSystem *user_system_proxy;
+
         char *session_name;
         char *session_type;
         char *language_name;
@@ -133,6 +140,8 @@ gdm_session_settings_finalize (GObject *object)
         if (settings->priv->user != NULL) {
                 g_object_unref (settings->priv->user);
         }
+
+        g_clear_object (&settings->priv->user_system_proxy);
 
         g_free (settings->priv->session_name);
         g_free (settings->priv->language_name);
@@ -288,6 +297,7 @@ gdm_session_settings_is_loaded (GdmSessionSettings  *settings)
 static void
 load_settings_from_user (GdmSessionSettings *settings)
 {
+        const char *object_path;
         const char *session_name;
         const char *session_type;
         const char *language_name;
@@ -295,6 +305,22 @@ load_settings_from_user (GdmSessionSettings *settings)
         if (!act_user_is_loaded (settings->priv->user)) {
                 g_warning ("GdmSessionSettings: trying to load user settings from unloaded user");
                 return;
+        }
+
+        object_path = act_user_get_object_path (settings->priv->user);
+
+        if (object_path != NULL) {
+                g_autoptr (GError) error = NULL;
+                settings->priv->user_system_proxy = gdm_accounts_service_user_system_proxy_new_for_bus_sync (G_BUS_TYPE_SYSTEM,
+                                                                                                             G_DBUS_PROXY_FLAGS_NONE,
+                                                                                                             "org.freedesktop.Accounts",
+                                                                                                             object_path,
+                                                                                                             NULL,
+                                                                                                             &error);
+                if (error != NULL) {
+                        g_debug ("GdmSessionSettings: couldn't retrieve user system proxy from accountsservice: %s",
+                                 error->message);
+                }
         }
 
         /* if the user doesn't have saved state, they don't have any settings worth reading */
@@ -376,6 +402,75 @@ gdm_session_settings_load (GdmSessionSettings  *settings,
         return TRUE;
 }
 
+static void
+save_os_release (GdmSessionSettings *settings,
+                 ActUser            *user)
+{
+        g_autoptr(GFile) file = NULL;
+        g_autoptr(GError) error = NULL;
+        g_autofree char *contents = NULL;
+        g_auto(GStrv) lines = NULL;
+        size_t i;
+
+        if (settings->priv->user_system_proxy == NULL) {
+                g_debug ("GdmSessionSettings: not saving OS version to user account because accountsservice doesn't support it");
+                return;
+        }
+
+        file = g_file_new_for_path ("/etc/os-release");
+
+        if (!g_file_load_contents (file, NULL, &contents, NULL, NULL, &error)) {
+                g_debug ("GdmSessionSettings: couldn't load /etc/os-release: %s", error->message);
+                return;
+        }
+
+        lines = g_strsplit (contents, "\n", -1);
+        for (i = 0; lines[i] != NULL; i++) {
+                char *p, *name, *name_end, *value, *value_end;
+
+                p = lines[i];
+
+                while (g_ascii_isspace (*p))
+                        p++;
+
+                if (*p == '#' || *p == '\0')
+                        continue;
+                name = p;
+                while (gdm_shell_var_is_valid_char (*p, p == name))
+                        p++;
+                name_end = p;
+                while (g_ascii_isspace (*p))
+                        p++;
+                if (name == name_end || *p != '=') {
+                        continue;
+                }
+                *name_end = '\0';
+
+                p++;
+
+                while (g_ascii_isspace (*p))
+                        p++;
+
+                value = p;
+                value_end = value + strlen(value) - 1;
+
+                if (value != value_end && *value == '"' && *value_end == '"') {
+                        value++;
+                        *value_end = '\0';
+                }
+
+                if (strcmp (name, "ID") == 0) {
+                        gdm_accounts_service_user_system_set_id (settings->priv->user_system_proxy,
+                                                                 value);
+                        g_debug ("GdmSessionSettings: setting system OS for user to '%s'", value);
+                } else if (strcmp (name, "VERSION_ID") == 0) {
+                        gdm_accounts_service_user_system_set_version_id (settings->priv->user_system_proxy,
+                                                                         value);
+                        g_debug ("GdmSessionSettings: setting system OS version for user to '%s'", value);
+                }
+        }
+}
+
 gboolean
 gdm_session_settings_save (GdmSessionSettings  *settings,
                            const char          *username)
@@ -406,6 +501,9 @@ gdm_session_settings_save (GdmSessionSettings  *settings,
         if (settings->priv->language_name != NULL) {
                 act_user_set_language (user, settings->priv->language_name);
         }
+
+        save_os_release (settings, user);
+
         g_object_unref (user);
 
         return TRUE;
