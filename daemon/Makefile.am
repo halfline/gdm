@@ -40,6 +40,7 @@ BUILT_SOURCES =					\
 	gdm-session-glue.h			\
 	gdm-session-worker-glue.h		\
 	gdm-session-enum-types.h		\
+	com.redhat.AccountsServiceUser.System.h \
 	$(NULL)
 
 gdm-session-enum-types.h: gdm-session-enum-types.h.in gdm-session.h
@@ -90,6 +91,13 @@ gdm-session-worker-glue.c gdm-session-worker-glue.h : gdm-session-worker.xml Mak
 		--generate-c-code=gdm-session-worker-glue		\
 		$(srcdir)/gdm-session-worker.xml
 
+com.redhat.AccountsServiceUser.System.c com.redhat.AccountsServiceUser.System.h: $(top_srcdir)/data/com.redhat.AccountsServiceUser.System.xml Makefile.am
+	$(AM_V_GEN)gdbus-codegen 					\
+		--c-namespace=Gdm					\
+		--interface-prefix=com.redhat				\
+		--generate-c-code=com.redhat.AccountsServiceUser.System	\
+		$(top_srcdir)/data/com.redhat.AccountsServiceUser.System.xml
+
 noinst_PROGRAMS = 		\
 	test-session-client	\
 	$(NULL)
@@ -117,6 +125,8 @@ libexec_PROGRAMS = 			\
 
 gdm_session_worker_SOURCES = 			\
 	session-worker-main.c 			\
+	com.redhat.AccountsServiceUser.System.h \
+	com.redhat.AccountsServiceUser.System.c \
 	gdm-session.c				\
 	gdm-session.h				\
 	gdm-session-settings.h			\
