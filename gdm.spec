@@ -9,7 +9,7 @@
 
 Name: gdm
 Epoch: 1
-Version: 3.29.90
+Version: 3.29.91
 Release: 1%{?dist}
 Summary: The GNOME Display Manager
 
@@ -18,6 +18,8 @@ URL: https://wiki.gnome.org/Projects/GDM
 Source0: http://download.gnome.org/sources/gdm/3.29/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
+
+Patch11: 0001-local-display-factory-ignore-spurios-SeatNew-signal-.patch
 
 Patch99: system-dconf.patch
 
@@ -315,6 +317,10 @@ fi
 %{_libdir}/pkgconfig/gdm-pam-extensions.pc
 
 %changelog
+* Fri Aug 24 2018  Ray Strode <rstrode@redhat.com> - 1:3.29.91-1
+- Update to 3.29.91
+- Fix race at startup
+
 * Mon Aug 13 2018 Kalev Lember <klember@redhat.com> - 1:3.29.90-1
 - Update to 3.29.90
 

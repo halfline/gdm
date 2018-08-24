@@ -1,0 +1,162 @@
+From d868eb3ced19d0624aa8ce948ccc8d8523551e78 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Tue, 14 Aug 2018 10:21:17 -0400
+Subject: [PATCH] local-display-factory: ignore spurios SeatNew signal at start
+ up
+
+Sometimes during startup, logind will send a `SeatNew` signal for
+seat0 after GDM has already called `ListSeats` and processed `seat0`.
+
+That `SeatNew` signal leads to GDM calling `create_display` twice in
+quick succession.
+
+This commit changes GDM to avoid such double processing, by ignoring
+the `create_display` requests for seats that already have a prepared
+display ("prepared" means "starting up").
+
+Closes: https://gitlab.gnome.org/GNOME/gdm/issues/410
+---
+ daemon/gdm-local-display-factory.c | 33 +++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
+
+diff --git a/daemon/gdm-local-display-factory.c b/daemon/gdm-local-display-factory.c
+index 39f3e30a3..7ec998efa 100644
+--- a/daemon/gdm-local-display-factory.c
++++ b/daemon/gdm-local-display-factory.c
+@@ -348,107 +348,126 @@ on_display_status_changed (GdmDisplay             *display,
+         case GDM_DISPLAY_MANAGED:
+                 break;
+         default:
+                 g_assert_not_reached ();
+                 break;
+         }
+ 
+         g_free (seat_id);
+         g_free (session_type);
+         g_free (session_class);
+ }
+ 
+ static gboolean
+ lookup_by_seat_id (const char *id,
+                    GdmDisplay *display,
+                    gpointer    user_data)
+ {
+         const char *looking_for = user_data;
+         char *current;
+         gboolean res;
+ 
+         g_object_get (G_OBJECT (display), "seat-id", &current, NULL);
+ 
+         res = g_strcmp0 (current, looking_for) == 0;
+ 
+         g_free(current);
+ 
+         return res;
+ }
+ 
++static gboolean
++lookup_prepared_display_by_seat_id (const char *id,
++                                    GdmDisplay *display,
++                                    gpointer    user_data)
++{
++        int status;
++
++        status = gdm_display_get_status (display);
++
++        if (status != GDM_DISPLAY_PREPARED)
++                return FALSE;
++
++        return lookup_by_seat_id (id, display, user_data);
++}
++
+ static GdmDisplay *
+ create_display (GdmLocalDisplayFactory *factory,
+                 const char             *seat_id,
+                 const char             *session_type,
+                 gboolean                initial)
+ {
+         GdmDisplayStore *store;
+         GdmDisplay      *display = NULL;
+         char            *active_session_id = NULL;
+         int              ret;
+ 
+         g_debug ("GdmLocalDisplayFactory: %s login display for seat %s requested",
+                  session_type? : "X11", seat_id);
+         store = gdm_display_factory_get_display_store (GDM_DISPLAY_FACTORY (factory));
+ 
++        if (sd_seat_can_multi_session (seat_id))
++                display = gdm_display_store_find (store, lookup_prepared_display_by_seat_id, (gpointer) seat_id);
++        else
++                display = gdm_display_store_find (store, lookup_by_seat_id, (gpointer) seat_id);
++
++        /* Ensure we don't create the same display more than once */
++        if (display != NULL) {
++                g_debug ("GdmLocalDisplayFactory: display already created");
++                return NULL;
++        }
++
+         ret = sd_seat_get_active (seat_id, &active_session_id, NULL);
+ 
+         if (ret == 0) {
+                 char *login_session_id = NULL;
+ 
+                 /* If we already have a login window, switch to it */
+                 if (gdm_get_login_window_session_id (seat_id, &login_session_id)) {
+                         GdmDisplay *display;
+ 
+                         display = gdm_display_store_find (store,
+                                                           lookup_by_session_id,
+                                                           (gpointer) login_session_id);
+                         if (display != NULL && gdm_display_get_status (display) == GDM_DISPLAY_MANAGED) {
+                                 if (g_strcmp0 (active_session_id, login_session_id) != 0) {
+                                         g_debug ("GdmLocalDisplayFactory: session %s found, activating.",
+                                                  login_session_id);
+                                         gdm_activate_session_by_id (factory->priv->connection, seat_id, login_session_id);
+                                 }
+                                 g_clear_pointer (&login_session_id, g_free);
+                                 g_clear_pointer (&active_session_id, g_free);
+                                 return NULL;
+                         }
+                         g_clear_pointer (&login_session_id, g_free);
+                 }
+                 g_clear_pointer (&active_session_id, g_free);
+-        } else if (!sd_seat_can_multi_session (seat_id)) {
+-                /* Ensure we don't create the same display more than once */
+-                display = gdm_display_store_find (store, lookup_by_seat_id, (gpointer) seat_id);
+-
+-                if (display != NULL) {
+-                        return NULL;
+-                }
+         }
+ 
+         g_debug ("GdmLocalDisplayFactory: Adding display on seat %s", seat_id);
+ 
+ #ifdef ENABLE_USER_DISPLAY_SERVER
+         if (g_strcmp0 (seat_id, "seat0") == 0) {
+                 display = gdm_local_display_new ();
+                 if (session_type != NULL) {
+                         g_object_set (G_OBJECT (display), "session-type", session_type, NULL);
+                 }
+         }
+ #endif
+ 
+         if (display == NULL) {
+                 guint32 num;
+ 
+                 num = take_next_display_number (factory);
+ 
+                 display = gdm_legacy_display_new (num);
+         }
+ 
+         g_object_set (display, "seat-id", seat_id, NULL);
+         g_object_set (display, "is-initial", initial, NULL);
+ 
+         store_display (factory, display);
+ 
+         /* let store own the ref */
+         g_object_unref (display);
+ 
+         if (! gdm_display_manage (display)) {
+-- 
+2.17.1
+
