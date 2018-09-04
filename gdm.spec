@@ -173,6 +173,10 @@ mkdir -p %{buildroot}/run/gdm
 find %{buildroot} -name '*.a' -delete
 find %{buildroot} -name '*.la' -delete
 
+mkdir -p ${RPM_BUILD_ROOT}%{_udevrulesdir}
+mv ${RPM_BUILD_ROOT}/lib/udev/rules.d/* ${RPM_BUILD_ROOT}%{_udevrulesdir}
+rm -rf ${RPM_BUILD_ROOT}/lib/udev
+
 %find_lang gdm --with-gnome
 
 %pre
