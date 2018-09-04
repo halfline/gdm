@@ -19,8 +19,6 @@ Source0: http://download.gnome.org/sources/gdm/3.29/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 Patch0: 0001-Honor-initial-setup-being-disabled-by-distro-install.patch
 
-Patch11: 0001-local-display-factory-ignore-spurios-SeatNew-signal-.patch
-
 Patch99: system-dconf.patch
 
 BuildRequires: pam-devel >= 0:%{pam_version}
